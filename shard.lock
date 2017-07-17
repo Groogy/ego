@@ -1,0 +1,18 @@
+version: 1.0
+shards:
+  boleite:
+    github: Groogy/boleite
+    commit: 00831bbf8836b3095471c2a4e7de002c94278078
+
+  crystal-clear:
+    github: Groogy/crystal-clear
+    commit: 334b9efe7503d847e2ed56c3de25e13aa42cdf17
+
+  lib_gl:
+    github: jellymann/crystal_lib_gl
+    version: 0.1.4
+
+  lib_glfw3:
+    github: jellymann/crystal_lib_glfw3
+    version: 0.1.0
+

@@ -1,0 +1,17 @@
+name: ego
+version: 0.1.0
+
+authors:
+  - Henrik Valter Vogelius Hansson <groogy@groogy.se>
+
+dependencies:
+  boleite:
+    github: Groogy/boleite
+
+targets:
+  ego:
+    main: src/main.cr
+
+crystal: 0.23.0
+
+license: zlib

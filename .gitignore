@@ -1,0 +1,9 @@
+/doc/
+/lib/
+/bin/
+/.shards/
+
+# Editor specific ignores for VSCode
+.editorconfig
+.vscode/
+crwrapper.sh

@@ -1,0 +1,2 @@
+I am a friendly file here to ensure that the folder is created by Git
+Mission accomplished! ( ᐛ )و
