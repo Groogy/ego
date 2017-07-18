@@ -3,6 +3,10 @@
 /bin/
 /.shards/
 
+# Generated files
+dist/config.yml
+dist/ego
+
 # Editor specific ignores for VSCode
 .editorconfig
 .vscode/
