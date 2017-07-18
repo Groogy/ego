@@ -2,7 +2,7 @@ version: 1.0
 shards:
   boleite:
     github: Groogy/boleite
-    commit: 00831bbf8836b3095471c2a4e7de002c94278078
+    commit: 83dc9ec878bdcc064b54632ed0052b3e49499100
 
   crystal-clear:
     github: Groogy/crystal-clear
