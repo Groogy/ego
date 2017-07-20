@@ -1,12 +1,12 @@
 class AppConfiguration
   struct Serializer
     def marshal(obj, node)
-      node.marshal("foobar", obj.foobar)
+      node.marshal("backend", obj.backend)
     end
 
     def unmarshal(node)
       config = AppConfiguration.new
-      config.foobar = node.unmarshal_string("foobar")
+      config.backend = node.unmarshal("backend", Boleite::BackendConfiguration)
       config
     end
   end

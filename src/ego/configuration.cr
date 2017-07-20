@@ -1,10 +1,5 @@
 class AppConfiguration < Boleite::Configuration
-  def foobar
-    @foobar
-  end
-
-  protected def foobar=(@foobar)
-  end
-
-  @foobar = "Hello World!"
+  property :backend
+  
+  @backend = Boleite::BackendConfiguration.new
 end

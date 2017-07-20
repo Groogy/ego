@@ -12,6 +12,7 @@ class EgoApplication < Boleite::Application
     else
       File.open(CONFIGURATION_FILE, "w") do |file|
         config = AppConfiguration.new 
+        config.backend = @backend.default_config
         serializer = Boleite::Serializer.new
         serializer.marshal(config)
         serializer.dump(file)
