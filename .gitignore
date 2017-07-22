@@ -11,3 +11,6 @@ dist/ego
 .editorconfig
 .vscode/
 crwrapper.sh
+
+# Let's ignore the shard lock for now
+shard.lock
