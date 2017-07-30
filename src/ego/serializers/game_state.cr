@@ -28,9 +28,9 @@ class GameState < Boleite::State
     @input = nil
   end
 
-  def update
+  def update(delta)
   end
 
-  def render
+  def render(delta)
   end
 end
