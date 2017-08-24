@@ -1,13 +1,21 @@
 alias Vector4f32 = Boleite::Vector4f32
+alias Vector2f32 = Boleite::Vector2f32
 
 struct SimpleVertex < Boleite::Vertex
   @pos   = Vector4f32.zero
   @color = Vector4f32.zero
+  @uv    = Vector2f32.zero
 
   def initialize
   end
 
-  def initialize(@pos, color)
+  def initialize(@pos, @color, @uv)
+  end
+
+  def initialize(pos, color, uv)
+    @pos   = Vector4f32.new(pos)
+    @color = Vector4f32.new(color)
+    @uv    = Vector2f32.new(uv)
   end
 end
 
@@ -28,23 +36,26 @@ class GameState < Boleite::State
     super()
 
     vertices = [
-      SimpleVertex.new(Vector4f32.new(0.0_f32, 0.5_f32, 0.0_f32, 1.0_f32), Vector4f32.new(1.0_f32, 0.0_f32, 0.0_f32, 1.0_f32)),
-      SimpleVertex.new(Vector4f32.new(0.5_f32, -0.5_f32, 0.0_f32, 1.0_f32), Vector4f32.new(0.0_f32, 1.0_f32, 0.0_f32, 1.0_f32)),
-			SimpleVertex.new(Vector4f32.new(-0.5_f32, -0.5_f32, 0.0_f32, 1.0_f32), Vector4f32.new(0.0_f32, 0.0_f32, 1.0_f32, 1.0_f32)),
+      SimpleVertex.new([0.0f32, 0.0f32, 0.0f32, 1.0f32], [1.0f32, 0.0f32, 0.0f32, 1.0f32], [0.0f32, 0.0f32]),
+      SimpleVertex.new([0.0f32, 1.0f32, 0.0f32, 1.0f32], [0.0f32, 1.0f32, 0.0f32, 1.0f32], [0.0f32, 1.0f32]),
+      SimpleVertex.new([1.0f32, 0.0f32, 0.0f32, 1.0f32], [0.0f32, 0.0f32, 1.0f32, 1.0f32], [1.0f32, 0.0f32]),
+      SimpleVertex.new([1.0f32, 1.0f32, 0.0f32, 1.0f32], [1.0f32, 1.0f32, 1.0f32, 1.0f32], [1.0f32, 1.0f32]),
     ]
 
     layout = Boleite::VertexLayout.new [
-      Boleite::VertexAttribute.new(4, :float, 32_u32, 0_u32),
-      Boleite::VertexAttribute.new(4, :float, 32_u32, 16_u32)
+      Boleite::VertexAttribute.new(4, :float, 40_u32, 0_u32),
+      Boleite::VertexAttribute.new(4, :float, 40_u32, 16_u32),
+      Boleite::VertexAttribute.new(2, :float, 40_u32, 32_u32),
     ]
 
     @vbo = @app.graphics.create_vertex_buffer_object
     @vbo.layout = layout
-    @vbo.primitive = Boleite::Primitive::Triangles
+    @vbo.primitive = Boleite::Primitive::TrianglesStrip
     buffer = @vbo.create_buffer
     buffer.add_data vertices[0]
     buffer.add_data vertices[1]
     buffer.add_data vertices[2]
+    buffer.add_data vertices[3]
 
     @input = nil
   end
@@ -63,7 +74,7 @@ class GameState < Boleite::State
   def update(delta)
   end
 
-  def render(delta)
-    @vbo.render
+  def render(delta, renderer)
+    renderer.draw @vbo
   end
 end

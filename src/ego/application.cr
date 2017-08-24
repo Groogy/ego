@@ -1,5 +1,6 @@
 class EgoApplication < Boleite::Application
   CONFIGURATION_FILE = "config.yml"
+  SHADER_FILE = "test.shader"
   
   def create_configuration : Boleite::Configuration
     if File.exists? CONFIGURATION_FILE
@@ -19,5 +20,10 @@ class EgoApplication < Boleite::Application
         config
       end
     end
+  end
+
+  def create_renderer(gfx : Boleite::GraphicsContext) : Boleite::Renderer
+    shader = Boleite::Shader.load_file SHADER_FILE, gfx
+    Boleite::ForwardRenderer.new gfx, shader
   end
 end
