@@ -37,9 +37,9 @@ class GameState < Boleite::State
 
     vertices = [
       SimpleVertex.new([0.0f32, 0.0f32, 0.0f32, 1.0f32], [1.0f32, 0.0f32, 0.0f32, 1.0f32], [0.0f32, 0.0f32]),
-      SimpleVertex.new([0.0f32, 1.0f32, 0.0f32, 1.0f32], [0.0f32, 1.0f32, 0.0f32, 1.0f32], [0.0f32, 1.0f32]),
-      SimpleVertex.new([1.0f32, 0.0f32, 0.0f32, 1.0f32], [0.0f32, 0.0f32, 1.0f32, 1.0f32], [1.0f32, 0.0f32]),
-      SimpleVertex.new([1.0f32, 1.0f32, 0.0f32, 1.0f32], [1.0f32, 1.0f32, 1.0f32, 1.0f32], [1.0f32, 1.0f32]),
+      SimpleVertex.new([0.0f32, 100.0f32, 0.0f32, 1.0f32], [0.0f32, 1.0f32, 0.0f32, 1.0f32], [0.0f32, 1.0f32]),
+      SimpleVertex.new([100.0f32, 0.0f32, 0.0f32, 1.0f32], [0.0f32, 0.0f32, 1.0f32, 1.0f32], [1.0f32, 0.0f32]),
+      SimpleVertex.new([100.0f32, 100.0f32, 0.0f32, 1.0f32], [1.0f32, 1.0f32, 1.0f32, 1.0f32], [1.0f32, 1.0f32]),
     ]
 
     layout = Boleite::VertexLayout.new [

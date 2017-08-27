@@ -3,8 +3,8 @@
 values
 {
 	worldTransform = world;
-	viewTransform = ;
-	projectionTransform = ;
+	viewTransform = camera;
+	projectionTransform = projection;
 }
 
 depth
@@ -20,6 +20,8 @@ vertex
 	layout(location = 2) in vec2 uv;
 
 	uniform mat4 world;
+	uniform mat4 camera;
+	uniform mat4 projection;
 
 	out VertexData {
 		vec4 position;
@@ -29,8 +31,9 @@ vertex
 
 	void main()
 	{
-		vec4 worldPos = position;
-		gl_Position = worldPos;
+		vec4 worldPos = position * world;
+		vec4 viewPos = worldPos * camera;
+		gl_Position = viewPos * projection;
 		outputVertex.position = worldPos;
 		outputVertex.color = color;
 		outputVertex.uv = uv;

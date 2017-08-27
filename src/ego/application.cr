@@ -23,7 +23,9 @@ class EgoApplication < Boleite::Application
   end
 
   def create_renderer(gfx : Boleite::GraphicsContext) : Boleite::Renderer
+    target = gfx.main_target
+    camera = Boleite::Camera2D.new(target.width.to_f32, target.height.to_f32, 0.0f32, 10.0f32)
     shader = Boleite::Shader.load_file SHADER_FILE, gfx
-    Boleite::ForwardRenderer.new gfx, shader
+    Boleite::ForwardRenderer.new gfx, camera, shader
   end
 end
