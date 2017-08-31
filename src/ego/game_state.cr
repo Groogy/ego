@@ -75,6 +75,6 @@ class GameState < Boleite::State
   end
 
   def render(delta, renderer)
-    renderer.draw @vbo
+    renderer.draw_vertices @vbo, nil, Boleite::Matrix44f32.identity
   end
 end
