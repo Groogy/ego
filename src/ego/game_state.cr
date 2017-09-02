@@ -1,24 +1,3 @@
-alias Vector4f32 = Boleite::Vector4f32
-alias Vector2f32 = Boleite::Vector2f32
-
-struct SimpleVertex < Boleite::Vertex
-  @pos   = Vector4f32.zero
-  @color = Vector4f32.zero
-  @uv    = Vector2f32.zero
-
-  def initialize
-  end
-
-  def initialize(@pos, @color, @uv)
-  end
-
-  def initialize(pos, color, uv)
-    @pos   = Vector4f32.new(pos)
-    @color = Vector4f32.new(color)
-    @uv    = Vector2f32.new(uv)
-  end
-end
-
 class GameState < Boleite::State
   class InputHandler < Boleite::InputReceiver
     def initialize(state)
@@ -30,35 +9,16 @@ class GameState < Boleite::State
   end
 
   @input : InputHandler | Nil
-  @vbo : Boleite::VertexBufferObject
   
   def initialize(@app : EgoApplication)
     super()
 
-    vertices = [
-      SimpleVertex.new([0.0f32, 0.0f32, 0.0f32, 1.0f32], [1.0f32, 0.0f32, 0.0f32, 1.0f32], [0.0f32, 0.0f32]),
-      SimpleVertex.new([0.0f32, 100.0f32, 0.0f32, 1.0f32], [0.0f32, 1.0f32, 0.0f32, 1.0f32], [0.0f32, 1.0f32]),
-      SimpleVertex.new([100.0f32, 0.0f32, 0.0f32, 1.0f32], [0.0f32, 0.0f32, 1.0f32, 1.0f32], [1.0f32, 0.0f32]),
-      SimpleVertex.new([100.0f32, 100.0f32, 0.0f32, 1.0f32], [1.0f32, 1.0f32, 1.0f32, 1.0f32], [1.0f32, 1.0f32]),
-    ]
-
-    layout = Boleite::VertexLayout.new [
-      Boleite::VertexAttribute.new(4, :float, 40_u32, 0_u32),
-      Boleite::VertexAttribute.new(4, :float, 40_u32, 16_u32),
-      Boleite::VertexAttribute.new(2, :float, 40_u32, 32_u32),
-    ]
-
-    @vbo = @app.graphics.create_vertex_buffer_object
-    @vbo.layout = layout
-    @vbo.primitive = Boleite::Primitive::TrianglesStrip
-    buffer = @vbo.create_buffer
-    buffer.add_data vertices[0]
-    buffer.add_data vertices[1]
-    buffer.add_data vertices[2]
-    buffer.add_data vertices[3]
-
     texture = Boleite::Texture.load_file "test.png", @app.graphics
     @sprite = Boleite::Sprite.new texture
+    @sprite.position = Boleite::Vector2f.new 300.0, 300.0
+    @sprite.origo = texture.size.to_f / 2.0
+    @sprite.scale = Boleite::Vector2f.new 2.0, 2.0
+    @sprite.rotation = 33.0
 
     @input = nil
   end
@@ -78,9 +38,6 @@ class GameState < Boleite::State
   end
 
   def render(delta, renderer)
-    #drawcall = Boleite::DrawCallContext.new(@vbo)
-    #drawcall.uniforms["albedoTexture"] = @sprite.texture
-    #renderer.draw drawcall
     renderer.draw @sprite
   end
 end
