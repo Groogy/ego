@@ -57,6 +57,9 @@ class GameState < Boleite::State
     buffer.add_data vertices[2]
     buffer.add_data vertices[3]
 
+    texture = Boleite::Texture.load_file "test.png", @app.graphics
+    @sprite = Boleite::Sprite.new texture
+
     @input = nil
   end
 
@@ -75,6 +78,9 @@ class GameState < Boleite::State
   end
 
   def render(delta, renderer)
-    renderer.draw_vertices @vbo, nil, Boleite::Matrix44f32.identity
+    #drawcall = Boleite::DrawCallContext.new(@vbo)
+    #drawcall.uniforms["albedoTexture"] = @sprite.texture
+    #renderer.draw drawcall
+    renderer.draw @sprite
   end
 end

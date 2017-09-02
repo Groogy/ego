@@ -44,6 +44,8 @@ fragment
 {
 	layout(location = 0) out vec4 outputAlbedo;
 
+	uniform sampler2D albedoTexture;
+
 	in VertexData {
 		vec4 position;
 		vec4 color;
@@ -52,6 +54,7 @@ fragment
 
 	void main()
 	{
-		outputAlbedo = inputVertex.color;
+		vec4 tex = texture(albedoTexture, inputVertex.uv);
+		outputAlbedo = tex * inputVertex.color;
 	}
 }
