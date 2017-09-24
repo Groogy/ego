@@ -24,9 +24,13 @@ class GameState < Boleite::State
     @sprite.rotation = 33.0
 
     @font = Boleite::Font.new app.graphics, "/usr/share/fonts/TTF/arial.ttf"
-    @text = Boleite::Text.new @font, "Hello world!\nNew line?"
+    @text = Boleite::Text.new @font, "Hello world?\nHello new line!"
     @text.size = 150u32
+    @text.default_color = Boleite::Color.blue
     @text.position = Boleite::Vector2f.new 10.0, 10.0
+    @text.formatter.add /(Hello)/, Boleite::Color.green
+    @text.formatter.add /(\!|\?)/, Boleite::Color.black
+    @text.formatter.add "new", Boleite::Color.white
 
     @input = nil
   end
