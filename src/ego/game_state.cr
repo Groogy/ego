@@ -86,7 +86,7 @@ class GameState < Boleite::State
 
     gfx = @app.graphics
     target = gfx.main_target
-    @camera = Boleite::Camera3D.new(45.0f32, target.width.to_f32, target.height.to_f32, 0.01f32, 100.0f32)
+    @camera = Boleite::Camera3D.new(60.0f32, target.width.to_f32, target.height.to_f32, 0.01f32, 100.0f32)
     shader = Boleite::Shader.load_file "test.shader", gfx
     @renderer = Boleite::ForwardRenderer.new gfx, @camera, shader
     @camera.move 0.0, 8.0, -2.5
