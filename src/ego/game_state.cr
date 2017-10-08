@@ -89,7 +89,7 @@ class GameState < Boleite::State
     @camera = Boleite::Camera3D.new(45.0f32, target.width.to_f32, target.height.to_f32, 0.01f32, 100.0f32)
     shader = Boleite::Shader.load_file "test.shader", gfx
     @renderer = Boleite::ForwardRenderer.new gfx, @camera, shader
-    @camera.move 0.0, 2.0, -2.5
+    @camera.move 0.0, 8.0, -2.5
 
     tileset = Boleite::Texture.load_file "tileset.png", gfx
     tileset.smooth = false
