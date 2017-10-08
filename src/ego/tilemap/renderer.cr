@@ -7,6 +7,8 @@ class TilemapRenderer
     @pos : Boleite::Vector4f32
     @uv : Boleite::Vector2f32
 
+    getter pos, uv
+
     def initialize(pos, uv)
       @pos = Boleite::Vector4f32.new(pos)
       @uv = Boleite::Vector2f32.new(uv)
@@ -67,21 +69,94 @@ class TilemapRenderer
     buffer.clear
     tilemap.each_tile do |tile, coord|
       if type = tile.tile_type
-        build_vertices_for_tile tile, type, coord, buffer
+        surrounding = tilemap.get_surrounding_tiles coord
+        build_vertices_for_tile tile, type, coord, surrounding, buffer
       end
     end
   end
 
-  private def build_vertices_for_tile(tile, type, coord, buffer)
+  private def build_vertices_for_tile(tile, type, coord, surrounding, buffer)
     coord = coord.to_f32
     uv = type.uv.to_f32 / @tileset.size.to_f32
-    extent_x = TILE_SIZE / @tileset.size.x
-    extent_y = TILE_SIZE / @tileset.size.y
-    vertex1 = Vertex.new [coord.x     , 0f32, coord.y     , 1f32], [uv.x         , uv.y]
-    vertex2 = Vertex.new [coord.x     , 0f32, coord.y+1f32, 1f32], [uv.x         , uv.y+extent_y]
-    vertex3 = Vertex.new [coord.x+1f32, 0f32, coord.y     , 1f32], [uv.x+extent_x, uv.y]
-    vertex4 = Vertex.new [coord.x+1f32, 0f32, coord.y+1f32, 1f32], [uv.x+extent_x, uv.y+extent_y]
+    extent = Boleite::Vector2f32.new TILE_SIZE / @tileset.size.x, TILE_SIZE / @tileset.size.y
+    height = tile.height.to_f32
 
+    build_roof_for_tile buffer, coord, height, uv, extent
+    if side = surrounding[0]
+      build_north_wall_for_tile buffer, coord, height, side.height, uv, extent if side.height < height
+    end
+    if side = surrounding[1]
+      build_east_wall_for_tile buffer, coord, height, side.height, uv, extent if side.height < height
+    end
+    if side = surrounding[2]
+      build_south_wall_for_tile buffer, coord, height, side.height, uv, extent if side.height < height
+    end
+    if side = surrounding[3]
+      build_west_wall_for_tile buffer, coord, height, side.height, uv, extent if side.height < height
+    end
+  end
+
+  private def build_roof_for_tile(buffer, coord, height, uv, extent)
+    vertex1 = Vertex.new [coord.x,      height, coord.y,      1f32], [uv.x, uv.y]
+    vertex2 = Vertex.new [coord.x,      height, coord.y+1f32, 1f32], [uv.x, uv.y+extent.y]
+    vertex3 = Vertex.new [coord.x+1f32, height, coord.y,      1f32], [uv.x+extent.x, uv.y]
+    vertex4 = Vertex.new [coord.x+1f32, height, coord.y+1f32, 1f32], [uv.x+extent.x, uv.y+extent.y]
+    buffer.add_data vertex1
+    buffer.add_data vertex3
+    buffer.add_data vertex2
+    buffer.add_data vertex2
+    buffer.add_data vertex3
+    buffer.add_data vertex4
+  end
+
+  private def build_north_wall_for_tile(buffer, coord, my_height, other_height, uv, extent)
+    delta = my_height - other_height
+    vertex1 = Vertex.new [coord.x,      my_height,         coord.y+1f32, 1f32], [uv.x,          uv.y+extent.y]
+    vertex2 = Vertex.new [coord.x+1f32, my_height,         coord.y+1f32, 1f32], [uv.x+extent.x, uv.y+extent.y]
+    vertex3 = Vertex.new [coord.x,      my_height - delta, coord.y+1f32, 1f32], [uv.x,          uv.y]
+    vertex4 = Vertex.new [coord.x+1f32, my_height - delta, coord.y+1f32, 1f32], [uv.x+extent.x, uv.y]
+    buffer.add_data vertex1
+    buffer.add_data vertex2
+    buffer.add_data vertex3
+    buffer.add_data vertex2
+    buffer.add_data vertex4
+    buffer.add_data vertex3
+  end
+
+  private def build_east_wall_for_tile(buffer, coord, my_height, other_height, uv, extent)
+    delta = my_height - other_height
+    vertex1 = Vertex.new [coord.x+1f32, my_height,         coord.y,      1f32], [uv.x,          uv.y+extent.y]
+    vertex2 = Vertex.new [coord.x+1f32, my_height,         coord.y+1f32, 1f32], [uv.x+extent.x, uv.y+extent.y]
+    vertex3 = Vertex.new [coord.x+1f32, my_height - delta, coord.y,      1f32], [uv.x,          uv.y]
+    vertex4 = Vertex.new [coord.x+1f32, my_height - delta, coord.y+1f32, 1f32], [uv.x+extent.x, uv.y]
+    buffer.add_data vertex1
+    buffer.add_data vertex3
+    buffer.add_data vertex2
+    buffer.add_data vertex2
+    buffer.add_data vertex3
+    buffer.add_data vertex4
+  end
+
+  private def build_south_wall_for_tile(buffer, coord, my_height, other_height, uv, extent)
+    delta = my_height - other_height
+    vertex1 = Vertex.new [coord.x,      my_height,         coord.y, 1f32], [uv.x,          uv.y+extent.y]
+    vertex2 = Vertex.new [coord.x+1f32, my_height,         coord.y, 1f32], [uv.x+extent.x, uv.y+extent.y]
+    vertex3 = Vertex.new [coord.x,      my_height - delta, coord.y, 1f32], [uv.x,          uv.y]
+    vertex4 = Vertex.new [coord.x+1f32, my_height - delta, coord.y, 1f32], [uv.x+extent.x, uv.y]
+    buffer.add_data vertex1
+    buffer.add_data vertex3
+    buffer.add_data vertex2
+    buffer.add_data vertex2
+    buffer.add_data vertex3
+    buffer.add_data vertex4
+  end
+
+  private def build_west_wall_for_tile(buffer, coord, my_height, other_height, uv, extent)
+    delta = my_height - other_height
+    vertex1 = Vertex.new [coord.x, my_height,         coord.y,      1f32], [uv.x,          uv.y+extent.y]
+    vertex2 = Vertex.new [coord.x, my_height,         coord.y+1f32, 1f32], [uv.x+extent.x, uv.y+extent.y]
+    vertex3 = Vertex.new [coord.x, my_height - delta, coord.y,      1f32], [uv.x,          uv.y]
+    vertex4 = Vertex.new [coord.x, my_height - delta, coord.y+1f32, 1f32], [uv.x+extent.x, uv.y]
     buffer.add_data vertex1
     buffer.add_data vertex2
     buffer.add_data vertex3

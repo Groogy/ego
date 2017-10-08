@@ -35,13 +35,13 @@ end
 class CameraMove
   @map = {
     Boleite::Key::W => :forward, Boleite::Key::S => :backward,
-    Boleite::Key::A => :left, Boleite::Key::D => :right
+    Boleite::Key::A => :left, Boleite::Key::D => :right,
+    Boleite::Key::C => :down, Boleite::Key::Z => :up
   }
   def interested?(event : Boleite::InputEvent) : Bool
     if event.is_a? Boleite::KeyEvent
       if event.action == Boleite::InputAction::Press || event.action == Boleite::InputAction::Release
-        return  event.key == Boleite::Key::W || event.key == Boleite::Key::S ||
-                event.key == Boleite::Key::A || event.key == Boleite::Key::D
+        return @map.keys.includes? event.key
       end
     end
     return false
@@ -57,7 +57,8 @@ class GameState < Boleite::State
   class InputHandler < Boleite::InputReceiver
     @move_actions = {
       :forward => false, :backward => false, 
-      :left => false, :right => false
+      :left => false, :right => false,
+      :down => false, :up => false
     }
 
     def initialize(@camera : Boleite::Camera3D)
@@ -148,6 +149,8 @@ class GameState < Boleite::State
       vector.z -= 5.0 * delta.to_f if input.is_moving? :backward
       vector.x -= 5.0 * delta.to_f if input.is_moving? :left
       vector.x += 5.0 * delta.to_f if input.is_moving? :right
+      vector.y -= 5.0 * delta.to_f if input.is_moving? :down
+      vector.y += 5.0 * delta.to_f if input.is_moving? :up
       @camera.move vector
     end
   end
