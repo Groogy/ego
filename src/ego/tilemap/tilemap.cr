@@ -45,6 +45,10 @@ class Tilemap
     ConstTileData.new tile
   end
 
+  def get_tile(x, y)
+    get_tile Boleite::Vector2u.new(x, y)
+  end
+
   def add_tile_type(type)
     @types << type
   end
@@ -57,6 +61,16 @@ class Tilemap
 
   def render(renderer)
     @renderer.render self, renderer
+  end
+
+  requires coord.x < @size.x && coord.y < @size.y
+  def get_surrounding_tiles(coord)
+    north, south, east, west = nil, nil, nil, nil
+    north = get_tile coord.x, coord.y + 1 if coord.y + 1 < @size.y
+    south = get_tile coord.x, coord.y - 1 if coord.y > 0
+    east  = get_tile coord.x + 1, coord.y if coord.x + 1 < @size.x
+    west  = get_tile coord.x - 1, coord.y if coord.x > 0
+    {north, east, south, west}
   end
 
   requires coord.x < @size.x && coord.y < @size.y
