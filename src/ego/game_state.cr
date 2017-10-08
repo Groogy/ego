@@ -32,61 +32,101 @@ class CameraMouseDrag
   end
 end
 
+class CameraMove
+  @map = {
+    Boleite::Key::W => :forward, Boleite::Key::S => :backward,
+    Boleite::Key::A => :left, Boleite::Key::D => :right
+  }
+  def interested?(event : Boleite::InputEvent) : Bool
+    if event.is_a? Boleite::KeyEvent
+      if event.action == Boleite::InputAction::Press || event.action == Boleite::InputAction::Release
+        return  event.key == Boleite::Key::W || event.key == Boleite::Key::S ||
+                event.key == Boleite::Key::A || event.key == Boleite::Key::D
+      end
+    end
+    return false
+  end
+
+  def translate(event : Boleite::InputEvent)
+    event = event.as(Boleite::KeyEvent)
+    { event.action == Boleite::InputAction::Press, @map[event.key] }
+  end
+end
+
 class GameState < Boleite::State
   class InputHandler < Boleite::InputReceiver
+    @move_actions = {
+      :forward => false, :backward => false, 
+      :left => false, :right => false
+    }
+
     def initialize(@camera : Boleite::Camera3D)
-      register CameraMouseDrag, ->on_camera_move(Float64, Float64)
+      register CameraMouseDrag, ->on_camera_drag(Float64, Float64)
+      register CameraMove, ->on_camera_move(Bool, Symbol)
     end
 
-    def on_camera_move(x : Float64, y : Float64)
+    def on_camera_drag(x : Float64, y : Float64)
       @camera.rotate y / 360, x / 360, 0.0
+    end
+
+    def on_camera_move(on : Bool, action : Symbol)
+      @move_actions[action] = on
+    end
+
+    def is_moving?(direction)
+      @move_actions[direction]
     end
   end
 
   @input : InputHandler | Nil
   @renderer : Boleite::Renderer
-  @vbo : Boleite::VertexBufferObject
-  @rot = 0.0
   
   def initialize(@app : EgoApplication)
     super()
 
     gfx = @app.graphics
     target = gfx.main_target
-    @camera = Boleite::Camera3D.new(90.0f32, target.width.to_f32, target.height.to_f32, 0.01f32, 10.0f32)
+    @camera = Boleite::Camera3D.new(45.0f32, target.width.to_f32, target.height.to_f32, 0.01f32, 100.0f32)
     shader = Boleite::Shader.load_file "test.shader", gfx
     @renderer = Boleite::ForwardRenderer.new gfx, @camera, shader
-    @camera.move 0.0, 0.0, -2.5
+    @camera.move 0.0, 2.0, -2.5
 
-    vertices = [
-      Vertex.new(Vector4.new(-1.0, -1.0, -1.0, 1.0), Vector4.new(1.0, 0.0, 0.0, 1.0)),
-      Vertex.new(Vector4.new(-1.0,  1.0, -1.0, 1.0), Vector4.new(1.0, 0.0, 0.0, 1.0)),
-      Vertex.new(Vector4.new( 1.0, -1.0, -1.0, 1.0), Vector4.new(1.0, 0.0, 0.0, 1.0)),
-      Vertex.new(Vector4.new( 1.0,  1.0, -1.0, 1.0), Vector4.new(1.0, 0.0, 0.0, 1.0)),
-      Vertex.new(Vector4.new( 1.0, -1.0, -1.0, 1.0), Vector4.new(0.0, 1.0, 0.0, 1.0)),
-      Vertex.new(Vector4.new( 1.0,  1.0, -1.0, 1.0), Vector4.new(0.0, 1.0, 0.0, 1.0)),
-      Vertex.new(Vector4.new( 1.0, -1.0,  1.0, 1.0), Vector4.new(0.0, 1.0, 0.0, 1.0)),
-      Vertex.new(Vector4.new( 1.0,  1.0,  1.0, 1.0), Vector4.new(0.0, 1.0, 0.0, 1.0)),
-      Vertex.new(Vector4.new( 1.0, -1.0,  1.0, 1.0), Vector4.new(0.0, 0.0, 1.0, 1.0)),
-      Vertex.new(Vector4.new( 1.0,  1.0,  1.0, 1.0), Vector4.new(0.0, 0.0, 1.0, 1.0)),
-      Vertex.new(Vector4.new(-1.0, -1.0,  1.0, 1.0), Vector4.new(0.0, 0.0, 1.0, 1.0)),
-      Vertex.new(Vector4.new(-1.0,  1.0,  1.0, 1.0), Vector4.new(0.0, 0.0, 1.0, 1.0)),
-      Vertex.new(Vector4.new(-1.0, -1.0,  1.0, 1.0), Vector4.new(0.0, 1.0, 1.0, 1.0)),
-      Vertex.new(Vector4.new(-1.0,  1.0,  1.0, 1.0), Vector4.new(0.0, 1.0, 1.0, 1.0)),
-      Vertex.new(Vector4.new(-1.0, -1.0, -1.0, 1.0), Vector4.new(0.0, 1.0, 1.0, 1.0)),
-      Vertex.new(Vector4.new(-1.0,  1.0, -1.0, 1.0), Vector4.new(0.0, 1.0, 1.0, 1.0)),
-    ]
-    layout = Boleite::VertexLayout.new [
-      Boleite::VertexAttribute.new(0, 4, :float, 32u32,  0u32, 0u32),
-      Boleite::VertexAttribute.new(0, 4, :float, 32u32, 16u32, 0u32),
-    ]
-    @vbo = gfx.create_vertex_buffer_object
-    @vbo.layout = layout
-    @vbo.primitive = Boleite::Primitive::TrianglesStrip
-    buffer = @vbo.create_buffer
-    vertices.each { |vertex| buffer.add_data vertex }
+    tileset = Boleite::Texture.load_file "tileset.png", gfx
+    @tilemap = Tilemap.new Boleite::Vector2u.new(64u32, 64u32), tileset
+    generate_tilemap
 
     @input = nil
+  end
+
+  def generate_tilemap
+    size = 64u32
+    water = TileType.new "water", "Water", Boleite::Vector2u.new(0u32, 0u32)
+    plains = TileType.new "plains", "Plains", Boleite::Vector2u.new(16u32, 0u32)
+    mountains = TileType.new "mountains", "Mountains", Boleite::Vector2u.new(32u32, 0u32)
+    @tilemap.add_tile_type water
+    @tilemap.add_tile_type plains
+    @tilemap.add_tile_type mountains
+
+    center = Boleite::Vector2f.new size / 2.0 - 1, size / 2.0 - 1
+    size.times do |x|
+      size.times do |y|
+        delta = Boleite::Vector2f.new center.x - x, center.y - y
+        distance = Boleite::Vector.magnitude delta
+        coord = Boleite::Vector2u.new x, y
+        if distance < 6
+          @tilemap.set_tile coord, mountains
+        elsif distance < 30
+          @tilemap.set_tile coord, plains
+        else
+          @tilemap.set_tile coord, water
+        end
+
+        if distance < 7
+          height = 6u16 - distance.to_u16
+          @tilemap.set_tile_height coord, height, true
+        end
+      end
+    end
   end
 
   def enable
@@ -101,14 +141,19 @@ class GameState < Boleite::State
   end
 
   def update(delta)
+    if input = @input
+      vector = Boleite::Vector3f.zero
+      vector.z += 5.0 * delta.to_f if input.is_moving? :forward
+      vector.z -= 5.0 * delta.to_f if input.is_moving? :backward
+      vector.x -= 5.0 * delta.to_f if input.is_moving? :left
+      vector.x += 5.0 * delta.to_f if input.is_moving? :right
+      @camera.move vector
+    end
   end
 
   def render(delta)
-    @rot += delta.to_f
-    matrix = Boleite::Matrix.rotate_around_y Boleite::Matrix44f32.identity, @rot.to_f32
     @renderer.clear Boleite::Color.black
-    drawcall = Boleite::DrawCallContext.new @vbo, matrix
-    @renderer.draw drawcall
+    @tilemap.render @renderer
     @renderer.present
   end
 end
