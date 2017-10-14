@@ -73,14 +73,7 @@ class GameState < Boleite::State
 
   def update(delta)
     if input = @input
-      vector = Boleite::Vector3f.zero
-      vector.z += 5.0 * delta.to_f if input.is_moving? :forward
-      vector.z -= 5.0 * delta.to_f if input.is_moving? :backward
-      vector.x -= 5.0 * delta.to_f if input.is_moving? :left
-      vector.x += 5.0 * delta.to_f if input.is_moving? :right
-      vector.y -= 5.0 * delta.to_f if input.is_moving? :down
-      vector.y += 5.0 * delta.to_f if input.is_moving? :up
-      @camera3d.move vector
+      input.update delta
     end
 
     @fps_counter += 1
