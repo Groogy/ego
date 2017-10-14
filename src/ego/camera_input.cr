@@ -69,11 +69,15 @@ class CameraInputHandler < Boleite::InputReceiver
 
   def update(delta)
     seconds = delta.to_f
+    transform = @camera.transformation.to_f64
+    forward = Boleite::Matrix.forward transform
+    left = Boleite::Matrix.left transform
     vector = Boleite::Vector3f.zero
-    vector.z += 5.0 * seconds if is_moving? :forward
-    vector.z -= 5.0 * seconds if is_moving? :backward
-    vector.x -= 5.0 * seconds if is_moving? :left
-    vector.x += 5.0 * seconds if is_moving? :right
+    vector += forward * 5.0 * seconds if is_moving? :forward
+    vector -= forward * 5.0 * seconds if is_moving? :backward
+    vector -= left * 5.0 * seconds if is_moving? :left
+    vector += left * 5.0 * seconds if is_moving? :right
+
     vector.y -= 5.0 * seconds if is_moving? :down
     vector.y += 5.0 * seconds if is_moving? :up
     @camera.move vector
