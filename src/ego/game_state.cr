@@ -129,6 +129,7 @@ class GameState < Boleite::State
         end
       end
     end
+    @tilemap.cleanup_ramps
   end
 
   def enable
