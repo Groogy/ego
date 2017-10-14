@@ -55,7 +55,17 @@ class Tilemap
 
   def each_tile
     @tiles.each_index do |index|
-      yield @tiles[index], to_coord(index)
+      yield ConstTileData.new(@tiles[index]), to_coord(index)
+    end
+  end
+
+  def cleanup_ramps
+    @tiles.each_index do |index|
+      tile = @tiles[index]
+      if tile.is_ramp?
+        surrounding = get_surrounding_tiles to_coord(index)
+        tile.ramp = false if surrounding.all? { |other| other ? other.height <= tile.height : false }
+      end
     end
   end
 
