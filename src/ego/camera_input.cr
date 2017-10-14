@@ -8,6 +8,7 @@ class CameraMouseDrag
   def interested?(event : Boleite::InputEvent) : Bool
     if event.is_a? Boleite::MouseButtonEvent
       @dragging = event.action == Boleite::InputAction::Press
+      @last = Boleite::Vector2f.zero
     end
     @dragging && event.class == Boleite::MousePosEvent
   end
