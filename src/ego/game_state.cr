@@ -104,6 +104,7 @@ class GameState < Boleite::State
 
     @font = Boleite::Font.new gfx, "arial.ttf"
     @fps_text = Boleite::Text.new @font, "FPS:"
+    @fps_text.formatter.add /(\d+)/, Boleite::Color.yellow
     @fps_text.size = 24u32
   end
 
