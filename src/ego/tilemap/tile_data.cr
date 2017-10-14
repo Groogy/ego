@@ -11,7 +11,7 @@ class TileData
 end
 
 struct ConstTileData
-  delegate height, ramp, to: @data
+  delegate height, ramp, is_ramp?, to: @data
   
   def initialize(@data : TileData)
   end
