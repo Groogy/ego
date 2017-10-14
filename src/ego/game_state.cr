@@ -125,7 +125,7 @@ class GameState < Boleite::State
 
         if distance < 14
           height = 6u16 - distance.to_u16 / 2
-          @tilemap.set_tile_height coord, height, distance.to_u16 % 2 == 0
+          @tilemap.set_tile_height coord, height, distance != 0 && distance.to_u16 % 2 == 0
         end
       end
     end
