@@ -3,6 +3,7 @@ class GameState < Boleite::State
   @renderer : Boleite::Renderer
   @fps_timer = 0.0
   @fps_counter = 0
+  @frame_time = Time::Span.zero
   
   def initialize(@app : EgoApplication)
     super()
@@ -44,7 +45,7 @@ class GameState < Boleite::State
       input.update delta
     end
 
-    @world.update
+    update_game delta
 
     @fps_counter += 1
     @fps_timer += delta.to_f
@@ -52,6 +53,16 @@ class GameState < Boleite::State
       @fps_text.text = "FPS: #{@fps_counter}"
       @fps_timer -= 1.0
       @fps_counter = 0
+    end
+  end
+
+  def update_game(delta)
+    target = Time::Span.new 1 * Time::Span::TicksPerSecond
+    speed = 1.0
+    @frame_time += delta
+    if @frame_time >= target * speed
+      @frame_time = Time::Span.zero
+      @world.update
     end
   end
 
