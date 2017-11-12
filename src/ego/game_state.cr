@@ -9,6 +9,13 @@ class GameState < Boleite::State
     super()
 
     gfx = @app.graphics
+    @font = Boleite::Font.new gfx, "arial.ttf"
+    @gui = Boleite::GUI.new gfx, @app.input_router
+    window = Boleite::GUI::Window.new
+    window.position = Boleite::Vector2f.new 10.0, 10.0
+    window.header_text = "HELLO WORLD!"
+    @gui.add_root window
+
     target = gfx.main_target
     @camera3d = Boleite::Camera3D.new(60.0f32, target.width.to_f32, target.height.to_f32, 0.01f32, 100.0f32)
     @camera2d = Boleite::Camera2D.new(target.width.to_f32, target.height.to_f32, 0f32, 1f32)
@@ -23,10 +30,10 @@ class GameState < Boleite::State
 
     @input = nil
 
-    @font = Boleite::Font.new gfx, "arial.ttf"
     @fps_text = Boleite::Text.new @font, "FPS:"
     @fps_text.formatter.add /(\d+)/, Boleite::Color.yellow
     @fps_text.size = 24u32
+    @fps_text.position = Boleite::Vector2f.new 10.0, 10.0
   end
 
   def enable
@@ -72,6 +79,8 @@ class GameState < Boleite::State
     @world.render @renderer
     @renderer.camera = @camera2d
     @renderer.draw @fps_text
+
+    @gui.render
     @renderer.present
   end
 end
