@@ -14,6 +14,11 @@ class GameState < Boleite::State
     window = Boleite::GUI::Window.new
     window.position = Boleite::Vector2f.new 10.0, 10.0
     window.header_text = "HELLO WORLD!"
+    button = Boleite::GUI::Button.new
+    button.label_text = "Foo"
+    button.size = Boleite::Vector2f.new 100.0, 20.0
+    button.click.on { puts "HEY!" }
+    window.add button
     @gui.add_root window
 
     target = gfx.main_target
