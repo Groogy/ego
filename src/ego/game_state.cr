@@ -69,8 +69,8 @@ class GameState < Boleite::State
   end
 
   def update_game(delta)
-    target = Time::Span.new 1 * Time::Span::TicksPerSecond
-    speed = 1.0
+    target = Time::Span.new seconds: 1, nanoseconds: 0
+    speed = 1
     @frame_time += delta
     if @frame_time >= target * speed
       @frame_time = Time::Span.zero
