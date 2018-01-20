@@ -39,7 +39,8 @@ class CameraMove
 
   def translate(event : Boleite::InputEvent)
     event = event.as(Boleite::KeyEvent)
-    { event.action == Boleite::InputAction::Press, @map[event.key] }
+    event.claim
+    {event.action == Boleite::InputAction::Press, @map[event.key]}
   end
 end
 
