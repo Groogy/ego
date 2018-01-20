@@ -11,15 +11,6 @@ class GameState < Boleite::State
     gfx = @app.graphics
     @font = Boleite::Font.new gfx, "arial.ttf"
     @gui = Boleite::GUI.new gfx, @app.input_router
-    window = Boleite::GUI::Window.new
-    window.position = Boleite::Vector2f.new 10.0, 10.0
-    window.header_text = "HELLO WORLD!"
-    button = Boleite::GUI::Button.new
-    button.label_text = "Foo"
-    button.size = Boleite::Vector2f.new 100.0, 20.0
-    button.click.on { puts "HEY!" }
-    window.add button
-    @gui.add_root window
 
     target = gfx.main_target
     @camera3d = Boleite::Camera3D.new(60.0f32, target.width.to_f32, target.height.to_f32, 0.01f32, 100.0f32)
