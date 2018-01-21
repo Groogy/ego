@@ -1,8 +1,11 @@
 class World
   @map : Map
+  @terrain_types : TerrainDatabase
 
   def initialize
     @map = Map.new Boleite::Vector2i.new(64, 64)
+    @terrain_types = TerrainDatabase.new
+    @terrain_types.load_file "data/tiles/basic.yml"
   end
 
   def update
@@ -13,9 +16,9 @@ class World
   end
 
   def generate_map
-    grass = TerrainType.new "grass", Boleite::Colorf.new 0f32, 1f32, 0f32, 1f32
-    mountain = TerrainType.new "mountain", Boleite::Colorf.new 0.5f32, 0.5f32, 0.5f32, 1f32
-
+    grass = @terrain_types.find "grass"
+    rock = @terrain_types.find "rock"
+    
     size = 64
     center = Boleite::Vector2f.new size / 2.0 - 1, size / 2.0 - 1
     size.times do |x|
@@ -27,7 +30,7 @@ class World
         if distance < 18
           height = 9.0 - distance / 2.0
           @map.set_height coord, height
-          @map.set_terrain coord, mountain
+          @map.set_terrain coord, rock
         else
           @map.set_terrain coord, grass
         end
