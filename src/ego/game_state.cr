@@ -19,10 +19,8 @@ class GameState < Boleite::State
     @renderer = Boleite::ForwardRenderer.new gfx, @camera3d, shader
     @camera3d.move 0.0, 8.0, -2.5
 
-    tileset = Boleite::Texture.load_file "tileset.png", gfx
-    tileset.smooth = false
-    @world = World.new tileset
-    @world.generate_tilemap
+    @world = World.new
+    @world.generate_map
 
     @input = nil
 
