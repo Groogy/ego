@@ -1,7 +1,7 @@
 class World
   @map : Map
   @terrain_types : TerrainDatabase
-  @current_tick = 0
+  @current_tick = 0u64
   @paused = false
 
   getter? paused
@@ -14,6 +14,10 @@ class World
 
   def toggle_pause
     @paused = !@paused
+  end
+
+  def date
+    GameTime.new @current_tick
   end
 
   def update

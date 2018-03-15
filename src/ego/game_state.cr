@@ -15,6 +15,8 @@ class GameState < Boleite::State
 
     @world = World.new
     @world.generate_map
+
+    @interface = GameStateInterface.new @gui, @world
   end
 
   def enable
@@ -33,7 +35,8 @@ class GameState < Boleite::State
       input.update delta
     end
 
-    update_game delta
+    did_update = update_game delta
+    @interface.update if did_update
     update_fps delta
   end
 
@@ -48,7 +51,7 @@ class GameState < Boleite::State
   end
 
   def update_game(delta)
-    speed = 1.0
+    speed = @interface.control_menu.speed_modifier
     target = Time::Span.new seconds: 0, nanoseconds: (1_000_000_000 * speed).to_i
     @frame_time += delta
     if @frame_time >= target
