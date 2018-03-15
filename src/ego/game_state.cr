@@ -34,7 +34,10 @@ class GameState < Boleite::State
     end
 
     update_game delta
+    update_fps delta
+  end
 
+  def update_fps(delta)
     @fps_counter += 1
     @fps_timer += delta.to_f
     if @fps_timer > 1.0
@@ -45,12 +48,15 @@ class GameState < Boleite::State
   end
 
   def update_game(delta)
-    target = Time::Span.new seconds: 1, nanoseconds: 0
-    speed = 1
+    speed = 1.0
+    target = Time::Span.new seconds: 0, nanoseconds: (1_000_000_000 * speed).to_i
     @frame_time += delta
-    if @frame_time >= target * speed
+    if @frame_time >= target
       @frame_time = Time::Span.zero
       @world.update
+      true
+    else
+      false
     end
   end
 
