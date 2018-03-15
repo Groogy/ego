@@ -1,6 +1,10 @@
 class World
   @map : Map
   @terrain_types : TerrainDatabase
+  @current_tick = 0
+  @paused = false
+
+  getter? paused
 
   def initialize
     @map = Map.new Boleite::Vector2i.new(64, 64)
@@ -8,7 +12,14 @@ class World
     @terrain_types.load_file "data/tiles/basic.yml"
   end
 
+  def toggle_pause
+    @paused = !@paused
+  end
+
   def update
+    unless @paused
+      @current_tick += 1
+    end
   end
 
   def render(renderer)
