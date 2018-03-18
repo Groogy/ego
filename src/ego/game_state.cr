@@ -1,23 +1,17 @@
 class GameState < Boleite::State
   @input : CameraInputHandler?
   @rendering : GameStateRenderHelper
+  @world : World
   @frame_time = Time::Span.zero
   
-  def initialize(@app : EgoApplication)
+  def initialize(@app : EgoApplication, @world : World)
     super()
 
     gfx = @app.graphics
     
     @gui = Boleite::GUI.new gfx, @app.input_router
     @rendering = GameStateRenderHelper.new gfx
-
-    @world = World.new
-
     @interface = GameStateInterface.new @gui, @world
-  end
-
-  def generate_world
-    @world.generate_map
   end
 
   def enable
