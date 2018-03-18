@@ -6,5 +6,5 @@ require "./ego/map/*"
 require "./ego/map/serializers/*"
 
 app = EgoApplication.new
-app.state_stack.push GameState.new(app)
+app.state_stack.push MenuState.new(app)
 app.run
