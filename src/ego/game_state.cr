@@ -1,8 +1,6 @@
 class GameState < Boleite::State
   @input : CameraInputHandler?
   @rendering : GameStateRenderHelper
-  @fps_timer = 0.0
-  @fps_counter = 0
   @frame_time = Time::Span.zero
   
   def initialize(@app : EgoApplication)
@@ -36,18 +34,7 @@ class GameState < Boleite::State
     end
 
     did_update = update_game delta
-    @interface.update if did_update
-    update_fps delta
-  end
-
-  def update_fps(delta)
-    @fps_counter += 1
-    @fps_timer += delta.to_f
-    if @fps_timer > 1.0
-      @rendering.update_fps(@fps_counter)
-      @fps_timer -= 1.0
-      @fps_counter = 0
-    end
+    @interface.update did_update
   end
 
   def update_game(delta)
