@@ -1,7 +1,7 @@
 class World
   @map : Map
   @terrain_types : TerrainDatabase
-  @current_tick = 0i64
+  @current_tick = GameTime.new
   @paused = false
 
   property current_tick
@@ -18,12 +18,12 @@ class World
   end
 
   def date
-    GameTime.new @current_tick
+    @current_tick
   end
 
   def update
     unless @paused
-      @current_tick += 1
+      @current_tick = @current_tick.next_tick
     end
   end
 

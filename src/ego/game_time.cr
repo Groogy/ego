@@ -34,6 +34,10 @@ struct GameTime
   def initialize(@ticks)
   end
 
+  def next_tick
+    GameTime.new @ticks + 1
+  end
+
   def to_years
     GameTime.convert_ticks_to_years @ticks
   end
