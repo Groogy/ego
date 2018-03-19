@@ -1,9 +1,9 @@
 class DebugStatsViewer
-  @gui : Boleite::GUI
   @world : World
 
-  def initialize(@gui, @world)
-    target_size = @gui.target_size
+  getter :window
+
+  def initialize(target_size, @world)
     @window = Boleite::GUI::Window.new
     @window.position = Boleite::Vector2f.new target_size.x - 200.0, 20.0
     @window.header_text = "Debug Statistics"
@@ -13,7 +13,6 @@ class DebugStatsViewer
     @info.character_size = 14u32
     container.add @info
     @window.add container
-    @gui.add_root @window
 
     @profiler = Profiler.new
   end

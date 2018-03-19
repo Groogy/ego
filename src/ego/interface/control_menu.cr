@@ -4,16 +4,15 @@ class ControlMenu
   MIN_SPEED = 1
   MAX_SPEED = 5
 
-  @gui : Boleite::GUI
   @world : World
   @speed = MIN_SPEED
 
   invariant @speed >= MIN_SPEED
   invariant @speed <= MAX_SPEED
 
-  getter speed
+  getter window, speed
 
-  def initialize(@gui, @world)
+  def initialize(@world)
     @window = Boleite::GUI::Window.new
     @window.header_text = "Control"
     @window.position = Boleite::Vector2f.new 0.0, @window.header_size
@@ -49,7 +48,6 @@ class ControlMenu
     window_container.add container
 
     @window.add window_container
-    @gui.add_root @window
   end
 
   def increase_speed

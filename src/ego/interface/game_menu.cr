@@ -1,6 +1,8 @@
 class GameMenu
   @gui : Boleite::GUI
 
+  getter window
+
   def initialize(@gui)
     target_size = @gui.target_size
 
@@ -20,7 +22,6 @@ class GameMenu
     window_size = @window.size
     @window.position = Boleite::Vector2f.new target_size.x / 2 - window_size.x / 2, target_size.y / 2 - window_size.y / 2
     @window.visible = false
-    @gui.add_root @window
   end
 
   def show

@@ -16,6 +16,7 @@ class GameState < Boleite::State
   end
 
   def enable
+    @interface.enable
     camera_input = CameraInputHandler.new @rendering.camera3d
     game_input = GameStateInputHandler.new @interface
     @app.input_router.register camera_input
@@ -29,6 +30,7 @@ class GameState < Boleite::State
     @app.input_router.unregister @game_input
     @camera_input = nil
     @game_input = nil
+    @interface.disable
   end
 
   def update(delta)
