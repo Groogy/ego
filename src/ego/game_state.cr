@@ -1,5 +1,6 @@
 class GameState < Boleite::State
-  @input : CameraInputHandler?
+  @camera_input : CameraInputHandler?
+  @game_input : GameStateInputHandler?
   @rendering : GameStateRenderHelper
   @world : World
   @frame_time = Time::Span.zero
@@ -15,18 +16,23 @@ class GameState < Boleite::State
   end
 
   def enable
-    input = CameraInputHandler.new(@rendering.camera3d)
-    @app.input_router.register(input)
-    @input = input
+    camera_input = CameraInputHandler.new @rendering.camera3d
+    game_input = GameStateInputHandler.new @interface
+    @app.input_router.register camera_input
+    @app.input_router.register game_input
+    @camera_input = camera_input
+    @game_input = game_input
   end
 
   def disable
-    @app.input_router.unregister(@input)
-    @input = nil
+    @app.input_router.unregister @camera_input
+    @app.input_router.unregister @game_input
+    @camera_input = nil
+    @game_input = nil
   end
 
   def update(delta)
-    if input = @input
+    if input = @camera_input
       input.update delta
     end
 
