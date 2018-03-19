@@ -1,9 +1,10 @@
 class World
   @map : Map
   @terrain_types : TerrainDatabase
-  @current_tick = 0u64
+  @current_tick = 0i64
   @paused = false
 
+  property current_tick
   getter? paused
 
   def initialize

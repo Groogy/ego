@@ -6,7 +6,7 @@ struct GameTime
   DAYS_PER_MONTH = 30
   MONTHS_PER_YEAR = 12
   
-  @ticks = 0u64
+  @ticks = 0i64
 
   def self.convert_ticks_to_minutes(ticks)
     ticks
