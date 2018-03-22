@@ -6,6 +6,7 @@
 # Generated files
 dist/config.yml
 dist/ego
+dist/saves/*
 
 # Editor specific ignores for VSCode
 .editorconfig

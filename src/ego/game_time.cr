@@ -38,6 +38,26 @@ struct GameTime
     GameTime.new @ticks + 1
   end
 
+  def add_years(val)
+    add_months val * MONTHS_PER_YEAR
+  end
+
+  def add_months(val)
+    add_days val * DAYS_PER_MONTH
+  end
+
+  def add_days(val)
+    @ticks += val * TICKS_PER_DAY
+  end
+
+  def add_hours(val)
+    @ticks += val * TICKS_PER_HOUR
+  end
+
+  def add_ticks(val)
+    @ticks += val
+  end
+
   def to_years
     GameTime.convert_ticks_to_years @ticks
   end

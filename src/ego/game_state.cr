@@ -12,7 +12,7 @@ class GameState < Boleite::State
     
     @gui = Boleite::GUI.new gfx, @app.input_router
     @rendering = GameStateRenderHelper.new gfx
-    @interface = GameStateInterface.new @gui, @world
+    @interface = GameStateInterface.new @gui, @app, @world
   end
 
   def enable

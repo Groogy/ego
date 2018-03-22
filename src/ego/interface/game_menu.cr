@@ -1,20 +1,23 @@
 class GameMenu
   @gui : Boleite::GUI
+  @app : Boleite::Application
+  @world : World
 
   getter window
 
-  def initialize(@gui)
+  def initialize(@gui, @app, @world)
     target_size = @gui.target_size
 
     @window = Boleite::GUI::Window.new
     @window.header_text = "Menu"
-    @window.name = "FOOBAR"
 
     container = Boleite::GUI::Layout.new :vertical
     button = Boleite::GUI::Button.new "Continue", Boleite::Vector2f.new(200.0, 20.0)
     button.click.on { hide }
     container.add button
     button = Boleite::GUI::Button.new "Save & Quit", Boleite::Vector2f.new(200.0, 20.0)
+    button.click.on { save; quit }
+
     container.add button
 
     @window.add container
@@ -33,5 +36,13 @@ class GameMenu
   def hide
     @window.visible = false
     @gui.each_root { |root| root.enabled = true }
+  end
+
+  def save
+    SaveGameHelper.save @world
+  end
+
+  def quit
+    state = @app.state_stack.pop
   end
 end

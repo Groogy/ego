@@ -1,13 +1,12 @@
 class GameStateInterface
-  @world : World
   @gui : Boleite::GUI
 
   getter control_menu
 
-  def initialize(@gui, @world)
-    @control_menu = ControlMenu.new @world
-    @debug_stats_viewer = DebugStatsViewer.new @gui.target_size, @world
-    @game_menu = GameMenu.new @gui
+  def initialize(@gui, app, world)
+    @control_menu = ControlMenu.new world
+    @debug_stats_viewer = DebugStatsViewer.new @gui.target_size, world
+    @game_menu = GameMenu.new @gui, app, world
   end
 
   def update(full_update)

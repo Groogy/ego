@@ -1,6 +1,4 @@
 class MenuState < Boleite::State
-  DEFAULT_SAVE_FILE = "saves/default.yml"
-
   def initialize(@app : EgoApplication)
     super()
     
@@ -40,12 +38,8 @@ class MenuState < Boleite::State
   end
 
   def load_game
-    world = File.open(DEFAULT_SAVE_FILE, "r") do |file|
-      serializer = Boleite::Serializer.new
-      data = serializer.read(file)
-      tmp = serializer.unmarshal(data, World)
-      tmp.as(World)
-    end
+    world = SaveGameHelper.load
+    world.generate_map
     state = GameState.new @app, world
     @app.state_stack.push state
   end
