@@ -4,7 +4,8 @@ class World
   @current_tick = GameTime.new
   @paused = false
 
-  property current_tick
+  property current_tick, map
+  getter terrain_types
   getter? paused
 
   def initialize

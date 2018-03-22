@@ -24,4 +24,10 @@ class TerrainDatabase
   def find(key)
     @types[key]
   end
+
+  def each_type
+    @types.each do |key, value|
+      yield key, value
+    end
+  end
 end
