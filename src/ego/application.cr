@@ -4,7 +4,7 @@ class EgoApplication < Boleite::Application
   def create_configuration : Boleite::Configuration
     if File.exists? CONFIGURATION_FILE
       File.open(CONFIGURATION_FILE, "r") do |file|
-        serializer = Boleite::Serializer.new
+        serializer = Boleite::Serializer.new nil
         data = serializer.read(file)
         config = serializer.unmarshal(data, AppConfiguration)
         config.as(AppConfiguration)
@@ -13,7 +13,7 @@ class EgoApplication < Boleite::Application
       File.open(CONFIGURATION_FILE, "w") do |file|
         config = AppConfiguration.new 
         config.backend = @backend.default_config
-        serializer = Boleite::Serializer.new
+        serializer = Boleite::Serializer.new nil
         serializer.marshal(config)
         serializer.dump(file)
         config

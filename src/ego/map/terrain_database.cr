@@ -12,7 +12,7 @@ class TerrainDatabase
   requires File.exists? path
   def load_file(path)
     File.open(path, "r") do |file|
-      serializer = Boleite::Serializer.new
+      serializer = Boleite::Serializer.new nil
       data = serializer.read(file)
       types = serializer.unmarshal(data, Collection)
       assert types
