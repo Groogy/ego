@@ -1,17 +1,17 @@
 class World
   @map : Map
-  @terrain_types : TerrainDatabase
+  @terrains : TerrainDatabase
   @current_tick = GameTime.new
   @paused = false
 
   property current_tick, map
-  getter terrain_types
+  getter terrains
   getter? paused
 
   def initialize
     @map = Map.new Boleite::Vector2i.new(64, 64)
-    @terrain_types = TerrainDatabase.new
-    @terrain_types.load_file "data/tiles/basic.yml"
+    @terrains = TerrainDatabase.new
+    @terrains.load_file "data/tiles/basic.yml"
   end
 
   def toggle_pause
@@ -33,8 +33,8 @@ class World
   end
 
   def generate_map
-    grass = @terrain_types.find "grass"
-    rock = @terrain_types.find "rock"
+    grass = @terrains.find "grass"
+    rock = @terrains.find "rock"
     
     size = 64
     center = Boleite::Vector2f.new size / 2.0 - 1, size / 2.0 - 1

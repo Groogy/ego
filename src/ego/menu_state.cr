@@ -39,7 +39,6 @@ class MenuState < Boleite::State
 
   def load_game
     world = SaveGameHelper.load
-    world.generate_map
     state = GameState.new @app, world
     @app.state_stack.push state
   end
