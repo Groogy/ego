@@ -9,6 +9,9 @@ class MapRenderer
       def initialize(x, y, @color)
         @pos = Boleite::Vector4f32.new x.to_f32, y.to_f32, 0f32, 1f32
       end
+      def initialize(x, y, z, @color)
+        @pos = Boleite::Vector4f32.new x.to_f32, y.to_f32, z.to_f32, 1f32
+      end
     end
 
     property need_update, vbo
@@ -55,17 +58,33 @@ class MapRenderer
           height = map.get_height point
           terrain = map.get_terrain point
           color = get_vertex_color height, terrain
-          pos = point.create_vertices
-          vertex1 = Vertex.new pos[0].x + 1, pos[0].y, color
+          pos = point.create_vertices map
+          vertex1 = Vertex.new pos[0].x, pos[0].y, color
           vertex2 = Vertex.new pos[1].x, pos[1].y, color
-          vertex3 = Vertex.new pos[2].x - 1, pos[2].y, color
+          vertex3 = Vertex.new pos[2].x, pos[2].y, color
           vertex4 = Vertex.new pos[3].x, pos[3].y, color
+
+          vertex5 = Vertex.new pos[0].x, pos[0].y + Map::TILE_HEIGHT_SHIFT, -0.1, Boleite::Color.white
+          vertex6 = Vertex.new pos[1].x, pos[1].y + Map::TILE_HEIGHT_SHIFT, -0.1, Boleite::Color.white
+          vertex7 = Vertex.new pos[2].x, pos[2].y + Map::TILE_HEIGHT_SHIFT, -0.1, Boleite::Color.white
           buffer.add_data vertex1
           buffer.add_data vertex2
           buffer.add_data vertex3
           buffer.add_data vertex1
           buffer.add_data vertex3
           buffer.add_data vertex4
+          buffer.add_data vertex1
+          buffer.add_data vertex5
+          buffer.add_data vertex6
+          buffer.add_data vertex6
+          buffer.add_data vertex2
+          buffer.add_data vertex1
+          buffer.add_data vertex3
+          buffer.add_data vertex2
+          buffer.add_data vertex6
+          buffer.add_data vertex6
+          buffer.add_data vertex7
+          buffer.add_data vertex3
         end
       end
     end

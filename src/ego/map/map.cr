@@ -3,6 +3,7 @@ class Map
 
   TILE_WIDTH = 48
   TILE_HEIGHT = 32
+  TILE_HEIGHT_SHIFT = 8
   MAX_HEIGHT = 16
 
   class Data
@@ -26,22 +27,23 @@ class Map
       @y = pos.y.to_u16
     end
 
-    def inside?(p)
-      v = create_vertices
+    def inside?(p, map)
+      v = create_vertices map
       Boleite::Vector.inside_shape? v, p
     end
 
-    def create_vertices
+    def create_vertices(map)
       x = (@x * Map::TILE_WIDTH).to_f
       y = (@y / 2 * Map::TILE_HEIGHT).to_f
       if @y % 2 == 1
         y += Map::TILE_HEIGHT / 2
         x -= Map::TILE_WIDTH / 2
       end
-      vertex1 = Boleite::Vector2f.new x, y
-      vertex2 = Boleite::Vector2f.new x + Map::TILE_WIDTH / 2, y + Map::TILE_HEIGHT / 2
-      vertex3 = Boleite::Vector2f.new x + Map::TILE_WIDTH, y
-      vertex4 = Boleite::Vector2f.new x + Map::TILE_WIDTH / 2, y - Map::TILE_HEIGHT / 2
+      height = map.get_height(self) * Map::TILE_HEIGHT_SHIFT
+      vertex1 = Boleite::Vector2f.new x, y - height
+      vertex2 = Boleite::Vector2f.new x + Map::TILE_WIDTH / 2, y + Map::TILE_HEIGHT / 2 - height
+      vertex3 = Boleite::Vector2f.new x + Map::TILE_WIDTH, y - height
+      vertex4 = Boleite::Vector2f.new x + Map::TILE_WIDTH / 2, y - Map::TILE_HEIGHT / 2 - height
       {vertex1, vertex2, vertex3, vertex4}
     end
   end
@@ -103,7 +105,7 @@ class Map
   ensures return_value.nil? || inside? return_value
   def find_tile(pos : Boleite::Vector2f)
     each_tile do |tile_pos|
-      return tile_pos if tile_pos.inside? pos
+      return tile_pos if tile_pos.inside? pos, self
     end
     return nil
   end
