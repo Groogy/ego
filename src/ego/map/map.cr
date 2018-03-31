@@ -54,6 +54,27 @@ class Map
     end
   end
 
+  def find_closest_point(a, b)
+    closest_point = Boleite::Vector2i.zero
+    closest_distance = 99999999.0
+    each_point do |world, map|
+      distance = Boleite::Vector.distance_to_segment a, b, world.to_f32
+      if distance < closest_distance
+        closest_point = map
+        closest_distance = distance
+      end
+    end
+    return closest_point, closest_distance
+  end
+
+  def each_point
+    @data.each_with_index do |data, index|
+      map = to_coord index
+      world = Boleite::Vector3f.new map.x.to_f, data.height.to_f, map.y.to_f
+      yield world, map
+    end
+  end
+
   def render(renderer)
     @renderer.render self, renderer
   end

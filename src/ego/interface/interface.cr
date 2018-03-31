@@ -3,8 +3,9 @@ class GameStateInterface
 
   getter control_menu
 
-  def initialize(@gui, app, world)
+  def initialize(@gui, app, world, camera)
     @control_menu = ControlMenu.new world
+    @toolbox = Toolbox.new world, camera
     @debug_stats_viewer = DebugStatsViewer.new @gui.target_size, world
     @game_menu = GameMenu.new @gui, app, world
   end
@@ -18,14 +19,19 @@ class GameStateInterface
     @game_menu.show
   end
 
-  def enable
+  def enable(app)
     @gui.add_root @control_menu.window
+    @gui.add_root @toolbox.window
     @gui.add_root @debug_stats_viewer.window
     @gui.add_root @game_menu.window
+
+    @toolbox.enable app
   end
 
-  def disable
+  def disable(app)
+    @toolbox.disable app
     @gui.remove_root @control_menu.window
+    @gui.remove_root @toolbox.window
     @gui.remove_root @debug_stats_viewer.window
     @gui.remove_root @game_menu.window
   end
