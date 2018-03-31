@@ -51,13 +51,13 @@ class CameraInputHandler < Boleite::InputReceiver
     :down => false, :up => false
   }
 
-  def initialize(@camera : Boleite::Camera3D)
+  def initialize(@camera : Boleite::Camera)
     register CameraMouseDrag, ->on_camera_drag(Float64, Float64)
     register CameraMove, ->on_camera_move(Bool, Symbol)
   end
 
   def on_camera_drag(x : Float64, y : Float64)
-    @camera.rotate y / 360, x / 360, 0.0
+    #@camera.rotate y / 360, x / 360, 0.0
   end
 
   def on_camera_move(on : Bool, action : Symbol)
@@ -81,6 +81,6 @@ class CameraInputHandler < Boleite::InputReceiver
 
     vector.y -= 5.0 * seconds if is_moving? :down
     vector.y += 5.0 * seconds if is_moving? :up
-    @camera.move vector
+    #@camera.move vector
   end
 end

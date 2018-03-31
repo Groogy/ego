@@ -12,12 +12,12 @@ class GameState < Boleite::State
     
     @gui = Boleite::GUI.new gfx, @app.input_router
     @rendering = GameStateRenderHelper.new gfx
-    @interface = GameStateInterface.new @gui, @app, @world, @rendering.camera3d
+    @interface = GameStateInterface.new @gui, @app, @world, @rendering.camera
   end
 
   def enable
     @interface.enable @app
-    camera_input = CameraInputHandler.new @rendering.camera3d
+    camera_input = CameraInputHandler.new @rendering.camera
     game_input = GameStateInputHandler.new @interface
     @app.input_router.register camera_input
     @app.input_router.register game_input
@@ -57,10 +57,8 @@ class GameState < Boleite::State
 
   def render(delta)
     @rendering.clear Boleite::Color.black
-    @rendering.set_3d_camera
     @world.render @rendering.renderer
-
-    @rendering.set_2d_camera
+    
     @gui.render
     @rendering.present
   end

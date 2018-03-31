@@ -4,8 +4,8 @@ end
 class TerrainTool < ToolBase
   @terrain : TerrainType
 
-  def initialize(@terrain, @world, @camera)
-    super(@world, @camera)
+  def initialize(@terrain, world, camera)
+    super(world, camera)
   end
 
   def on_map_click(pos : Boleite::Vector2i)
