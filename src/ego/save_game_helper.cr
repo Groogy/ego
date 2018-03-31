@@ -53,9 +53,8 @@ struct SaveGameHelper
     serializer = Map::ObjSerializer.new
     terrain_list = serializer.read_terrain_list file
     map_data = serializer.read_map_data file
-    pp terrain_list
     map_data.map do |raw|
-      { terrain_list[raw[0]], raw[1] }
+      { raw[0], terrain_list[raw[1]], raw[2] }
     end
   end
 
@@ -72,7 +71,7 @@ struct SaveGameHelper
     map_data = IO::Memory.new
     serializer = Map::ObjSerializer.new
     terrain_list = serializer.write_terrain_list world, map_data
-    serializer.write_map_data world.map.data, terrain_list, map_data
+    serializer.write_map_data world.map.size, world.map.data, terrain_list, map_data
     map_data.rewind
     map_data
   end

@@ -23,15 +23,17 @@ class Map
       terrain_list
     end
 
-    def write_map_data(data, terrains, io)
-      data.each do |point|
+    def write_map_data(size, data, terrains, io)
+      data.each do |point, tile|
+        point_index = point.x.to_u32 + size.y * point.y.to_u32
         terrain_index = 0u8
-        if terrain = point[1].terrain
+        if terrain = tile.terrain
           index = terrains.index terrain.key
           terrain_index = index.to_u8 if index
         end
+        io.write_bytes point_index
         io.write_bytes terrain_index
-        io.write_bytes point[1].height
+        io.write_bytes tile.height
       end
     end
 
@@ -44,12 +46,13 @@ class Map
     end
 
     def read_map_data(io)
-      map_data = [] of {UInt8, Float32}
+      map_data = [] of {UInt32, UInt8, UInt8}
       begin
         while true
+          pos = io.read_bytes UInt32
           terrain = io.read_bytes UInt8
-          height = io.read_bytes Float32
-          map_data << {terrain, height}
+          height = io.read_bytes UInt8
+          map_data << {pos, terrain, height}
         end
       rescue IO::EOFError
         map_data

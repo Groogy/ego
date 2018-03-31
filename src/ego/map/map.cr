@@ -92,9 +92,10 @@ class Map
 
   requires data.size == @data.size
   def apply_data(data, terrains)
-    data.each_index do |index|
-      #@data[index].terrain = terrains.find data[index][0]
-      #@data[index].height = data[index][1]
+    data.each do |d|
+      pos = Pos.new (d[0] % @size.x).to_u16, (d[0] / @size.y).to_u16
+      @data[pos].terrain = terrains.find d[1]
+      @data[pos].height = d[2]
     end
   end
 
