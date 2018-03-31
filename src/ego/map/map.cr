@@ -1,32 +1,83 @@
 class Map
   include CrystalClear
 
+  TILE_WIDTH = 48
+  TILE_HEIGHT = 32
+  MAX_HEIGHT = 16
+
   class Data
-    @height = 0.0f32
+    @height = 0u8
     @terrain : TerrainType?
 
     property height, terrain
   end
 
-  @data : Array(Data)
+  struct Pos
+    @x : UInt16
+    @y : UInt16
+
+    property x, y
+
+    def initialize(@x, @y)
+    end
+
+    def initialize(pos)
+      @x = pos.x.to_u16
+      @y = pos.y.to_u16
+    end
+
+    def inside?(p)
+      v = create_vertices
+      cn = 0
+      v.each_index do |i|
+        n = (i + 1) % v.size
+        if (v[i].y <= p.y && v[n].y > p.y) ||
+           (v[i].y > p.y && v[n].y <= p.y)
+           vt = (p.y - v[i].y).to_f / (v[n].y - v[i].y)
+           cn += 1 if p.x < v[i].x + vt * (v[n].x - v[i].x)
+        end
+      end
+      cn % 2 == 1
+    end
+
+    def create_vertices
+      x = (@x * Map::TILE_WIDTH).to_f
+      y = (@y / 2 * Map::TILE_HEIGHT).to_f
+      if @y % 2 == 1
+        y += Map::TILE_HEIGHT / 2
+        x -= Map::TILE_WIDTH / 2
+      end
+      vertex1 = Boleite::Vector2f.new x, y
+      vertex2 = Boleite::Vector2f.new x + Map::TILE_WIDTH / 2, y + Map::TILE_HEIGHT / 2
+      vertex3 = Boleite::Vector2f.new x + Map::TILE_WIDTH, y
+      vertex4 = Boleite::Vector2f.new x + Map::TILE_WIDTH / 2, y - Map::TILE_HEIGHT / 2
+      {vertex1, vertex2, vertex3, vertex4}
+    end
+  end
+
+  @data = {} of Pos => Data
   @size = Boleite::Vector2i.zero
   @renderer : MapRenderer
 
   getter size, data
 
   def initialize(@size)
-    size = @size.x * @size.y
-    @data = Array(Data).new(size) { |index| Data.new }
+    @size.x.times do |x|
+      @size.y.times do |y|
+        pos = Pos.new x.to_u16, y.to_u16
+        @data[pos] = Data.new
+      end
+    end
     @renderer = MapRenderer.new @size
   end
 
   def set_height(pos, height)
-    @data[to_index(pos)].height = height.to_f32
+    @data[Pos.new pos].height = height.to_u8
     @renderer.notify_change
   end
 
   def get_height(pos)
-    @data[to_index(pos)].height.to_f64
+    @data[Pos.new pos].height.to_u8
   end
 
   def get_height(x, y)
@@ -34,12 +85,12 @@ class Map
   end
 
   def set_terrain(pos, terrain)
-    @data[to_index(pos)].terrain = terrain
+    @data[Pos.new pos].terrain = terrain
     @renderer.notify_change
   end
 
   def get_terrain(pos)
-    @data[to_index(pos)].terrain
+    @data[Pos.new pos].terrain
   end
 
   def get_terrain(x, y)
@@ -49,41 +100,30 @@ class Map
   requires data.size == @data.size
   def apply_data(data, terrains)
     data.each_index do |index|
-      @data[index].terrain = terrains.find data[index][0]
-      @data[index].height = data[index][1]
+      #@data[index].terrain = terrains.find data[index][0]
+      #@data[index].height = data[index][1]
     end
   end
 
-  def find_closest_point(a, b)
-    closest_point = Boleite::Vector2i.zero
-    closest_distance = 99999999.0
-    each_point do |world, map|
-      distance = Boleite::Vector.distance_to_segment a, b, world.to_f32
-      if distance < closest_distance
-        closest_point = map
-        closest_distance = distance
-      end
-    end
-    return closest_point, closest_distance
+  def inside?(pos : Pos)
+    Boleite::IntRect.new(0, 0, @size.x, @size.y).contains? pos
   end
 
-  def each_point
-    @data.each_with_index do |data, index|
-      map = to_coord index
-      world = Boleite::Vector3f.new map.x.to_f, data.height.to_f, map.y.to_f
-      yield world, map
+  ensures return_value.nil? || inside? return_value
+  def find_tile(pos : Boleite::Vector2f)
+    each_tile do |tile_pos|
+      return tile_pos if tile_pos.inside? pos
+    end
+    return nil
+  end
+
+  def each_tile
+    @data.each_key do |pos|
+      yield pos, @data[pos]
     end
   end
 
   def render(renderer)
     @renderer.render self, renderer
-  end
-
-  private def to_index(coord)
-    coord.x + coord.y * @size.x
-  end
-
-  private def to_coord(index)
-    Boleite::Vector2i.new index.to_i32 % @size.x, index.to_i32 / @size.y
   end
 end

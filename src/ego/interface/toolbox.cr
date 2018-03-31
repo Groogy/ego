@@ -3,7 +3,7 @@ class Toolbox
 
   end
   @world : World
-  @camera : Boleite::Camera3D
+  @camera : Boleite::Camera2D
   @current_tool : ToolBase?
   @input = Boleite::InputReceiver.new
 
