@@ -28,16 +28,7 @@ class Map
 
     def inside?(p)
       v = create_vertices
-      cn = 0
-      v.each_index do |i|
-        n = (i + 1) % v.size
-        if (v[i].y <= p.y && v[n].y > p.y) ||
-           (v[i].y > p.y && v[n].y <= p.y)
-           vt = (p.y - v[i].y).to_f / (v[n].y - v[i].y)
-           cn += 1 if p.x < v[i].x + vt * (v[n].x - v[i].x)
-        end
-      end
-      cn % 2 == 1
+      Boleite::Vector.inside_shape? v, p
     end
 
     def create_vertices
