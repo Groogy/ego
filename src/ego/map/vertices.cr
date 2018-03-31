@@ -6,8 +6,8 @@ class MapRenderer
   
       getter pos, color
   
-      def initialize(pos, @color)
-        @pos = Boleite::Vector4f32.new(pos)
+      def initialize(x : Float32, y : Float32, @color)
+        @pos = Boleite::Vector4f32.new x, y, 0f32, 1f32
       end
     end
 
@@ -36,7 +36,7 @@ class MapRenderer
       ]
       vbo = gfx.create_vertex_buffer_object
       vbo.layout = layout
-      vbo.primitive = Boleite::Primitive::Points
+      vbo.primitive = Boleite::Primitive::Triangles
       vbo.create_buffer
       vbo
     end
@@ -49,21 +49,37 @@ class MapRenderer
 
     private def create_vertices(map, buffer)
       size = map.size
-      size.y.times do |y|
-        size.x.times do |x|
-          terrain = map.get_terrain x, y
-          color = get_vertex_color(terrain)
-          vertex1 = Vertex.new [x.to_f32 * 16f32, y.to_f32 * 16f32, 0f32, 1f32], color
+      size.y.times do |iy|
+        size.x.times do |ix|
+          height = map.get_height ix, iy
+          terrain = map.get_terrain ix, iy
+          color = get_vertex_color height, terrain
+          x = (ix * Map::TILE_WIDTH).to_f32
+          y = (iy / 2 * Map::TILE_HEIGHT).to_f32
+          if iy % 2 == 1
+            y += Map::TILE_HEIGHT / 2
+            x -= Map::TILE_WIDTH / 2
+          end
+          vertex1 = Vertex.new x + 1, y, color
+          vertex2 = Vertex.new x + Map::TILE_WIDTH / 2, y + Map::TILE_HEIGHT / 2, color
+          vertex3 = Vertex.new x + Map::TILE_WIDTH / 2, y - Map::TILE_HEIGHT / 2, color
+          vertex4 = Vertex.new x + Map::TILE_WIDTH - 1, y, color
           buffer.add_data vertex1
+          buffer.add_data vertex2
+          buffer.add_data vertex3
+          buffer.add_data vertex2
+          buffer.add_data vertex4
+          buffer.add_data vertex3
         end
       end
     end
 
-    private def get_vertex_color(terrain : TerrainType)
-      terrain.color.to_f32
+    private def get_vertex_color(height, terrain : TerrainType)
+      mod = 1f32 - height.to_f32 / Map::MAX_HEIGHT
+      terrain.color.to_f32 * mod
     end
 
-    private def get_vertex_color(val : Nil)
+    private def get_vertex_color(height, val : Nil)
       Boleite::Color.black.to_f32
     end
   end

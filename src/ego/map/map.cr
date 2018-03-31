@@ -1,6 +1,10 @@
 class Map
   include CrystalClear
 
+  TILE_WIDTH = 48
+  TILE_HEIGHT = 32
+  MAX_HEIGHT = 16
+
   class Data
     @height = 0u8
     @terrain : TerrainType?
@@ -71,6 +75,10 @@ class Map
       #@data[index].terrain = terrains.find data[index][0]
       #@data[index].height = data[index][1]
     end
+  end
+
+  def find_tile(pos : Boleite::Vector2f)
+    Pos.new(0u16, 0u16)
   end
 
   def each_tile
