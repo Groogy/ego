@@ -24,9 +24,8 @@ end
 
 class CameraMove
   @map = {
-    Boleite::Key::W => :forward, Boleite::Key::S => :backward,
+    Boleite::Key::W => :up, Boleite::Key::S => :down,
     Boleite::Key::A => :left, Boleite::Key::D => :right,
-    Boleite::Key::C => :down, Boleite::Key::Z => :up
   }
   def interested?(event : Boleite::InputEvent) : Bool
     if event.is_a? Boleite::KeyEvent
@@ -46,18 +45,17 @@ end
 
 class CameraInputHandler < Boleite::InputReceiver
   @move_actions = {
-    :forward => false, :backward => false, 
+    :down => false, :up => false,
     :left => false, :right => false,
-    :down => false, :up => false
   }
 
-  def initialize(@camera : Boleite::Camera)
-    register CameraMouseDrag, ->on_camera_drag(Float64, Float64)
+  def initialize(@camera : Boleite::Camera2D)
     register CameraMove, ->on_camera_move(Bool, Symbol)
+    register CameraMouseDrag, ->on_camera_drag(Float64, Float64)
   end
 
   def on_camera_drag(x : Float64, y : Float64)
-    #@camera.rotate y / 360, x / 360, 0.0
+    @camera.move -x, -y
   end
 
   def on_camera_move(on : Bool, action : Symbol)
@@ -70,17 +68,11 @@ class CameraInputHandler < Boleite::InputReceiver
 
   def update(delta)
     seconds = delta.to_f
-    transform = @camera.transformation.to_f64
-    forward = Boleite::Matrix.forward transform
-    left = Boleite::Matrix.left transform
-    vector = Boleite::Vector3f.zero
-    vector += forward * 5.0 * seconds if is_moving? :forward
-    vector -= forward * 5.0 * seconds if is_moving? :backward
-    vector -= left * 5.0 * seconds if is_moving? :left
-    vector += left * 5.0 * seconds if is_moving? :right
-
-    vector.y -= 5.0 * seconds if is_moving? :down
-    vector.y += 5.0 * seconds if is_moving? :up
-    #@camera.move vector
+    vector = Boleite::Vector2f.zero
+    vector.x -= 500.0 * seconds if is_moving? :left
+    vector.x += 500.0 * seconds if is_moving? :right
+    vector.y -= 500.0 * seconds if is_moving? :up
+    vector.y += 500.0 * seconds if is_moving? :down
+    @camera.move vector
   end
 end
