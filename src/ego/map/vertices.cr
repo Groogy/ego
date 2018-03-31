@@ -5,6 +5,11 @@ class MapRenderer
       @color : Boleite::Vector4f32
   
       getter pos, color
+
+      def initialize()
+        @pos = Boleite::Vector4f32.zero
+        @color = Boleite::Vector4f32.zero
+      end
   
       def initialize(x, y, @color)
         @pos = Boleite::Vector4f32.new x.to_f32, y.to_f32, 0f32, 1f32
@@ -51,6 +56,10 @@ class MapRenderer
     end
 
     private def create_vertices(map, buffer)
+      vertices = StaticArray(Vertex, 7).new Vertex.new
+      order = { 0, 1, 2, 0, 2, 3,
+                0, 4, 5, 5, 1, 0,
+                2, 1, 5, 5, 6, 2 }
       size = map.size
       size.y.times do |iy|
         size.x.times do |ix|
@@ -59,32 +68,17 @@ class MapRenderer
           terrain = map.get_terrain point
           color = get_vertex_color height, terrain
           pos = point.create_vertices map
-          vertex1 = Vertex.new pos[0].x, pos[0].y, color
-          vertex2 = Vertex.new pos[1].x, pos[1].y, color
-          vertex3 = Vertex.new pos[2].x, pos[2].y, color
-          vertex4 = Vertex.new pos[3].x, pos[3].y, color
+          vertices[0] = Vertex.new pos[0].x, pos[0].y, color
+          vertices[1] = Vertex.new pos[1].x, pos[1].y, color
+          vertices[2] = Vertex.new pos[2].x, pos[2].y, color
+          vertices[3] = Vertex.new pos[3].x, pos[3].y, color
+          vertices[4] = Vertex.new pos[0].x, pos[0].y + Map::TILE_HEIGHT_SHIFT, -0.1, Boleite::Color.white
+          vertices[5] = Vertex.new pos[1].x, pos[1].y + Map::TILE_HEIGHT_SHIFT, -0.1, Boleite::Color.white
+          vertices[6] = Vertex.new pos[2].x, pos[2].y + Map::TILE_HEIGHT_SHIFT, -0.1, Boleite::Color.white
 
-          vertex5 = Vertex.new pos[0].x, pos[0].y + Map::TILE_HEIGHT_SHIFT, -0.1, Boleite::Color.white
-          vertex6 = Vertex.new pos[1].x, pos[1].y + Map::TILE_HEIGHT_SHIFT, -0.1, Boleite::Color.white
-          vertex7 = Vertex.new pos[2].x, pos[2].y + Map::TILE_HEIGHT_SHIFT, -0.1, Boleite::Color.white
-          buffer.add_data vertex1
-          buffer.add_data vertex2
-          buffer.add_data vertex3
-          buffer.add_data vertex1
-          buffer.add_data vertex3
-          buffer.add_data vertex4
-          buffer.add_data vertex1
-          buffer.add_data vertex5
-          buffer.add_data vertex6
-          buffer.add_data vertex6
-          buffer.add_data vertex2
-          buffer.add_data vertex1
-          buffer.add_data vertex3
-          buffer.add_data vertex2
-          buffer.add_data vertex6
-          buffer.add_data vertex6
-          buffer.add_data vertex7
-          buffer.add_data vertex3
+          order.each do |index|
+            buffer.add_data vertices[index]
+          end
         end
       end
     end
