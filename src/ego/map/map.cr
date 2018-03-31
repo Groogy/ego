@@ -25,6 +25,34 @@ class Map
       @x = pos.x.to_u16
       @y = pos.y.to_u16
     end
+
+    def inside?(p)
+      v = create_vertices
+      cn = 0
+      v.each_index do |i|
+        n = (i + 1) % v.size
+        if (v[i].y <= p.y && v[n].y > p.y) ||
+           (v[i].y > p.y && v[n].y <= p.y)
+           vt = (p.y - v[i].y).to_f / (v[n].y - v[i].y)
+           cn += 1 if p.x < v[i].x + vt * (v[n].x - v[i].x)
+        end
+      end
+      cn % 2 == 1
+    end
+
+    def create_vertices
+      x = (@x * Map::TILE_WIDTH).to_f
+      y = (@y / 2 * Map::TILE_HEIGHT).to_f
+      if @y % 2 == 1
+        y += Map::TILE_HEIGHT / 2
+        x -= Map::TILE_WIDTH / 2
+      end
+      vertex1 = Boleite::Vector2f.new x, y
+      vertex2 = Boleite::Vector2f.new x + Map::TILE_WIDTH / 2, y + Map::TILE_HEIGHT / 2
+      vertex3 = Boleite::Vector2f.new x + Map::TILE_WIDTH, y
+      vertex4 = Boleite::Vector2f.new x + Map::TILE_WIDTH / 2, y - Map::TILE_HEIGHT / 2
+      {vertex1, vertex2, vertex3, vertex4}
+    end
   end
 
   @data = {} of Pos => Data
@@ -77,8 +105,16 @@ class Map
     end
   end
 
+  def inside?(pos : Pos)
+    Boleite::IntRect.new(0, 0, @size.x, @size.y).contains? pos
+  end
+
+  ensures return_value.nil? || inside? return_value
   def find_tile(pos : Boleite::Vector2f)
-    Pos.new(0u16, 0u16)
+    each_tile do |tile_pos|
+      return tile_pos if tile_pos.inside? pos
+    end
+    return nil
   end
 
   def each_tile

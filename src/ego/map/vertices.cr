@@ -6,8 +6,8 @@ class MapRenderer
   
       getter pos, color
   
-      def initialize(x : Float32, y : Float32, @color)
-        @pos = Boleite::Vector4f32.new x, y, 0f32, 1f32
+      def initialize(x, y, @color)
+        @pos = Boleite::Vector4f32.new x.to_f32, y.to_f32, 0f32, 1f32
       end
     end
 
@@ -51,25 +51,21 @@ class MapRenderer
       size = map.size
       size.y.times do |iy|
         size.x.times do |ix|
-          height = map.get_height ix, iy
-          terrain = map.get_terrain ix, iy
+          point = Map::Pos.new ix.to_u16, iy.to_u16
+          height = map.get_height point
+          terrain = map.get_terrain point
           color = get_vertex_color height, terrain
-          x = (ix * Map::TILE_WIDTH).to_f32
-          y = (iy / 2 * Map::TILE_HEIGHT).to_f32
-          if iy % 2 == 1
-            y += Map::TILE_HEIGHT / 2
-            x -= Map::TILE_WIDTH / 2
-          end
-          vertex1 = Vertex.new x + 1, y, color
-          vertex2 = Vertex.new x + Map::TILE_WIDTH / 2, y + Map::TILE_HEIGHT / 2, color
-          vertex3 = Vertex.new x + Map::TILE_WIDTH / 2, y - Map::TILE_HEIGHT / 2, color
-          vertex4 = Vertex.new x + Map::TILE_WIDTH - 1, y, color
+          pos = point.create_vertices
+          vertex1 = Vertex.new pos[0].x + 1, pos[0].y, color
+          vertex2 = Vertex.new pos[1].x, pos[1].y, color
+          vertex3 = Vertex.new pos[2].x - 1, pos[2].y, color
+          vertex4 = Vertex.new pos[3].x, pos[3].y, color
           buffer.add_data vertex1
           buffer.add_data vertex2
           buffer.add_data vertex3
-          buffer.add_data vertex2
-          buffer.add_data vertex4
+          buffer.add_data vertex1
           buffer.add_data vertex3
+          buffer.add_data vertex4
         end
       end
     end
