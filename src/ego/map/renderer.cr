@@ -4,22 +4,27 @@ class MapRenderer
   @@shader : Boleite::Shader?
   
   @size : Boleite::Vector2i
-  @vertices = Vertices.new
 
   def initialize(@size)
+    @vertices = StaticArray(Vertices, 16).new do |index|
+      Vertices.new index.to_u8
+    end
   end
 
   def notify_change
-    @vertices.need_update = true
+    @vertices.each &.need_update=(true)
   end
 
   def render(map, renderer)
     gfx = renderer.gfx
-    vertices = @vertices.get_vertices map, gfx
     shader = get_shader gfx
-
-    drawcall = Boleite::DrawCallContext.new vertices, shader
-    renderer.draw drawcall
+    @vertices.each do |v|
+      draw = v.get_vertices map, gfx
+      if draw.total_buffer_size > 0
+        drawcall = Boleite::DrawCallContext.new draw, shader
+        renderer.draw drawcall
+      end
+    end
   end
 
   private def get_shader(gfx) : Boleite::Shader

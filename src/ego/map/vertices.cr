@@ -1,5 +1,5 @@
 class MapRenderer
-  struct Vertices
+  class Vertices
     struct Vertex < Boleite::Vertex
       @pos : Boleite::Vector4f32
       @color : Boleite::Vector4f32
@@ -23,6 +23,10 @@ class MapRenderer
 
     @need_update = true
     @vbo : Boleite::VertexBufferObject?
+    @target_height = 0u8
+
+    def initialize(@target_height)
+    end
 
     def get_vertices(map, gfx) : Boleite::VertexBufferObject
       vbo = @vbo
@@ -56,15 +60,17 @@ class MapRenderer
     end
 
     private def create_vertices(map, buffer)
-      vertices = StaticArray(Vertex, 7).new Vertex.new
+      vertices = StaticArray(Vertex, 8).new Vertex.new
       order = { 0, 1, 2, 0, 2, 3,
                 0, 4, 5, 5, 1, 0,
-                2, 1, 5, 5, 6, 2 }
+                2, 1, 6, 6, 7, 2 }
       size = map.size
       size.y.times do |iy|
         size.x.times do |ix|
           point = Map::Pos.new ix.to_u16, iy.to_u16
           height = map.get_height point
+          next if height != @target_height
+          left, right = calculate_heights height, point, map
           terrain = map.get_terrain point
           color = get_vertex_color height, terrain
           pos = point.create_vertices map
@@ -72,15 +78,32 @@ class MapRenderer
           vertices[1] = Vertex.new pos[1].x, pos[1].y, color
           vertices[2] = Vertex.new pos[2].x, pos[2].y, color
           vertices[3] = Vertex.new pos[3].x, pos[3].y, color
-          vertices[4] = Vertex.new pos[0].x, pos[0].y + Map::TILE_HEIGHT_SHIFT * height, Boleite::Color.white
-          vertices[5] = Vertex.new pos[1].x, pos[1].y + Map::TILE_HEIGHT_SHIFT * height, Boleite::Color.white
-          vertices[6] = Vertex.new pos[2].x, pos[2].y + Map::TILE_HEIGHT_SHIFT * height, Boleite::Color.white
+          vertices[4] = Vertex.new pos[0].x, pos[0].y + Map::TILE_HEIGHT_SHIFT * left, Boleite::Color.white
+          vertices[5] = Vertex.new pos[1].x, pos[1].y + Map::TILE_HEIGHT_SHIFT * left, Boleite::Color.white
+          vertices[6] = Vertex.new pos[1].x, pos[1].y + Map::TILE_HEIGHT_SHIFT * right, Boleite::Color.white
+          vertices[7] = Vertex.new pos[2].x, pos[2].y + Map::TILE_HEIGHT_SHIFT * right, Boleite::Color.white
 
           order.each do |index|
             buffer.add_data vertices[index]
           end
         end
       end
+    end
+
+    private def calculate_heights(height, point, map)
+      middle = 0u8
+      mp = Map::Pos.new point.x, point.y + 1
+      middle = map.get_height mp if map.inside? mp
+      left = 0u8
+      lp = Map::Pos.new point.x - 1, point.y + 1
+      left = map.get_height lp if map.inside? lp
+      right = 0u8
+      rp = Map::Pos.new point.x + 1, point.y + 1
+      right = map.get_height rp if map.inside? rp
+      left = {left, middle}.min
+      right = {right, middle}.min
+
+      {height - {left, height}.min, height - {right, height}.min}
     end
 
     private def get_vertex_color(height, terrain : TerrainType)
