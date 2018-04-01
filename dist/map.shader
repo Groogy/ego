@@ -9,7 +9,7 @@ values
 
 depth
 {
-	enabled = true;
+	enabled = false;
 	function = Less;
 }
 
