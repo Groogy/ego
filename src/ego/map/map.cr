@@ -112,7 +112,7 @@ class Map
 
   ensures return_value.nil? || inside? return_value
   def find_tile(pos : Boleite::Vector2f)
-    each_tile do |tile_pos|
+    each_tile_reversed do |tile_pos|
       return tile_pos if tile_pos.inside? pos, self
     end
     return nil
@@ -121,6 +121,15 @@ class Map
   def each_tile
     @data.each_key do |pos|
       yield pos, @data[pos]
+    end
+  end
+
+  def each_tile_reversed
+    @size.y.downto 1 do |y|
+      @size.x.downto 1 do |x|
+        pos = Pos.new (x-1).to_u16, (y-1).to_u16
+        yield pos, @data[pos]
+      end
     end
   end
 
