@@ -71,19 +71,20 @@ class MapRenderer
         size.x.times do |ix|
           ix = size.x - ix - 1 if flip_x
           point = Map::Pos.new(ix.to_u16, iy.to_u16)
+          rot = point.rotate_by map
           height = map.get_height point
           next if height != @target_height
           left, right = calculate_heights height, point, map
           terrain = map.get_terrain point
           color = get_vertex_color height, terrain
-          pos = point.create_vertices map
+          pos = point.create_vertices_for_render map
           vertices[0] = Vertex.new pos[0].x, pos[0].y, color
-          vertices[1] = Vertex.new pos[1].x, pos[1].y, color
+          vertices[1] = Vertex.new pos[3].x, pos[3].y, color
           vertices[2] = Vertex.new pos[2].x, pos[2].y, color
-          vertices[3] = Vertex.new pos[3].x, pos[3].y, color
+          vertices[3] = Vertex.new pos[1].x, pos[1].y, color
           vertices[4] = Vertex.new pos[0].x, pos[0].y + Map::TILE_HEIGHT_SHIFT * left, Boleite::Color.white
-          vertices[5] = Vertex.new pos[1].x, pos[1].y + Map::TILE_HEIGHT_SHIFT * left, Boleite::Color.white
-          vertices[6] = Vertex.new pos[1].x, pos[1].y + Map::TILE_HEIGHT_SHIFT * right, Boleite::Color.white
+          vertices[5] = Vertex.new pos[3].x, pos[3].y + Map::TILE_HEIGHT_SHIFT * left, Boleite::Color.white
+          vertices[6] = Vertex.new pos[3].x, pos[3].y + Map::TILE_HEIGHT_SHIFT * right, Boleite::Color.white
           vertices[7] = Vertex.new pos[2].x, pos[2].y + Map::TILE_HEIGHT_SHIFT * right, Boleite::Color.white
 
           order.each do |index|
