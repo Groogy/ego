@@ -82,7 +82,7 @@ class Map
   end
 
   requires inside? pos
-  requires height >= 0 && height <= MAX_HEIGHT
+  requires height >= 0 && height < MAX_HEIGHT
   def set_height(pos, height)
     @data[Pos.new pos].height = height.to_u8
     @renderer.notify_change
