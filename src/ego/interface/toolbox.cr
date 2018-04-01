@@ -28,8 +28,14 @@ class Toolbox
     create_terrain_tool terrain_box
     label_and_content.add Boleite::GUI::Label.new("TERRAIN", Boleite::Vector2f.new(200.0, 20.0))
     label_and_content.add terrain_box
-    container.add label_and_content
 
+    height_box = Boleite::GUI::Layout.new :vertical
+    height_box.padding = Boleite::Vector2f.new 6.0, 2.0
+    create_height_tool height_box
+    label_and_content.add Boleite::GUI::Label.new("HEIGHT", Boleite::Vector2f.new(200.0, 20.0))
+    label_and_content.add height_box
+
+    container.add label_and_content
     @window.add container
   end
 
@@ -50,6 +56,11 @@ class Toolbox
 
   def select_terrain_tool(terrain)
     attach_tool TerrainTool.new terrain, @world, @camera
+    update_tool_label
+  end
+
+  def select_height_tool(direction)
+    attach_tool HeightTool.new direction.to_i8, @world, @camera
     update_tool_label
   end
 
@@ -89,5 +100,17 @@ class Toolbox
         counter = 0
       end
     end
+  end
+
+  def create_height_tool(container)
+    current = Boleite::GUI::Layout.new :horizontal
+    current.padding = Boleite::Vector2f.new 0.0, 0.0
+    button = Boleite::GUI::Button.new "Raise", Boleite::Vector2f.new(70.0, 20.0)
+    button.click.on { select_height_tool 1 }
+    current.add button
+    button = Boleite::GUI::Button.new "Lower", Boleite::Vector2f.new(70.0, 20.0)
+    button.click.on { select_height_tool -1 }
+    current.add button
+    container.add current
   end
 end
