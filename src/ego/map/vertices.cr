@@ -11,9 +11,6 @@ class MapRenderer
         @color = Boleite::Vector4f32.zero
       end
   
-      def initialize(x, y, @color)
-        @pos = Boleite::Vector4f32.new x.to_f32, y.to_f32, 0f32, 1f32
-      end
       def initialize(x, y, z, @color)
         @pos = Boleite::Vector4f32.new x.to_f32, y.to_f32, z.to_f32, 1f32
       end
@@ -78,14 +75,14 @@ class MapRenderer
           terrain = map.get_terrain point
           color = get_vertex_color height, terrain
           pos = point.create_vertices_for_render map
-          vertices[0] = Vertex.new pos[0].x, pos[0].y, color
-          vertices[1] = Vertex.new pos[3].x, pos[3].y, color
-          vertices[2] = Vertex.new pos[2].x, pos[2].y, color
-          vertices[3] = Vertex.new pos[1].x, pos[1].y, color
-          vertices[4] = Vertex.new pos[0].x, pos[0].y + Map::TILE_HEIGHT_SHIFT * left, Boleite::Color.white
-          vertices[5] = Vertex.new pos[3].x, pos[3].y + Map::TILE_HEIGHT_SHIFT * left, Boleite::Color.white
-          vertices[6] = Vertex.new pos[3].x, pos[3].y + Map::TILE_HEIGHT_SHIFT * right, Boleite::Color.white
-          vertices[7] = Vertex.new pos[2].x, pos[2].y + Map::TILE_HEIGHT_SHIFT * right, Boleite::Color.white
+          vertices[0] = Vertex.new pos[0].x, pos[0].y, rot.y + rot.x, color
+          vertices[1] = Vertex.new pos[3].x, pos[3].y, rot.y + rot.x, color
+          vertices[2] = Vertex.new pos[2].x, pos[2].y, rot.y + rot.x, color
+          vertices[3] = Vertex.new pos[1].x, pos[1].y, rot.y + rot.x, color
+          vertices[4] = Vertex.new pos[0].x, pos[0].y + Map::TILE_HEIGHT_SHIFT * left, rot.y + rot.x, Boleite::Color.white
+          vertices[5] = Vertex.new pos[3].x, pos[3].y + Map::TILE_HEIGHT_SHIFT * left, rot.y + rot.x, Boleite::Color.white
+          vertices[6] = Vertex.new pos[3].x, pos[3].y + Map::TILE_HEIGHT_SHIFT * right, rot.y + rot.x, Boleite::Color.white
+          vertices[7] = Vertex.new pos[2].x, pos[2].y + Map::TILE_HEIGHT_SHIFT * right, rot.y + rot.x, Boleite::Color.white
 
           order.each do |index|
             buffer.add_data vertices[index]
@@ -95,7 +92,7 @@ class MapRenderer
     end
 
     private def calculate_ranges(map)
-      {false, map.view_rotation > 1}
+      {map.view_rotation > 0 && map.view_rotation < 3, map.view_rotation > 1}
     end
 
     private def calculate_heights(height, point, map)

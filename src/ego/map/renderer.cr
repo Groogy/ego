@@ -18,6 +18,7 @@ class MapRenderer
   def render(map, renderer)
     gfx = renderer.gfx
     shader = get_shader gfx
+    shader.set_parameter "mapSize", map.size.to_f32
     @vertices.each do |v|
       draw = v.get_vertices map, gfx
       if draw.total_buffer_size > 0

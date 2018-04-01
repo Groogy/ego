@@ -9,7 +9,7 @@ values
 
 depth
 {
-	enabled = false;
+	enabled = true;
 	function = Less;
 }
 
@@ -25,11 +25,15 @@ vertex
 	out VertexData {
 		vec4 position;
 		vec4 color;
+		float zOrder;
 	} outputVertex;
 
 	void main()
 	{
-		vec4 worldPos = world * position;
+		vec4 pos = position;
+		outputVertex.zOrder = pos.z;
+		pos.z = 0;
+		vec4 worldPos = world * pos;
 		vec4 viewPos = camera * worldPos;
 		gl_Position = projection * viewPos;
 		outputVertex.position = worldPos;
@@ -41,13 +45,17 @@ fragment
 {
 	layout(location = 0) out vec4 outputAlbedo;
 
+	uniform vec2 mapSize;
+
 	in VertexData {
 		vec4 position;
 		vec4 color;
+		float zOrder;
 	} inputVertex;
 
 	void main()
 	{
-    	outputAlbedo = inputVertex.color;
+		outputAlbedo = inputVertex.color;
+		gl_FragDepth = 1 - (inputVertex.zOrder + 1) / (mapSize.x * mapSize.y);
 	}
 }
