@@ -18,7 +18,7 @@ class GameState < Boleite::State
   def enable
     @interface.enable @app
     camera_input = CameraInputHandler.new @rendering.camera
-    game_input = GameStateInputHandler.new @interface
+    game_input = GameStateInputHandler.new @interface, @world
     @app.input_router.register camera_input
     @app.input_router.register game_input
     @camera_input = camera_input

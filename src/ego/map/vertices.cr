@@ -64,10 +64,13 @@ class MapRenderer
       order = { 0, 1, 2, 0, 2, 3,
                 0, 4, 5, 5, 1, 0,
                 2, 1, 6, 6, 7, 2 }
+      flip_x, flip_y = calculate_ranges map
       size = map.size
       size.y.times do |iy|
+        iy = size.y - iy - 1 if flip_y
         size.x.times do |ix|
-          point = Map::Pos.new ix.to_u16, iy.to_u16
+          ix = size.x - ix - 1 if flip_x
+          point = Map::Pos.new(ix.to_u16, iy.to_u16)
           height = map.get_height point
           next if height != @target_height
           left, right = calculate_heights height, point, map
@@ -90,20 +93,26 @@ class MapRenderer
       end
     end
 
+    private def calculate_ranges(map)
+      {false, map.view_rotation > 1}
+    end
+
     private def calculate_heights(height, point, map)
-      middle = 0u8
-      mp = Map::Pos.new point.x, point.y + 1
-      middle = map.get_height mp if map.inside? mp
       left = 0u8
-      lp = Map::Pos.new point.x - 1, point.y + 1
+      ld = rotate_dir 0, 1, map.view_rotation
+      rd = rotate_dir 1, 0, map.view_rotation
+      lp = Map::Pos.new point.x + ld[0], point.y + ld[1]
       left = map.get_height lp if map.inside? lp
       right = 0u8
-      rp = Map::Pos.new point.x + 1, point.y + 1
+      rp = Map::Pos.new point.x + rd[0], point.y + rd[1]
       right = map.get_height rp if map.inside? rp
-      left = {left, middle}.min
-      right = {right, middle}.min
 
       {height - {left, height}.min, height - {right, height}.min}
+    end
+
+    private def rotate_dir(x : Int32, y : Int32, rotation, depth=0)
+      x, y = rotate_dir -y, x, rotation, depth+1 if depth < rotation
+      {x, y}
     end
 
     private def get_vertex_color(height, terrain : TerrainType)

@@ -33,12 +33,9 @@ class Map
     end
 
     def create_vertices(map)
-      x = (@x * Map::TILE_WIDTH).to_f
-      y = (@y / 2 * Map::TILE_HEIGHT).to_f
-      if @y % 2 == 1
-        y += Map::TILE_HEIGHT / 2
-        x -= Map::TILE_WIDTH / 2
-      end
+      xi, yi = map.apply_view_rotation @x.to_i, @y.to_i
+      x = ((xi - yi) * Map::TILE_WIDTH / 2).to_f
+      y = ((xi + yi) * Map::TILE_HEIGHT / 2).to_f
       height = map.get_height(self) * Map::TILE_HEIGHT_SHIFT
       vertex1 = Boleite::Vector2f.new x, y - height
       vertex2 = Boleite::Vector2f.new x + Map::TILE_WIDTH / 2, y + Map::TILE_HEIGHT / 2 - height
@@ -46,13 +43,20 @@ class Map
       vertex4 = Boleite::Vector2f.new x + Map::TILE_WIDTH / 2, y - Map::TILE_HEIGHT / 2 - height
       {vertex1, vertex2, vertex3, vertex4}
     end
+  
+    def rotate_by(map)
+      x, y = @x.to_i, @y.to_i
+      x, y = map.apply_view_rotation x, y
+      Pos.new x.to_u16, y.to_u16
+    end
   end
 
   @data = {} of Pos => Data
   @size = Boleite::Vector2i.zero
+  @view_rotation = 0
   @renderer : MapRenderer
 
-  getter size, data
+  getter size, data, view_rotation
 
   def initialize(@size)
     @size.x.times do |x|
@@ -62,6 +66,19 @@ class Map
       end
     end
     @renderer = MapRenderer.new @size
+  end
+
+  requires dir >= -1 && dir <= 1
+  def rotate_view(dir)
+    @view_rotation += dir
+    @view_rotation = 0 if @view_rotation > 3
+    @view_rotation = 3 if @view_rotation < 0
+    @renderer.notify_change
+  end
+
+  def apply_view_rotation(x : Int32, y : Int32, depth=0) 
+    x, y = apply_view_rotation y, @size.y - x - 1, depth+1 if depth < view_rotation
+    {x, y}
   end
 
   requires inside? pos
@@ -127,7 +144,7 @@ class Map
   def each_tile_reversed
     @size.y.downto 1 do |y|
       @size.x.downto 1 do |x|
-        pos = Pos.new (x-1).to_u16, (y-1).to_u16
+        pos = Pos.new((x-1).to_u16, (y-1).to_u16).rotate_by self
         yield pos, @data[pos]
       end
     end
