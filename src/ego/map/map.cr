@@ -64,28 +64,35 @@ class Map
     @renderer = MapRenderer.new @size
   end
 
+  requires inside? pos
+  requires height >= 0 && height <= MAX_HEIGHT
   def set_height(pos, height)
     @data[Pos.new pos].height = height.to_u8
     @renderer.notify_change
   end
 
+  requires inside? pos
   def get_height(pos)
     @data[Pos.new pos].height.to_u8
   end
 
+  requires inside? pos
   def get_height(x, y)
     get_height Boleite::Vector2i.new(x, y)
   end
 
+  requires inside? pos
   def set_terrain(pos, terrain)
     @data[Pos.new pos].terrain = terrain
     @renderer.notify_change
   end
 
+  requires inside? pos
   def get_terrain(pos)
     @data[Pos.new pos].terrain
   end
 
+  requires inside? pos
   def get_terrain(x, y)
     get_terrain Boleite::Vector2i.new(x, y)
   end
@@ -99,7 +106,7 @@ class Map
     end
   end
 
-  def inside?(pos : Pos)
+  def inside?(pos)
     Boleite::IntRect.new(0, 0, @size.x, @size.y).contains? pos
   end
 
