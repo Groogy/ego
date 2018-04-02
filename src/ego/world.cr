@@ -11,7 +11,7 @@ class World
   def initialize
     @map = Map.new Boleite::Vector2i.new(64, 64)
     @terrains = TerrainDatabase.new
-    @terrains.load_file "data/tiles/basic.yml"
+    @terrains.load_folder "data/tiles"
   end
 
   def toggle_pause

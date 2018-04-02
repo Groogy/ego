@@ -9,6 +9,13 @@ class TerrainDatabase
 
   @types = Collection.new
 
+  requires Dir.exists? path
+  def load_folder(path)
+    Dir.each_child path do |file|
+      load_file path + File::SEPARATOR + file
+    end
+  end
+
   requires File.exists? path
   def load_file(path)
     File.open(path, "r") do |file|
