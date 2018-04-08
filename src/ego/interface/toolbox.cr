@@ -35,6 +35,12 @@ class Toolbox
     label_and_content.add Boleite::GUI::Label.new("HEIGHT", Boleite::Vector2f.new(200.0, 20.0))
     label_and_content.add height_box
 
+    spawn_box = Boleite::GUI::Layout.new :vertical
+    spawn_box.padding = Boleite::Vector2f.new 6.0, 2.0
+    create_spawn_tool spawn_box
+    label_and_content.add Boleite::GUI::Label.new("SPAWN", Boleite::Vector2f.new(200.0, 20.0))
+    label_and_content.add spawn_box
+
     container.add label_and_content
     @window.add container
   end
@@ -61,6 +67,11 @@ class Toolbox
 
   def select_height_tool(direction)
     attach_tool HeightTool.new direction.to_i8, @world, @camera
+    update_tool_label
+  end
+
+  def select_spawn_tool(tmpl)
+    attach_tool SpawnTool.new tmpl, @world, @camera
     update_tool_label
   end
 
@@ -112,5 +123,26 @@ class Toolbox
     button.click.on { select_height_tool -1 }
     current.add button
     container.add current
+  end
+
+  def create_spawn_tool(box)
+    templates = @world.entity_templates
+    containers = {} of EntityCategory => Boleite::GUI::Layout
+    templates.each do |key, tmpl|
+      category = tmpl.primary_category
+      if !containers.keys.includes? category
+        containers[category] = Boleite::GUI::Layout.new :horizontal
+      end
+
+      button = Boleite::GUI::Button.new tmpl.name, Boleite::Vector2f.new(80.0, 20.0)
+      button.click.on { select_spawn_tool tmpl }
+      containers[category].add button
+    end
+
+    containers.each do |category, container|
+      label = Boleite::GUI::Label.new category.name, Boleite::Vector2f.new(200.0, 20.0)
+      box.add label
+      box.add container
+    end
   end
 end
