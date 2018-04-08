@@ -1,4 +1,4 @@
-class EntityTemplateData
+struct EntityTemplateData
   @id : String
   @name = ""
 

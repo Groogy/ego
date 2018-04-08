@@ -1,13 +1,10 @@
 class EntityTemplate
   include CrystalClear
 
-  @id : String
-  @name : String
+  @data : EntityTemplateData
 
-  getter id, name
+  delegate id, name, to: @data
 
-  def initialize(data : EntityTemplateData)
-    @id = data.id
-    @name = data.name
+  def initialize(@data : EntityTemplateData)
   end
 end

@@ -1,4 +1,4 @@
-class EntityTemplateData
+struct EntityTemplateData
   struct ObjSerializer
     def unmarshal(node)
       result = EntityTemplateData.new node.key.as(String)
