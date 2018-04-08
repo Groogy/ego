@@ -5,7 +5,7 @@ class EntityTemplate
     def initialize(@tmpl)
     end
 
-    def post_load(manager)
+    def post_load(world)
     end
   end
 end

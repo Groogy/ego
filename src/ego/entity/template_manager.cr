@@ -46,7 +46,7 @@ class EntityTemplateManager
     end
 
     builders.each do |builder|
-      builder.post_load self
+      builder.post_load world
     end
   end
 end
