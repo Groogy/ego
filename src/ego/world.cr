@@ -1,6 +1,7 @@
 class World
   @map : Map
   @terrains : TerrainDatabase
+  @entities : EntityManager
   @current_tick = GameTime.new
   @paused = false
 
@@ -12,6 +13,8 @@ class World
     @map = Map.new Boleite::Vector2i.new(64, 64)
     @terrains = TerrainDatabase.new
     @terrains.load_folder "data/tiles"
+    @entities = EntityManager.new
+    @entities.templates.load_folder "data/entities"
   end
 
   def toggle_pause
