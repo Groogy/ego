@@ -4,10 +4,7 @@ end
 class TerrainDatabase
   include CrystalClear
 
-  class Collection < Hash(String, TerrainType)
-  end
-
-  @types = Collection.new
+  @types = {} of String => TerrainType
 
   requires Dir.exists? path
   def load_folder(path)
@@ -21,7 +18,7 @@ class TerrainDatabase
     File.open(path, "r") do |file|
       serializer = Boleite::Serializer.new nil
       data = serializer.read(file)
-      types = serializer.unmarshal(data, Collection)
+      types = serializer.unmarshal(data, Hash(String, TerrainType))
       assert types
       @types.merge! types if types
     end

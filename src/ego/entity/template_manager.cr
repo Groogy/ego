@@ -1,35 +1,32 @@
 class EntityTemplateManager
   include CrystalClear
 
-  class LoadedData < Hash(String, EntityTemplateData)
-  end
-
   @templates = {} of String => EntityTemplate
 
   requires Dir.exists? path
-  def load_folder(path)
-    loaded_data = LoadedData.new
+  def load_folder(path, world)
+    loaded_data = {} of String => EntityTemplateData
     Dir.each_child path do |file|
-      loaded_data.merge! load_file(path + File::SEPARATOR + file, false)
+      loaded_data.merge! load_file(path + File::SEPARATOR + file, world, false)
     end
-    post_load loaded_data
+    post_load loaded_data, world
   end
 
   requires File.exists? path
-  def load_file(path, do_post = true)
-    loaded_data = LoadedData.new
+  def load_file(path, world, do_post = true)
+    loaded_data = {} of String => EntityTemplateData
     File.open(path, "r") do |file|
       serializer = Boleite::Serializer.new nil
       data = serializer.read(file)
-      templates = serializer.unmarshal(data, LoadedData)
+      templates = serializer.unmarshal data, Hash(String, EntityTemplateData)
       assert templates
       loaded_data = templates if templates
     end
-    post_load loaded_data if do_post
+    post_load loaded_data, world if do_post
     loaded_data
   end
 
-  requires @types.has_key? key
+  requires @templates.has_key? key
   def get_template(key)
     @templates[key]
   end
@@ -40,7 +37,7 @@ class EntityTemplateManager
     end
   end
 
-  private def post_load(loaded_data)
+  private def post_load(loaded_data, world)
     builders = [] of EntityTemplate::Builder
     loaded_data.each do |key, value|
       tmpl = EntityTemplate.new value

@@ -7,6 +7,7 @@ class World
 
     def unmarshal(node)
       world = World.new
+      world.load_data
       world.current_tick = node.unmarshal "date", GameTime
       world.map = node.unmarshal "map", Map
       world
