@@ -24,12 +24,16 @@ class EntityCategoryManager
     end
   end
 
+  def count
+    @categories.size
+  end
+
   requires @categories.has_key? key
-  def get_category(key)
+  def get(key)
     @categories[key]
   end
 
-  def each_category
+  def each
     @categories.each do |key, value|
       yield key, value
     end

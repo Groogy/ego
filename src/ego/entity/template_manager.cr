@@ -26,12 +26,16 @@ class EntityTemplateManager
     loaded_data
   end
 
+  def count
+    @templates.size
+  end
+
   requires @templates.has_key? key
-  def get_template(key)
+  def get(key)
     @templates[key]
   end
 
-  def each_template
+  def each
     @templates.each do |key, value|
       yield key, value
     end

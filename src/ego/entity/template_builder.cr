@@ -13,7 +13,7 @@ class EntityTemplate
     def load_categories(manager)
       keys = @tmpl.data.categories
       @tmpl.categories = keys.map do |key|
-        manager.get_category key
+        manager.get key
       end
     end
   end
