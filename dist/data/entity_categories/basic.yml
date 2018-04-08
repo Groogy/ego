@@ -1,0 +1,14 @@
+food:
+  name: "Food"
+plant:
+  name: "Plant"
+building:
+  name: "Building"
+mineral:
+  name: "Mineral"
+tool:
+  name: "Tool"
+animal:
+  name: "Animal"
+material:
+  name: "Material"

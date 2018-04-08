@@ -8,7 +8,7 @@ class World
   @paused = false
 
   property current_tick, map
-  getter terrains
+  getter terrains, entities, entity_categories, entity_templates
   getter? paused
 
   def initialize

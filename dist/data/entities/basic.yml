@@ -1,4 +1,6 @@
 foo:
   name: "Foo"
+  categories: ["food", "animal"]
 bar:
   name: "Bar"
+  categories: ["plant", "material"]
