@@ -10,4 +10,8 @@ class EntityTemplate
 
   def initialize(@data : EntityTemplateData)
   end
+
+  def primary_category
+    @categories.first
+  end
 end
