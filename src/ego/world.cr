@@ -1,7 +1,7 @@
 class World
   @map : Map
   @terrains = TerrainDatabase.new
-  @entities = EntityManager.new
+  @entities : EntityManager
   @entity_categories = EntityCategoryManager.new
   @entity_templates = EntityTemplateManager.new
   @current_tick = GameTime.new
@@ -12,7 +12,9 @@ class World
   getter? paused
 
   def initialize
-    @map = Map.new Boleite::Vector2i.new(64, 64)
+    size = Boleite::Vector2i.new 64, 64
+    @map = Map.new size
+    @entities = EntityManager.new size
   end
 
   def load_data
