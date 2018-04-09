@@ -9,6 +9,7 @@ class MapRenderer
     @vertices = StaticArray(Vertices, 16).new do |index|
       Vertices.new index.to_u8
     end
+    assert @vertices.size == Map::MAX_HEIGHT
   end
 
   def notify_change
