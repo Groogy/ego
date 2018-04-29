@@ -68,16 +68,18 @@ class EntityRenderer
     end
 
     private def create_vertices_for_entity(entity, map, buffer)
-      pos = entity.position
-      rot = pos.point.rotate_by map
-      vertices = pos.point.create_vertices_for_render map
+      graphics = entity.template.graphics
+      uv = graphics.uv
+      pos = entity.position.point
+      rot = pos.rotate_by map
+      vertices = pos.create_vertices_for_render map
       depth = rot.x + rot.y
-      sprite_height = Map::TILE_HEIGHT_SHIFT * 8.0
-      left = Vertex.new vertices[0], depth, 0.0, sprite_height / 8.0
-      right = Vertex.new vertices[2], depth, Map::TILE_WIDTH, sprite_height / 8.0
-      bottom = Vertex.new vertices[3], depth, Map::TILE_WIDTH / 2, 0.0
-      upper_left = Vertex.new vertices[0].x, vertices[0].y - sprite_height, depth, 0.0, sprite_height
-      upper_right = Vertex.new vertices[2].x, vertices[2].y - sprite_height, depth, Map::TILE_WIDTH, sprite_height
+      sprite_height = graphics.height
+      left = Vertex.new vertices[0], depth, uv.x, uv.y + Map::TILE_HEIGHT_SHIFT
+      right = Vertex.new vertices[2], depth, uv.x + Map::TILE_WIDTH, uv.y + Map::TILE_HEIGHT_SHIFT
+      bottom = Vertex.new vertices[3], depth, uv.x + Map::TILE_WIDTH / 2, uv.y
+      upper_left = Vertex.new vertices[0].x, vertices[0].y - sprite_height, depth, uv.x, uv.y + sprite_height
+      upper_right = Vertex.new vertices[2].x, vertices[2].y - sprite_height, depth, uv.x + Map::TILE_WIDTH, uv.y + sprite_height
 
       buffer.add_data left
       buffer.add_data bottom

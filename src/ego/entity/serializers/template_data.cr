@@ -4,6 +4,7 @@ struct EntityTemplateData
       result = EntityTemplateData.new node.key.as(String)
       result.name = node.unmarshal_string "name"
       result.categories = node.unmarshal "categories", Array(String)
+      result.graphics = node.unmarshal "graphics", EntityGraphicsTemplate
       result
     end
   end

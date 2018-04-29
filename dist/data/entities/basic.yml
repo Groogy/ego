@@ -1,6 +1,12 @@
 foo:
   name: "Foo"
   categories: ["food", "animal"]
+  graphics:
+    uv: [0, 0]
+    height: 64
 bar:
   name: "Bar"
   categories: ["plant", "material"]
+  graphics:
+    uv: [0, 0]
+    height: 64
