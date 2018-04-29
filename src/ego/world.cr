@@ -39,6 +39,7 @@ class World
 
   def render(renderer)
     @map.render renderer
+    @entities.render renderer
   end
 
   def generate_map

@@ -4,6 +4,7 @@ class EntityManager
   @map : Map
   @grid : EntityGrid
   @entities = [] of Entity
+  @renderer = EntityRenderer.new
 
   def initialize(@map)
     @grid = EntityGrid.new @map.size
@@ -14,6 +15,18 @@ class EntityManager
     @grid.add entity
     @entities << entity
     puts "Created #{entity} at #{entity.position}"
+    @renderer.notify_change
     entity
+  end
+
+  def render(renderer)
+    @renderer.notify_change
+    @renderer.render self, @map, renderer
+  end
+
+  def each
+    @entities.each do |entity|
+      yield entity
+    end
   end
 end
