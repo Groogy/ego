@@ -2,6 +2,8 @@ food:
   name: "Food"
 plant:
   name: "Plant"
+population:
+  name: "Population"
 building:
   name: "Building"
 mineral:

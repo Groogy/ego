@@ -1,12 +1,12 @@
-foo:
-  name: "Foo"
-  categories: ["food", "animal"]
+nomadic_population:
+  name: "Nomads"
+  categories: ["population"]
   graphics:
     uv: [0, 0]
     height: 64
 bar:
-  name: "Bar"
+  name: "Trees"
   categories: ["plant", "material"]
   graphics:
-    uv: [0, 0]
+    uv: [52, 0]
     height: 64

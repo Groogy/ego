@@ -66,8 +66,11 @@ fragment
 	void main()
 	{
 		vec2 texSize = textureSize(albedoSampler, 0);
-		//outputAlbedo = vec4(inputVertex.uv / texSize, 0, 1);
-		outputAlbedo = texture(albedoSampler, inputVertex.uv / texSize);
+		vec4 albedo = texture(albedoSampler, inputVertex.uv / texSize);
+		if(albedo.a == 0)
+			discard;
+
+		outputAlbedo = albedo;
 		gl_FragDepth = 1 - (inputVertex.zOrder + 1) / (mapSize.x * mapSize.y);
 	}
 }
