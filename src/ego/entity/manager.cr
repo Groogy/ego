@@ -1,11 +1,12 @@
 class EntityManager
   include CrystalClear
 
+  @map : Map
   @grid : EntityGrid
   @entities = [] of Entity
 
-  def initialize(size)
-    @grid = EntityGrid.new size
+  def initialize(@map)
+    @grid = EntityGrid.new @map.size
   end
 
   def create_entity(tmpl, pos)

@@ -13,17 +13,17 @@ abstract struct EntityPos
 end
 
 struct MapEntityPos < EntityPos
-  @pos : Boleite::Vector2u16
+  @pos : Map::Pos
 
   def initialize(@pos)
   end
 
-  def initialize(pos : Map::Pos)
-    @pos = Boleite::Vector2u16.new pos.x, pos.y
+  def initialize(pos : Boleite::Vector2u16)
+    @pos = Map::Pos.new pos.x, pos.y
   end
 
   def initialize(x, y)
-    @pos = Boleite::Vector2u16.new x, y
+    @pos = Map::Pos.new x, y
   end
 
   def point

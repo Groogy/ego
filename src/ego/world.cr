@@ -14,7 +14,7 @@ class World
   def initialize
     size = Boleite::Vector2i.new 64, 64
     @map = Map.new size
-    @entities = EntityManager.new size
+    @entities = EntityManager.new @map
   end
 
   def load_data
