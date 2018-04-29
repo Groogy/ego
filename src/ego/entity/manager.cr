@@ -14,7 +14,6 @@ class EntityManager
     entity = Entity.new tmpl, pos
     @grid.add entity
     @entities << entity
-    puts "Created #{entity} at #{entity.position}"
     @renderer.notify_change
     entity
   end
