@@ -20,9 +20,8 @@ class MapRenderer
 
     @need_update = true
     @vbo : Boleite::VertexBufferObject?
-    @target_height = 0u8
 
-    def initialize(@target_height)
+    def initialize
     end
 
     def get_vertices(map, gfx) : Boleite::VertexBufferObject
@@ -61,16 +60,12 @@ class MapRenderer
       order = { 0, 1, 2, 0, 2, 3,
                 0, 4, 5, 5, 1, 0,
                 2, 1, 6, 6, 7, 2 }
-      flip_x, flip_y = calculate_ranges map
       size = map.size
       size.y.times do |iy|
-        iy = size.y - iy - 1 if flip_y
         size.x.times do |ix|
-          ix = size.x - ix - 1 if flip_x
           point = Map::Pos.new(ix.to_u16, iy.to_u16)
           rot = point.rotate_by map
           height = map.get_height point
-          next if height != @target_height
           left, right = calculate_heights height, point, map
           terrain = map.get_terrain point
           color = get_vertex_color height, terrain
@@ -89,10 +84,6 @@ class MapRenderer
           end
         end
       end
-    end
-
-    private def calculate_ranges(map)
-      {map.view_rotation > 0 && map.view_rotation < 3, map.view_rotation > 1}
     end
 
     private def calculate_heights(height, point, map)

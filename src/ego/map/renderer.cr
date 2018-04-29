@@ -3,29 +3,24 @@ class MapRenderer
 
   @@shader : Boleite::Shader?
   
+  @vertices = Vertices.new
   @size : Boleite::Vector2i
 
   def initialize(@size)
-    @vertices = StaticArray(Vertices, 16).new do |index|
-      Vertices.new index.to_u8
-    end
-    assert @vertices.size == Map::MAX_HEIGHT
   end
 
   def notify_change
-    @vertices.each &.need_update=(true)
+    @vertices.need_update = true
   end
 
   def render(map, renderer)
     gfx = renderer.gfx
     shader = get_shader gfx
     shader.set_parameter "mapSize", map.size.to_f32
-    @vertices.each do |v|
-      draw = v.get_vertices map, gfx
-      if draw.total_buffer_size > 0
-        drawcall = Boleite::DrawCallContext.new draw, shader
-        renderer.draw drawcall
-      end
+    draw = @vertices.get_vertices map, gfx
+    if draw.total_buffer_size > 0
+      drawcall = Boleite::DrawCallContext.new draw, shader
+      renderer.draw drawcall
     end
   end
 
