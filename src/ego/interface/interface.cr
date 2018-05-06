@@ -1,13 +1,14 @@
 class GameStateInterface
   @gui : Boleite::GUI
 
-  getter control_menu
+  getter control_menu, inspector
 
   def initialize(@gui, app, world, camera)
     @control_menu = ControlMenu.new world
     @toolbox = Toolbox.new world, camera
     @debug_stats_viewer = DebugStatsViewer.new @gui.target_size, world
     @game_menu = GameMenu.new @gui, app, world
+    @inspector = Inspector.new world, camera
   end
 
   def update(full_update)
@@ -24,15 +25,19 @@ class GameStateInterface
     @gui.add_root @toolbox.window
     @gui.add_root @debug_stats_viewer.window
     @gui.add_root @game_menu.window
+    @gui.add_root @inspector.window
 
     @toolbox.enable app
+    @inspector.enable app
   end
 
   def disable(app)
+    @inspector.disable app
     @toolbox.disable app
     @gui.remove_root @control_menu.window
     @gui.remove_root @toolbox.window
     @gui.remove_root @debug_stats_viewer.window
     @gui.remove_root @game_menu.window
+    @gui.remove_root @inspector.window
   end
 end
