@@ -28,6 +28,7 @@ abstract class ToolBase
   end
 
   def translate(event : Boleite::InputEvent)
+    event.claim
     {@mouse_last}
   end
 end
