@@ -4,7 +4,7 @@ class Inspector
   @selected_tile : Map::Pos?
   @input = Boleite::InputReceiver.new
 
-  getter window
+  getter window, selected_tile
 
   def initialize(@world, @camera)
     @window = Boleite::GUI::Window.new
@@ -18,7 +18,8 @@ class Inspector
 
   def select_tile(coords : Map::Pos?)
     @selected_tile = coords
-    update_tile_info @selected_tile
+    @world.entities.renderer.selected_tile = coords
+    update_tile_info coords
   end
 
   def enable(app)

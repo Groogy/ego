@@ -6,6 +6,8 @@ class EntityManager
   @entities = [] of Entity
   @renderer = EntityRenderer.new
 
+  getter renderer
+
   def initialize(@map)
     @grid = EntityGrid.new @map.size
   end
@@ -19,7 +21,6 @@ class EntityManager
   end
 
   def render(renderer)
-    @renderer.notify_change
     @renderer.render self, @map, renderer
   end
 

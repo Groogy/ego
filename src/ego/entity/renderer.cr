@@ -6,6 +6,7 @@ class EntityRenderer
   @@texture : Boleite::Texture?
 
   @vertices = Vertices.new
+  @selected_tile : Map::Pos?
 
   def initialize
   end
@@ -14,13 +15,17 @@ class EntityRenderer
     @vertices.need_update = true
   end
 
+  def selected_tile=(@selected_tile : Map::Pos?)
+    notify_change
+  end
+
   def render(entities, map, renderer)
     gfx = renderer.gfx
     texture = get_texture gfx
     shader = get_shader gfx
     shader.set_parameter "albedoSampler", texture
     shader.set_parameter "mapSize", map.size.to_f32
-    draw = @vertices.get_vertices entities, map, gfx
+    draw = @vertices.get_vertices @selected_tile, entities, map, gfx
     if draw.total_buffer_size > 0
       drawcall = Boleite::DrawCallContext.new draw, shader
       renderer.draw drawcall

@@ -41,5 +41,6 @@ class GameStateInputHandler < Boleite::InputReceiver
 
   def on_rotate_map_key(dir)
     @world.map.rotate_view dir
+    @world.entities.renderer.notify_change
   end
 end

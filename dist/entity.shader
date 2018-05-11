@@ -25,6 +25,7 @@ vertex
 {
 	layout(location = 0) in vec4 position;
 	layout(location = 1) in vec2 uv;
+	layout(location = 2) in vec4 color;
 
 	uniform mat4 world;
 	uniform mat4 camera;
@@ -33,6 +34,7 @@ vertex
 	out VertexData {
 		vec4 position;
 		vec2 uv;
+		vec4 color;
 		float zOrder;
 	} outputVertex;
 
@@ -46,6 +48,7 @@ vertex
 		gl_Position = projection * viewPos;
 		outputVertex.position = worldPos;
 		outputVertex.uv = uv;
+		outputVertex.color = color;
 	}
 }
 
@@ -60,13 +63,15 @@ fragment
 	in VertexData {
 		vec4 position;
 		vec2 uv;
+		vec4 color;
 		float zOrder;
 	} inputVertex;
 
 	void main()
 	{
 		vec2 texSize = textureSize(albedoSampler, 0);
-		vec4 albedo = texture(albedoSampler, inputVertex.uv / texSize);
+		vec4 tex = texture(albedoSampler, inputVertex.uv / texSize);
+		vec4 albedo = tex * inputVertex.color;
 		if(albedo.a == 0)
 			discard;
 
