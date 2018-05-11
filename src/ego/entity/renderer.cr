@@ -50,6 +50,8 @@ class EntityRenderer
   end
 
   private def create_texture(gfx) : Boleite::Texture
-    Boleite::Texture.load_file TEXTURE_FILE, gfx
+    texture = Boleite::Texture.load_file TEXTURE_FILE, gfx
+    texture.smooth = false
+    texture
   end
 end
