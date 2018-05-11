@@ -7,6 +7,7 @@ class EntityManager
   @renderer = EntityRenderer.new
 
   getter renderer
+  delegate each_at, to: @grid
 
   def initialize(@map)
     @grid = EntityGrid.new @map.size

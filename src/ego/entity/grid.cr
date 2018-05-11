@@ -20,6 +20,12 @@ class EntityGrid
     def includes?(obj)
       @entities.includes? obj
     end
+
+    def each
+      @entities.each do |entity|
+        yield entity
+      end
+    end
   end
 
   @size : Boleite::Vector2i
@@ -66,5 +72,11 @@ class EntityGrid
 
   def includes?(entity, pos)
     @grid[pos.x + old.y * @size.y].includes? entity
+  end
+
+  def each_at(pos)
+    @grid[pos.x + pos.y * @size.y].each do |entity|
+      yield entity
+    end
   end
 end
