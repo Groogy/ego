@@ -8,16 +8,18 @@ class MenuState < Boleite::State
     shader = Boleite::Shader.load_file "test.shader", gfx
     @renderer = Boleite::ForwardRenderer.new gfx, @camera2d, shader
     
-    @gui = Boleite::GUI.new gfx, @app.input_router
+    @gui = Boleite::GUI.new gfx
     @window = Boleite::GUI::Window.new
     build_gui target.size
   end
 
   def enable
+    @gui.enable @app.input_router
     @gui.add_root @window
   end
 
   def disable
+    @gui.disable @app.input_router
     @gui.remove_root @window
   end
 

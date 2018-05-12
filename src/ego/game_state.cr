@@ -10,12 +10,13 @@ class GameState < Boleite::State
 
     gfx = @app.graphics
     
-    @gui = Boleite::GUI.new gfx, @app.input_router
+    @gui = Boleite::GUI.new gfx
     @rendering = GameStateRenderHelper.new gfx
     @interface = GameStateInterface.new @gui, @app, @world, @rendering.camera
   end
 
   def enable
+    @gui.enable @app.input_router
     @interface.enable @app
     camera_input = CameraInputHandler.new @rendering.camera
     game_input = GameStateInputHandler.new @interface, @world
@@ -31,6 +32,7 @@ class GameState < Boleite::State
     @camera_input = nil
     @game_input = nil
     @interface.disable @app
+    @gui.disable @app.input_router
   end
 
   def update(delta)
