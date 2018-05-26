@@ -25,10 +25,9 @@ class GameStateInterface
     @gui.add_root @toolbox.window
     @gui.add_root @debug_stats_viewer.window
     @gui.add_root @game_menu.window
-    @gui.add_root @inspector.window
 
     @toolbox.enable app
-    @inspector.enable app
+    @inspector.enable app, @gui
   end
 
   def disable(app)
@@ -38,6 +37,5 @@ class GameStateInterface
     @gui.remove_root @toolbox.window
     @gui.remove_root @debug_stats_viewer.window
     @gui.remove_root @game_menu.window
-    @gui.remove_root @inspector.window
   end
 end
