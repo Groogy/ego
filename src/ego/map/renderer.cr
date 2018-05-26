@@ -1,5 +1,5 @@
 class MapRenderer
-  SHADER_FILE = "map.shader"
+  SHADER_FILE = "resources/shaders/map.shader"
 
   @@shader : Boleite::Shader?
   

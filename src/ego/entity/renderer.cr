@@ -1,5 +1,5 @@
 class EntityRenderer
-  SHADER_FILE = "entity.shader"
+  SHADER_FILE = "resources/shaders/entity.shader"
   TEXTURE_FILE = "resources/entities.png"
 
   @@shader : Boleite::Shader?

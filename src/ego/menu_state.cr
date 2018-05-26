@@ -5,10 +5,10 @@ class MenuState < Boleite::State
     gfx = @app.graphics
     target = gfx.main_target
     @camera2d = Boleite::Camera2D.new(target.width.to_f32, target.height.to_f32, 0f32, 1f32)
-    shader = Boleite::Shader.load_file "test.shader", gfx
+    shader = Boleite::Shader.load_file "resources/shaders/test.shader", gfx
     @renderer = Boleite::ForwardRenderer.new gfx, @camera2d, shader
     
-    @gui = Boleite::GUI.new gfx
+    @gui = Boleite::GUI.new gfx, Boleite::Font.new(gfx, "resources/fonts/arial.ttf")
     @window = Boleite::GUI::Window.new
     build_gui target.size
   end

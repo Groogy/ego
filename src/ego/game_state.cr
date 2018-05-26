@@ -10,7 +10,7 @@ class GameState < Boleite::State
 
     gfx = @app.graphics
     
-    @gui = Boleite::GUI.new gfx
+    @gui = Boleite::GUI.new gfx, Boleite::Font.new(gfx, "resources/fonts/arial.ttf")
     @rendering = GameStateRenderHelper.new gfx
     @interface = GameStateInterface.new @gui, @app, @world, @rendering.camera
   end
