@@ -74,7 +74,6 @@ class Inspector
   end
 
   def open_entity(entity)
-    pp entity.template.name
     if gui = @gui
       position = entity.position
       window = Boleite::GUI::Window.new
