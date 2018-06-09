@@ -34,4 +34,16 @@ class EntityComponentData
   def get_bool(key)
     @data[key].as(Bool)
   end
+
+  requires @data.has_key? key
+  requires @data[key].is_a? Array(DataType)
+  def get_array(key)
+    @data[key].as(Array(DataType))
+  end
+
+  requires @data.has_key? key
+  requires @data[key].is_a? Hash(String, DataType)
+  def get_hash(key)
+    @data[key].as(Hash(String, DataType))
+  end
 end
