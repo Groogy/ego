@@ -6,8 +6,9 @@ class World
   @entity_templates = EntityTemplateManager.new
   @current_tick = GameTime.new
   @paused = false
+  @random : Boleite::Random
 
-  property current_tick, map
+  property current_tick, map, random
   getter terrains, entities, entity_categories, entity_templates
   getter? paused
 
@@ -15,6 +16,7 @@ class World
     size = Boleite::Vector2i.new 64, 64
     @map = Map.new size
     @entities = EntityManager.new @map
+    @random = Boleite::NoiseRandom.new 0u32
   end
 
   def load_data
