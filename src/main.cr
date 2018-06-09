@@ -5,6 +5,7 @@ require "./ego/serializers/*"
 require "./ego/map/*"
 require "./ego/map/serializers/*"
 require "./ego/entity/*"
+require "./ego/entity/components/*"
 require "./ego/entity/serializers/*"
 
 app = EgoApplication.new

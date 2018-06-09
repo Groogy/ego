@@ -13,10 +13,11 @@ class EntityManager
     @grid = EntityGrid.new @map.size
   end
 
-  def create_entity(tmpl, pos)
+  def create_entity(tmpl, pos, world)
     entity = Entity.new tmpl, pos
     @grid.add entity
     @entities << entity
+    entity.initialize_components world
     @renderer.notify_change
     entity
   end

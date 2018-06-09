@@ -33,6 +33,10 @@ class World
     @current_tick
   end
 
+  def spawn_entity(template, pos)
+    @entities.create_entity template, pos, self
+  end
+
   def update
     unless @paused
       @current_tick = @current_tick.next_tick

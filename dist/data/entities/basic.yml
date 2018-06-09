@@ -1,12 +1,16 @@
-nomadic_population:
-  name: "Nomads"
+primitive_population:
+  name: "Primitive Settlement"
   categories: ["population"]
   graphics:
     uv: [0, 0]
     height: 64
+  components:
+    - id: "hunger"
+      args: { max_satisfaction: 10000, satisfaction_decay: 1, edible: ["foods"] }
 bar:
   name: "Trees"
   categories: ["plant", "material"]
   graphics:
     uv: [52, 0]
     height: 64
+  components: []
