@@ -1,7 +1,7 @@
 class EntityComponentData
   include CrystalClear
 
-  alias DataType = Bool | Int64 | Float64 | String | Hash(String, DataType) | Array(DataType)
+  alias DataType = Bool | Int64 | Float64 | String | Hash(String, DataType) | Array(DataType) | GameTime
 
   @id : String
   @data : Hash(String, DataType)
@@ -9,6 +9,7 @@ class EntityComponentData
   getter id, data
 
   def initialize(@id, @data)
+    convert_gametime_data
   end
 
   requires @data.has_key? key
@@ -45,5 +46,28 @@ class EntityComponentData
   requires @data[key].is_a? Hash(String, DataType)
   def get_hash(key)
     @data[key].as(Hash(String, DataType))
+  end
+
+  requires @data.has_key? key
+  requires @data[key].is_a? GameTime
+  def get_gametime(key)
+    @data[key].as(GameTime)
+  end
+
+  private def convert_gametime_data
+    @data.each do |key, value|
+      if value.is_a? Hash(String, DataType)
+        hsh = {} of String => Int64
+        value.each do |k, v|
+          hsh[k] = v.as(Int64)
+        end
+        begin
+          time = GameTime.new hsh
+        rescue ArgumentError
+        else
+          @data[key] = time
+        end
+      end
+    end
   end
 end
