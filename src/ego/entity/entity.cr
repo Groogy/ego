@@ -4,6 +4,7 @@ class Entity
   @template : EntityTemplate
   @position : EntityPos
   @components = [] of EntityComponent
+  @destroyed = false
 
   getter template, position
 
@@ -54,5 +55,13 @@ class Entity
   def get_component(klass)
     comp = get_component? klass
     comp.as(EntityComponent)
+  end
+
+  def destroy
+    @destroyed = true
+  end
+
+  def destroyed?
+    @destroyed
   end
 end

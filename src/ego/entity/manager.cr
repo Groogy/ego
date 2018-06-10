@@ -34,6 +34,7 @@ class EntityManager
     @systems.each do |system|
       update_system world, system
     end
+    clean_destroyed_entities
   end
 
   def update_system(world, system)
@@ -43,6 +44,12 @@ class EntityManager
       if component
         system.update world, entity, component
       end
+    end
+  end
+
+  def clean_destroyed_entities
+    @entities.each do |entity|
+      @entities.delete entity if entity.destroyed?
     end
   end
 
