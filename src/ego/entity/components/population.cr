@@ -2,7 +2,7 @@ class PopulationComponent < EntityComponent
   include CrystalClear
   
   @population : Int64
-  @growth = 0i64
+  @growth = GameTime.new
 
   def initialize(data, entity, world)
     super data, entity, world
@@ -22,7 +22,7 @@ class PopulationComponent < EntityComponent
   end
 
   def base_growth
-    @data.get_int "growth"
+    @data.get_gametime "growth"
   end
 
   def time_for_next_growth
@@ -30,10 +30,10 @@ class PopulationComponent < EntityComponent
   end
 
   def advance_growth
-    @growth += 1i64
+    @growth = @growth.next_tick
     if @growth >= time_for_next_growth
       @population += 1i64 if @population < max_population
-      @growth = 0i64
+      @growth = GameTime.new
     end
   end
 
