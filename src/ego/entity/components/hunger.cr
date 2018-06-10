@@ -6,7 +6,6 @@ class HungerComponent < EntityComponent
   def initialize(data, entity, world)
     super data, entity, world
     @satisfaction = data.get_int "max_satisfaction"
-    pp edible
   end
 
   def satisfaction_decay

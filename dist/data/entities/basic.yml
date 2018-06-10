@@ -7,6 +7,8 @@ primitive_population:
   components:
     - id: "hunger"
       args: { max_satisfaction: 10000, satisfaction_decay: 1, edible: ["foods"] }
+    - id: "population"
+      args: { max: 24, start: 5, growth: 5000000 }
 bar:
   name: "Trees"
   categories: ["plant", "material"]
