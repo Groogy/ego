@@ -5,18 +5,11 @@ struct GameTime
     end
 
     def unmarshal(node)
-      time = GameTime.new
+      hsh = {} of String => Int64
       node.each do |key, value|
-        value = value.as(Int64)
-        case key
-        when "years" then time.add_years value
-        when "months" then time.add_months value
-        when "days" then time.add_days value
-        when "hours" then time.add_hours value
-        when "ticks" then time.add_ticks value
-        end
+        hsh[key.as(String)] = value.as(Int64)
       end
-      time
+      GameTime.new hsh
     end
   end
 

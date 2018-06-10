@@ -34,6 +34,20 @@ struct GameTime
   def initialize(@ticks)
   end
 
+  def initialize(data : Hash(String, Int64))
+    data.each do |key, value|
+      case key
+      when "years" then add_years value
+      when "months" then add_months value
+      when "days" then add_days value
+      when "hours" then add_hours value
+      when "ticks" then add_ticks value
+      else
+        raise ArgumentError.new("Invalid hash given to construct time")
+      end
+    end
+  end
+
   def next_tick
     GameTime.new @ticks + 1
   end
