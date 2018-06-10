@@ -15,6 +15,14 @@ class EntityTemplate
     @categories.first
   end
 
+  def has_category?(cat : EntityCategory)
+    @categories.includes? cat
+  end
+
+  def has_category?(str : String)
+    @categories.any? { |cat| cat.id == str }
+  end
+
   def allocate_components
     arr = [] of EntityComponent
     @data.components.each do |data|

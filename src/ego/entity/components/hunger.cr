@@ -1,4 +1,6 @@
 class HungerComponent < EntityComponent
+  include CrystalClear
+
   @satisfaction : Int64
 
   property satisfaction
@@ -18,5 +20,20 @@ class HungerComponent < EntityComponent
 
   def edible
     @data.get_array("edible").map { |val| val.as(String) }
+  end
+
+  def is_edible?(entity)
+    tmpl = entity.template
+    edible.any? { |cat| tmpl.has_category? category }
+  end
+
+  requires food.has_component FoodComponent
+  requires is_edible? food
+  def eat(food)
+    comp = food.get_component FoodComponent
+    worth = comp.hunger_worth
+    @satisfaction += worth
+    @satisfaction = {@satisfaction, max_satisfaction}.min
+    food.destroy
   end
 end

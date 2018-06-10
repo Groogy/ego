@@ -16,3 +16,21 @@ bar:
     uv: [52, 0]
     height: 64
   components: []
+strawberry_flower:
+  name: "Strawberry Flowers"
+  categories: ["plant"]
+  graphics:
+    uv: [97, 0]
+    height: 32
+  components:
+    - id: "harvestable"
+      args: { provides: "strawberry", growth_time: { months: 2 } }
+strawberry:
+  name: "Strawberry"
+  categories: ["food"]
+  graphics:
+    uv: [97, 40]
+    height: 32
+  components:
+    - id: "food"
+      args: { hunger_worth: 200 }
