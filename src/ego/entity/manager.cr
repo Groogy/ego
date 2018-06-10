@@ -23,7 +23,7 @@ class EntityManager
 
   def create_entity(tmpl, pos, world)
     entity = Entity.new tmpl, pos
-    @grid.add entity
+    @grid.add entity if pos.on_map?
     @entities << entity
     entity.initialize_components world
     @renderer.notify_change
