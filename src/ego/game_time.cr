@@ -97,4 +97,56 @@ struct GameTime
   def to_i
     @ticks
   end
+
+  def ==(val : Int)
+    @ticks == val
+  end
+
+  def >(val : Int)
+    @ticks > val
+  end
+
+  def <(val : Int)
+    @ticks < val
+  end
+
+  def >=(val : Int)
+    @ticks >= val
+  end
+
+  def <=(val : Int)
+    @ticks <= val
+  end
+
+  def >(val : GameTime)
+    @ticks > val.to_i
+  end
+
+  def <(val : GameTime)
+    @ticks < val.to_i
+  end
+
+  def >=(val : GameTime)
+    @ticks >= val.to_i
+  end
+
+  def <=(val : GameTime)
+    @ticks <= val.to_i
+  end
+
+  def +(val : Int)
+    GameTime.new @ticks + val
+  end
+
+  def -(val : Int)
+    GameTime.new @ticks - val
+  end
+
+  def /(val : Int)
+    GameTime.new @ticks / val
+  end
+
+  def *(val : Int)
+    GameTime.new @ticks * val
+  end
 end
