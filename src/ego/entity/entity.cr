@@ -33,17 +33,15 @@ class Entity
   end
 
   def get_component?(id : String)
-    @components.each do |obj|
-      return obj if obj.id == id
+    @components.find do |obj|
+      obj.id == id
     end
-    return nil
   end
 
   def get_component?(klass)
-    @components.each do |obj|
-      return obj if obj.class == klass
+    @components.find do |obj|
+      obj.class == klass
     end
-    return nil
   end
 
   requires has_component? id
