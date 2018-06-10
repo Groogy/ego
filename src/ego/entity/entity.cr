@@ -51,7 +51,7 @@ class Entity
   end
 
   requires has_component? klass
-  macro get_component(klass)
+  def get_component(klass)
     comp = get_component? klass
     comp.as(EntityComponent)
   end
