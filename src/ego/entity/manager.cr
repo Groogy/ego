@@ -6,11 +6,15 @@ class EntityManager
   @entities = [] of Entity
   @systems = [] of EntitySystem
   @renderer = EntityRenderer.new
+  @id_generator : EntityIdGenerator
 
   getter renderer
   delegate each_at, to: @grid
+  delegate each, each_with_index, to: @entities
 
-  def initialize(@map)
+  protected property entities, id_generator
+
+  def initialize(@map, @id_generator = EntityIdGenerator.new)
     @grid = EntityGrid.new @map.size
     create_systems
   end
@@ -21,13 +25,34 @@ class EntityManager
     {% end %}
   end
 
-  def create_entity(tmpl, pos, world)
-    entity = Entity.new tmpl, pos
+  def create(tmpl, pos, world)
+    entity = Entity.new @id_generator.generate, tmpl, pos
     @grid.add entity if pos.on_map?
     @entities << entity
     entity.initialize_components world
     @renderer.notify_change
     entity
+  end
+
+  def add(entity)
+    @grid.add entity if entity.position.on_map?
+    @entities << entity
+    @renderer.notify_change
+    entity
+  end
+
+  def find_by_id(id : EntityId)
+    each do |entity|
+      return entity if entity.id == id
+    end
+    nil
+  end
+
+  def exists_by_id?(id : EntityId)
+    each do |entity|
+      return true if entity.id == id
+    end
+    false
   end
 
   def update(world)
@@ -55,11 +80,5 @@ class EntityManager
 
   def render(renderer)
     @renderer.render self, @map, renderer
-  end
-
-  def each
-    @entities.each do |entity|
-      yield entity
-    end
   end
 end

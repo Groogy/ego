@@ -1,14 +1,16 @@
 class Entity
   include CrystalClear
 
+  @id : EntityId
   @template : EntityTemplate
   @position : EntityPos
   @components = [] of EntityComponent
   @destroyed = false
 
-  getter template, position
+  getter id, template
+  property position
 
-  def initialize(@template, @position)
+  def initialize(@id, @template, @position)
   end
 
   def initialize_components(world)

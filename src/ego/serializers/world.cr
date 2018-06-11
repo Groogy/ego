@@ -4,14 +4,16 @@ class World
       node.marshal "date", obj.current_tick
       node.marshal "random", obj.random
       node.marshal "map", obj.map
+      node.marshal "entities", obj.entities
     end
 
     def unmarshal(node)
-      world = World.new
+      world = node.data
       world.load_data
       world.current_tick = node.unmarshal "date", GameTime
       world.random = node.unmarshal "random", Boleite::NoiseRandom
       world.map = node.unmarshal "map", Map
+      world.entities = node.unmarshal "entities", EntityManager
       world
     end
   end

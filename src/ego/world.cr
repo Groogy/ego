@@ -8,9 +8,11 @@ class World
   @paused = false
   @random : Boleite::Random
 
-  property current_tick, map, random
-  getter terrains, entities, entity_categories, entity_templates
+  getter current_tick, map, random, terrains
+  getter entities, entity_categories, entity_templates
   getter? paused
+
+  protected setter current_tick, map, random, entities
 
   def initialize
     size = Boleite::Vector2i.new 64, 64
@@ -34,7 +36,7 @@ class World
   end
 
   def spawn_entity(template, pos)
-    @entities.create_entity template, pos, self
+    @entities.create template, pos, self
   end
 
   def update

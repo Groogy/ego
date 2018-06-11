@@ -43,7 +43,7 @@ struct SaveGameHelper
   end 
 
   def self.read_game_state(file)
-    serializer = Boleite::Serializer.new nil
+    serializer = Boleite::Serializer.new World.new
     data = serializer.read file
     tmp = serializer.unmarshal data, World
     tmp.as(World)

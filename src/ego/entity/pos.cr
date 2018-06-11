@@ -57,3 +57,31 @@ struct OffmapEntityPos < EntityPos
     @parent
   end
 end
+
+struct LoadingOffmapEntityPos < EntityPos
+  @parent : EntityId
+  
+  def initialize(@parent)
+  end
+
+  def point
+    raise Exception.new "Using uninitialized position!"
+  end
+
+  def on_map?
+    false
+  end
+
+  def create_pos(entities)
+    entity = entities.find_by_id @parent
+    if entity
+      OffmapEntityPos.new entity
+    else
+      raise Exception.new "Failed to find entity of id #{@parent}"
+    end
+  end
+
+  def parent
+    raise Exception.new "Using uninitialized position!"
+  end
+end
