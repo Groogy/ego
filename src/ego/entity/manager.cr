@@ -48,8 +48,8 @@ class EntityManager
   end
 
   def clean_destroyed_entities
-    @entities.each do |entity|
-      @entities.delete entity if entity.destroyed?
+    @entities.reject! do |entity|
+      entity.destroyed?
     end
   end
 
