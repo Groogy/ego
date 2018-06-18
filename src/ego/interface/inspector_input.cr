@@ -20,7 +20,7 @@ class InspectorClickInput
 
   def translate(event : Boleite::InputEvent)
     event.claim
-    pos = @mouse_last + @camera.position
+    pos = @mouse_last * @camera.scale + @camera.position
     point = @world.map.find_tile pos
     {point}
   end
