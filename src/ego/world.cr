@@ -15,7 +15,7 @@ class World
   protected setter current_tick, map, random, entities
 
   def initialize
-    size = Boleite::Vector2i.new 64, 64
+    size = Boleite::Vector2i.new 128, 128
     @map = Map.new size
     @entities = EntityManager.new @map
     @random = Boleite::NoiseRandom.new 0u32
@@ -55,7 +55,8 @@ class World
     grass = @terrains.find "grass"
     rock = @terrains.find "rock"
     
-    size = 64
+    size = 128
+    mountain_size = 36
     center = Boleite::Vector2f.new size / 2.0 - 1, size / 2.0 - 1
     size.times do |x|
       size.times do |y|
@@ -63,8 +64,8 @@ class World
         distance = Boleite::Vector.magnitude delta
         coord = Boleite::Vector2i.new x, y
 
-        if distance < 18
-          height = 9.0 - distance / 2.0
+        if distance < mountain_size
+          height = Map::MAX_HEIGHT * ((mountain_size - distance) / mountain_size)
           @map.set_height coord, height
           @map.set_terrain coord, rock
         else

@@ -1,10 +1,10 @@
 class Map
   include CrystalClear
 
-  TILE_WIDTH = 48
-  TILE_HEIGHT = 32
-  TILE_HEIGHT_SHIFT = 8
-  MAX_HEIGHT = 16
+  TILE_WIDTH = 12
+  TILE_HEIGHT = 8
+  TILE_HEIGHT_SHIFT = 2
+  MAX_HEIGHT = 64
 
   class Data
     @height = 0u8
@@ -44,7 +44,7 @@ class Map
   end
 
   requires inside? pos
-  requires height >= 0 && height < MAX_HEIGHT
+  requires height >= 0 && height <= MAX_HEIGHT
   def set_height(pos, height)
     @data[Pos.new pos].height = height.to_u8
     @renderer.notify_change

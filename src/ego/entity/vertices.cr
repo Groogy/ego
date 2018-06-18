@@ -129,10 +129,10 @@ class EntityRenderer
         Vertex.new(raw[1], depth),
         Vertex.new(raw[2], depth),
         Vertex.new(raw[3], depth),
-        Vertex.new(raw[0].x + 5, raw[0].y, depth),
-        Vertex.new(raw[1].x, raw[1].y + 5, depth),
-        Vertex.new(raw[2].x - 5, raw[2].y, depth),
-        Vertex.new(raw[3].x, raw[3].y - 5, depth),
+        Vertex.new(raw[0].x + 2, raw[0].y, depth),
+        Vertex.new(raw[1].x, raw[1].y + 2, depth),
+        Vertex.new(raw[2].x - 2, raw[2].y, depth),
+        Vertex.new(raw[3].x, raw[3].y - 2, depth),
       }
 
       vertices.each &.color=(Boleite::Color.black)
