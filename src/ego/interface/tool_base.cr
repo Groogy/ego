@@ -10,7 +10,7 @@ abstract class ToolBase
   end
 
   def on_screen_click(pos : Boleite::Vector2f)
-    pos = pos + @camera.position
+    pos = pos * @camera.scale + @camera.position
     point = @world.map.find_tile pos
     on_map_click point if point
   end
