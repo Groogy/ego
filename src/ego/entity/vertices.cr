@@ -86,40 +86,64 @@ class EntityRenderer
     end
 
     private def create_vertices_for_entity(entity, map, buffer)
-      order = {
-        0, 2, 1,
-        0, 1, 3,
-        1, 4, 3
-      }
+      tmpl = entity.template
+      pp tmpl.id
+      area = tmpl.size
+      uv_area = calculate_uv_area_for tmpl
+      base_pos = entity.position.point
+      area.y.times do |y|
+        area.x.times do |x|
+          pos = base_pos
+          pos.x -= x
+          pos.y -= y
+          create_vertices_for_pos tmpl, pos, base_pos, uv_area, map, buffer
+        end
+      end
+      if tmpl.graphics.height > 0
+        create_top_vertices_for tmpl, base_pos, map, buffer
+      end
+    end
 
-      vertices = calculate_vertices_for entity.template, entity.position.point, map
+    private def calculate_uv_area_for(tmpl)
+      uv = tmpl.graphics.uv_size.to_f
+      uv.y -= tmpl.graphics.height
+      uv / tmpl.size.to_f
+    end
+
+    private def create_vertices_for_pos(tmpl, pos, base_pos, uv_area, map, buffer)
+      order = {
+        3, 2, 0,
+        2, 1, 0
+      }
+      diff = (base_pos - pos).translate_to_isometric
+      offset = Boleite::Vector2f.new(-diff[0] / Map::TILE_WIDTH.to_f, diff[1] / Map::TILE_HEIGHT.to_f) * uv_area
+      vertices = calculate_square_vertices_for tmpl, pos, offset, uv_area, map
       order.each { |index| buffer.add_data vertices[index] }
     end
 
-    private def calculate_vertices_for(tmpl, pos, map)
+    private def calculate_square_vertices_for(tmpl, pos, uv_offset, uv_area, map)
       graphics = tmpl.graphics
-      uv = graphics.uv.to_f
-      uv_size = graphics.uv_size.to_f
+      uv = graphics.uv.to_f + uv_offset
       points = pos.create_vertices_for_render map
-      points = adjust_vertex_points points, tmpl
-      depth = calculate_depth pos, map
-      sprite_height = graphics.height
+      depth = calculate_depth tmpl, pos, map
       
-      left = Vertex.new points[0], depth, uv.x - uv_size.x / 2, uv.y + uv_size.y - sprite_height
-      right = Vertex.new points[2], depth, uv.x + uv_size.x / 2, uv.y + uv_size.y - sprite_height
+      left = Vertex.new points[0], depth, uv.x - uv_area.x / 2, uv.y + uv_area.y / 2
+      top = Vertex.new points[1], depth, uv.x, uv.y + uv_area.y
+      right = Vertex.new points[2], depth, uv.x + uv_area.x / 2, uv.y + uv_area.y / 2
       bottom = Vertex.new points[3], depth, uv.x, uv.y
-      upper_left = Vertex.new points[0].x, points[0].y - sprite_height / 4, depth, uv.x - uv_size.x / 2, uv.y + uv_size.y
-      upper_right = Vertex.new points[2].x, points[2].y - sprite_height / 4, depth, uv.x + uv_size.x / 2, uv.y + uv_size.y
-      return left, right, bottom, upper_left, upper_right
+      return left, top, right, bottom
     end
 
-    def adjust_vertex_points(points, tmpl)
-      area = (tmpl.size.to_f - 1.0) * Boleite::Vector2f.new(Map::TILE_WIDTH / 2.0, Map::TILE_HEIGHT / 2.0)
-      {points[0] + Boleite::Vector2f.new(-area.x, -area.y), points[1],
-      points[2] + Boleite::Vector2f.new(area.x, -area.y), points[3]}
+    private def create_top_vertices_for(tmpl, pos, map, buffer)
     end
 
-    private def calculate_depth(pos, map)
+    private def calculate_top_vertices_for(tmpl, pos, map)
+      upper_left = Vertex.new points[0].x, points[0].y - sprite_height / 4, depths[1], uv.x - uv_size.x / 2, uv.y + uv_size.y
+      upper_right = Vertex.new points[2].x, points[2].y - sprite_height / 4, depths[2], uv.x + uv_size.x / 2, uv.y + uv_size.y
+      return upper_left, upper_right
+    end
+
+    private def calculate_depth(tmpl, pos, map)
       rot = pos.rotate_by map
       rot.x + rot.y
     end

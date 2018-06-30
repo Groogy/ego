@@ -13,15 +13,35 @@ class Map
       @y = pos.y.to_u16
     end
 
+    def -(other)
+      Pos.new @x - other.x, @y - other.y
+    end
+
+    def +(other)
+      Pos.new @x + other.x, @y + other.y
+    end
+
     def inside?(p, map)
       v = create_vertices_for_test map
       Boleite::Vector.inside_shape? v, p
     end
 
-    def create_vertices(map)
+    def translate_to_isometric(map)
       xi, yi = map.apply_view_rotation @x.to_i, @y.to_i
       x = ((xi - yi) * Map::TILE_WIDTH / 2).to_f
       y = ((xi + yi) * Map::TILE_HEIGHT / 2).to_f
+      return x, y
+    end
+
+    def translate_to_isometric
+      xi, yi = @x.to_i, @y.to_i
+      x = ((xi - yi) * Map::TILE_WIDTH / 2).to_f
+      y = ((xi + yi) * Map::TILE_HEIGHT / 2).to_f
+      return x, y
+    end
+
+    def create_vertices(map)
+      x, y = translate_to_isometric map
       height = map.get_height(self) * Map::TILE_HEIGHT_SHIFT
       vertex1 = Boleite::Vector2f.new x, y - height
       vertex2 = Boleite::Vector2f.new x + Map::TILE_WIDTH / 2, y - Map::TILE_HEIGHT / 2 - height

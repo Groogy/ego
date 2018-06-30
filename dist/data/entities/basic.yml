@@ -5,7 +5,7 @@ primitive_population:
   graphics:
     uv: [96, 0]
     uv_size: [192, 192]
-    height: 128
+    height: 64
   components:
     - id: "hunger"
       args: { max_satisfaction: 10000, satisfaction_decay: 1, edible: ["foods"] }
@@ -18,7 +18,7 @@ tree:
   graphics:
     uv: [215, 0]
     uv_size: [48, 48]
-    height: 32
+    height: 16
   components: []
 strawberry_flower:
   name: "Strawberry Flowers"
@@ -27,7 +27,7 @@ strawberry_flower:
   graphics:
     uv: [263, 0]
     uv_size: [48, 48]
-    height: 32
+    height: 16
   components:
     - id: "harvestable"
       args: { provides: "strawberry", growth_time: { months: 2 } }
