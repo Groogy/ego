@@ -86,36 +86,48 @@ class EntityRenderer
     end
 
     private def create_vertices_for_entity(entity, map, buffer)
-      graphics = entity.template.graphics
-      uv = graphics.uv
-      pos = entity.position.point
-      rot = pos.rotate_by map
-      vertices = pos.create_vertices_for_render map
-      depth = rot.x + rot.y
+      order = {
+        0, 2, 1,
+        0, 1, 3,
+        1, 4, 3
+      }
+
+      vertices = calculate_vertices_for entity.template, entity.position.point, map
+      order.each { |index| buffer.add_data vertices[index] }
+    end
+
+    private def calculate_vertices_for(tmpl, pos, map)
+      graphics = tmpl.graphics
+      uv = graphics.uv.to_f
+      uv_size = graphics.uv_size.to_f
+      points = pos.create_vertices_for_render map
+      points = adjust_vertex_points points, tmpl
+      depth = calculate_depth pos, map
       sprite_height = graphics.height
-      left = Vertex.new vertices[0], depth, uv.x, uv.y + Map::TILE_HEIGHT_SHIFT
-      right = Vertex.new vertices[2], depth, uv.x + Map::TILE_WIDTH, uv.y + Map::TILE_HEIGHT_SHIFT
-      bottom = Vertex.new vertices[3], depth, uv.x + Map::TILE_WIDTH / 2, uv.y
-      upper_left = Vertex.new vertices[0].x, vertices[0].y - sprite_height, depth, uv.x, uv.y + sprite_height
-      upper_right = Vertex.new vertices[2].x, vertices[2].y - sprite_height, depth, uv.x + Map::TILE_WIDTH, uv.y + sprite_height
+      
+      left = Vertex.new points[0], depth, uv.x - uv_size.x / 2, uv.y + uv_size.y - sprite_height
+      right = Vertex.new points[2], depth, uv.x + uv_size.x / 2, uv.y + uv_size.y - sprite_height
+      bottom = Vertex.new points[3], depth, uv.x, uv.y
+      upper_left = Vertex.new points[0].x, points[0].y - sprite_height / 4, depth, uv.x - uv_size.x / 2, uv.y + uv_size.y
+      upper_right = Vertex.new points[2].x, points[2].y - sprite_height / 4, depth, uv.x + uv_size.x / 2, uv.y + uv_size.y
+      return left, right, bottom, upper_left, upper_right
+    end
 
-      buffer.add_data left
-      buffer.add_data bottom
-      buffer.add_data right
+    def adjust_vertex_points(points, tmpl)
+      area = (tmpl.size.to_f - 1.0) * Boleite::Vector2f.new(Map::TILE_WIDTH / 2.0, Map::TILE_HEIGHT / 2.0)
+      {points[0] + Boleite::Vector2f.new(-area.x, -area.y), points[1],
+      points[2] + Boleite::Vector2f.new(area.x, -area.y), points[3]}
+    end
 
-      buffer.add_data left
-      buffer.add_data right
-      buffer.add_data upper_left
-
-      buffer.add_data right
-      buffer.add_data upper_right
-      buffer.add_data upper_left
+    private def calculate_depth(pos, map)
+      rot = pos.rotate_by map
+      rot.x + rot.y
     end
 
     private def create_vertices_for_selection(pos, map, buffer)
       rot = pos.rotate_by map
       raw = pos.create_vertices_for_render map
-      depth = rot.x + rot.y
+      depth = map.size.x + map.size.y + 1
 
       indices = {
         0, 4, 1, 4, 5, 1,

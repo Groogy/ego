@@ -1,9 +1,11 @@
 primitive_population:
   name: "Primitive Settlement"
   categories: ["population"]
+  size: [4, 4]
   graphics:
-    uv: [0, 0]
-    height: 64
+    uv: [96, 0]
+    uv_size: [192, 192]
+    height: 128
   components:
     - id: "hunger"
       args: { max_satisfaction: 10000, satisfaction_decay: 1, edible: ["foods"] }
@@ -12,15 +14,19 @@ primitive_population:
 tree:
   name: "Trees"
   categories: ["plant", "material"]
+  size: [1, 1]
   graphics:
-    uv: [52, 0]
-    height: 64
+    uv: [215, 0]
+    uv_size: [48, 48]
+    height: 32
   components: []
 strawberry_flower:
   name: "Strawberry Flowers"
+  size: [1, 1]
   categories: ["plant"]
   graphics:
-    uv: [97, 0]
+    uv: [263, 0]
+    uv_size: [48, 48]
     height: 32
   components:
     - id: "harvestable"
@@ -28,8 +34,10 @@ strawberry_flower:
 strawberry:
   name: "Strawberry"
   categories: ["food"]
+  size: [1, 1]
   graphics:
     uv: [97, 40]
+    uv_size: [0, 0]
     height: 32
   components:
     - id: "food"
