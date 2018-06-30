@@ -31,17 +31,19 @@ vertex
 	uniform mat4 camera;
 	uniform mat4 projection;
 
+	uniform vec2 mapSize;
+
 	out VertexData {
 		vec4 position;
 		vec2 uv;
 		vec4 color;
-		float zOrder;
+		flat float depth;
 	} outputVertex;
 
 	void main()
 	{
 		vec4 pos = position;
-		outputVertex.zOrder = pos.z;
+		outputVertex.depth = 1.0 - pos.z / (mapSize.x + mapSize.y);
 		pos.z = 0;
 		vec4 worldPos = world * pos;
 		vec4 viewPos = camera * worldPos;
@@ -58,13 +60,11 @@ fragment
 
 	uniform sampler2D albedoSampler;
 
-	uniform vec2 mapSize;
-
 	in VertexData {
 		vec4 position;
 		vec2 uv;
 		vec4 color;
-		float zOrder;
+		flat float depth;
 	} inputVertex;
 
 	void main()
@@ -76,6 +76,6 @@ fragment
 			discard;
 
 		outputAlbedo = albedo;
-		gl_FragDepth = 1 - (inputVertex.zOrder + 1) / (mapSize.x * mapSize.y);
+		gl_FragDepth = inputVertex.depth - 0.001;
 	}
 }

@@ -22,16 +22,18 @@ vertex
 	uniform mat4 camera;
 	uniform mat4 projection;
 
+	uniform vec2 mapSize;
+
 	out VertexData {
 		vec4 position;
 		vec4 color;
-		float zOrder;
+		flat float depth;
 	} outputVertex;
 
 	void main()
 	{
 		vec4 pos = position;
-		outputVertex.zOrder = pos.z;
+		outputVertex.depth = 1 - pos.z / (mapSize.x + mapSize.y);
 		pos.z = 0;
 		vec4 worldPos = world * pos;
 		vec4 viewPos = camera * worldPos;
@@ -45,17 +47,16 @@ fragment
 {
 	layout(location = 0) out vec4 outputAlbedo;
 
-	uniform vec2 mapSize;
-
 	in VertexData {
 		vec4 position;
 		vec4 color;
-		float zOrder;
+		flat float depth;
 	} inputVertex;
 
 	void main()
 	{
+		
 		outputAlbedo = inputVertex.color;
-		gl_FragDepth = 1 - (inputVertex.zOrder + 1) / (mapSize.x * mapSize.y);
+		gl_FragDepth = inputVertex.depth;
 	}
 }
