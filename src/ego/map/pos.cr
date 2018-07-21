@@ -13,8 +13,16 @@ class Map
       @y = pos.y.to_u16
     end
 
+    def -(val : Int)
+      Pos.new @x - val, @y - val
+    end
+
     def -(other)
       Pos.new @x - other.x, @y - other.y
+    end
+
+    def +(val : Int)
+      Pos.new @x + val, @y + val
     end
 
     def +(other)
