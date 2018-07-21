@@ -85,6 +85,19 @@ class Map
     Boleite::IntRect.new(0, 0, @size.x, @size.y).contains? pos
   end
 
+  def flat?(pos, size)
+    value = get_height pos
+    size.y.times do |y|
+      size.x.times do |x|
+        p = pos
+        p.x += x
+        p.y += y
+        return false if value != get_height p
+      end
+    end
+    return true
+  end
+
   ensures return_value.nil? || inside? return_value
   def find_tile(pos : Boleite::Vector2f)
     each_tile_reversed do |tile_pos|
