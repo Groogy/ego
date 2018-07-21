@@ -9,8 +9,8 @@ values
 
 depth
 {
-	enabled = true;
-	function = LessEqual;
+	enabled = false;
+	function = Always;
 }
 
 blend
@@ -37,14 +37,11 @@ vertex
 		vec4 position;
 		vec2 uv;
 		vec4 color;
-		float depth;
 	} outputVertex;
 
 	void main()
 	{
 		vec4 pos = position;
-		outputVertex.depth = 1.0 - pos.z / (mapSize.x + mapSize.y);
-		pos.z = 0;
 		vec4 worldPos = world * pos;
 		vec4 viewPos = camera * worldPos;
 		gl_Position = projection * viewPos;
@@ -64,7 +61,6 @@ fragment
 		vec4 position;
 		vec2 uv;
 		vec4 color;
-		float depth;
 	} inputVertex;
 
 	void main()
@@ -72,10 +68,7 @@ fragment
 		vec2 texSize = textureSize(albedoSampler, 0);
 		vec4 tex = texture(albedoSampler, inputVertex.uv / texSize);
 		vec4 albedo = tex * inputVertex.color;
-		if(albedo.a == 0)
-			discard;
 		
 		outputAlbedo = albedo;
-		gl_FragDepth = inputVertex.depth;
 	}
 }

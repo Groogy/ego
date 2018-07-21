@@ -13,26 +13,26 @@ class EntityRenderer
         @color = Boleite::Color.white
       end
 
-      def initialize(pos, z)
-        @pos = Boleite::Vector4f32.new pos.x.to_f32, pos.y.to_f32, z.to_f32, 1f32
+      def initialize(pos)
+        @pos = Boleite::Vector4f32.new pos.x.to_f32, pos.y.to_f32, 0f32, 1f32
         @uv = Boleite::Vector2f32.zero
         @color = Boleite::Color.white
       end
   
-      def initialize(x, y, z)
-        @pos = Boleite::Vector4f32.new x.to_f32, y.to_f32, z.to_f32, 1f32
+      def initialize(x, y)
+        @pos = Boleite::Vector4f32.new x.to_f32, y.to_f32, 0f32, 1f32
         @uv = Boleite::Vector2f32.zero
         @color = Boleite::Color.white
       end
 
-      def initialize(pos, z, u, v)
-        @pos = Boleite::Vector4f32.new pos.x.to_f32, pos.y.to_f32, z.to_f32, 1f32
+      def initialize(pos, u, v)
+        @pos = Boleite::Vector4f32.new pos.x.to_f32, pos.y.to_f32, 0f32, 1f32
         @uv = Boleite::Vector2f32.new u.to_f32, v.to_f32
         @color = Boleite::Color.white
       end
   
-      def initialize(x, y, z, u, v)
-        @pos = Boleite::Vector4f32.new x.to_f32, y.to_f32, z.to_f32, 1f32
+      def initialize(x, y, u, v)
+        @pos = Boleite::Vector4f32.new x.to_f32, y.to_f32, 0f32, 1f32
         @uv = Boleite::Vector2f32.new u.to_f32, v.to_f32
         @color = Boleite::Color.white
       end
@@ -217,8 +217,6 @@ class EntityRenderer
       rot = pos.rotate_by map
       bounds = pos.to_rect.bounds
       smaller_bounds = pos.to_rect.shrink(2).bounds
-      depth = map.size.x + map.size.y + 1
-
       indices = {
         0, 3, 7, 0, 7, 4, 
         0, 4, 1, 4, 5, 1,
@@ -227,14 +225,14 @@ class EntityRenderer
       }
 
       vertices = {
-        Vertex.new(bounds[0].x, bounds[0].y, depth),
-        Vertex.new(bounds[1].x, bounds[0].y, depth),
-        Vertex.new(bounds[1].x, bounds[1].y, depth),
-        Vertex.new(bounds[0].x, bounds[1].y, depth),
-        Vertex.new(smaller_bounds[0].x, smaller_bounds[0].y, depth),
-        Vertex.new(smaller_bounds[1].x, smaller_bounds[0].y, depth),
-        Vertex.new(smaller_bounds[1].x, smaller_bounds[1].y, depth),
-        Vertex.new(smaller_bounds[0].x, smaller_bounds[1].y, depth),
+        Vertex.new(bounds[0].x, bounds[0].y),
+        Vertex.new(bounds[1].x, bounds[0].y),
+        Vertex.new(bounds[1].x, bounds[1].y),
+        Vertex.new(bounds[0].x, bounds[1].y),
+        Vertex.new(smaller_bounds[0].x, smaller_bounds[0].y),
+        Vertex.new(smaller_bounds[1].x, smaller_bounds[0].y),
+        Vertex.new(smaller_bounds[1].x, smaller_bounds[1].y),
+        Vertex.new(smaller_bounds[0].x, smaller_bounds[1].y),
       }
 
       vertices.each &.color=(Boleite::Color.black)

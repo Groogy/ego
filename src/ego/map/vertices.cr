@@ -11,8 +11,8 @@ class MapRenderer
         @color = Boleite::Vector4f32.zero
       end
   
-      def initialize(x, y, z, @color)
-        @pos = Boleite::Vector4f32.new x.to_f32, y.to_f32, z.to_f32, 1f32
+      def initialize(x, y, @color)
+        @pos = Boleite::Vector4f32.new x.to_f32, y.to_f32, 0f32, 1f32
       end
     end
 
@@ -67,10 +67,10 @@ class MapRenderer
           terrain = map.get_terrain point
           color = get_vertex_color height, terrain
           bounds = rot.to_rect.bounds
-          vertices[0] = Vertex.new bounds[0].x, bounds[0].y, rot.y, color
-          vertices[1] = Vertex.new bounds[1].x, bounds[0].y, rot.y, color
-          vertices[2] = Vertex.new bounds[1].x, bounds[1].y, rot.y, color
-          vertices[3] = Vertex.new bounds[0].x, bounds[1].y, rot.y, color
+          vertices[0] = Vertex.new bounds[0].x, bounds[0].y, color
+          vertices[1] = Vertex.new bounds[1].x, bounds[0].y, color
+          vertices[2] = Vertex.new bounds[1].x, bounds[1].y, color
+          vertices[3] = Vertex.new bounds[0].x, bounds[1].y, color
 
           order.each do |index|
             buffer.add_data vertices[index]
