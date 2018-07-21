@@ -37,7 +37,7 @@ vertex
 		vec4 position;
 		vec2 uv;
 		vec4 color;
-		flat float depth;
+		float depth;
 	} outputVertex;
 
 	void main()
@@ -64,7 +64,7 @@ fragment
 		vec4 position;
 		vec2 uv;
 		vec4 color;
-		flat float depth;
+		float depth;
 	} inputVertex;
 
 	void main()
@@ -74,8 +74,8 @@ fragment
 		vec4 albedo = tex * inputVertex.color;
 		if(albedo.a == 0)
 			discard;
-
+		
 		outputAlbedo = albedo;
-		gl_FragDepth = inputVertex.depth - 0.001;
+		gl_FragDepth = inputVertex.depth;
 	}
 }
