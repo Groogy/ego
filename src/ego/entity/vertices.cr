@@ -81,142 +81,52 @@ class EntityRenderer
     private def create_vertices(selected_tile, entities, map, buffer)
       create_vertices_for_selection selected_tile, map, buffer if selected_tile
       entities.each do |entity|
-        #create_vertices_for_entity entity, map, buffer if entity.position.on_map?
+        create_vertices_for_entity entity, map, buffer if entity.position.on_map?
       end
     end
 
     private def create_vertices_for_entity(entity, map, buffer)
       tmpl = entity.template
       area = tmpl.size
-      uv_area = calculate_uv_area_for tmpl
       base_pos = entity.position.point
       area.y.times do |y|
         area.x.times do |x|
           pos = base_pos
-          pos.x -= x
-          pos.y -= y
-          create_vertices_for_pos tmpl, pos, base_pos, uv_area, map, buffer
+          pos.x += x
+          pos.y += y
+          create_vertices_for_pos tmpl, pos, base_pos, map, buffer
         end
       end
-      if tmpl.graphics.height > 0
-        create_top_vertices_for tmpl, base_pos, map, uv_area, buffer
-      end
     end
 
-    private def calculate_uv_area_for(tmpl)
-      Boleite::Vector2f.new Map::TILE_WIDTH.to_f, Map::TILE_HEIGHT.to_f
-    end
-
-    private def create_vertices_for_pos(tmpl, pos, base_pos, uv_area, map, buffer)
+    private def create_vertices_for_pos(tmpl, pos, base_pos, map, buffer)
       order = {
-        3, 2, 0,
-        2, 1, 0
+        0, 2, 3,
+        0, 3, 1
       }
-      diff = (base_pos - pos).translate_to_isometric
-      offset = Boleite::Vector2f.new(-diff[0] / Map::TILE_WIDTH.to_f, diff[1] / Map::TILE_HEIGHT.to_f) * uv_area
-      vertices = calculate_square_vertices_for tmpl, pos, offset, uv_area, map
+      diff = pos - base_pos
+      uv_offset = Boleite::Vector2i.new Map::TILE_WIDTH * diff.x, Map::TILE_WIDTH * (tmpl.size.y - diff.y)
+      vertices = calculate_square_vertices_for tmpl, pos, uv_offset, map
       order.each { |index| buffer.add_data vertices[index] }
     end
 
-    private def calculate_square_vertices_for(tmpl, pos, uv_offset, uv_area, map)
-      graphics = tmpl.graphics
-      uv = graphics.uv.to_f + uv_offset
-      points = pos.create_vertices_for_render map
-      depth = calculate_depth tmpl, pos, map
-      
-      left = Vertex.new points[0], depth, uv.x - uv_area.x / 2, uv.y + uv_area.y / 2
-      top = Vertex.new points[1], depth, uv.x, uv.y + uv_area.y
-      right = Vertex.new points[2], depth, uv.x + uv_area.x / 2, uv.y + uv_area.y / 2
-      bottom = Vertex.new points[3], depth, uv.x, uv.y
-
-      return left, top, right, bottom
-    end
-
-    private def create_top_vertices_for(tmpl, base_pos, map, uv_area, buffer)
-      base_points = base_pos.create_vertices_for_render map
-      left = calculate_left_top_vertex_for tmpl, base_pos, map, uv_area
-      right = calculate_right_top_vertex_for tmpl, base_pos, map, uv_area
-      middle = calculate_middle_top_vertex_for tmpl, base_pos, uv_area, map
-      top_left = calculate_top_left_top_vertex_for tmpl, left, base_points, map
-      top_right = calculate_top_right_top_vertex_for tmpl, right, base_points, map
-
-      buffer.add_data left
-      buffer.add_data middle
-      buffer.add_data top_left
-
-      buffer.add_data right
-      buffer.add_data top_right
-      buffer.add_data middle
-
-      buffer.add_data top_left
-      buffer.add_data middle
-      buffer.add_data top_right
-    end
-
-    private def calculate_left_top_vertex_for(tmpl, base_pos, map, uv_area)
-      gfx = tmpl.graphics
-      left = base_pos
-      left.x -= tmpl.size.x - 1
-      depth = calculate_depth tmpl, left, map
-      points = left.create_vertices_for_render map
-
-      diff = (base_pos - left).translate_to_isometric
-      uv = gfx.uv.to_f + Boleite::Vector2f.new(-diff[0] / Map::TILE_WIDTH.to_f, diff[1] / Map::TILE_HEIGHT.to_f) * uv_area
-
-      Vertex.new points[0], depth, uv.x - uv_area.x / 2, uv.y + uv_area.y / 2
-    end
-
-    private def calculate_right_top_vertex_for(tmpl, base_pos, map, uv_area)
-      gfx = tmpl.graphics
-      right = base_pos
-      right.y -= tmpl.size.y - 1
-      depth = calculate_depth tmpl, right, map
-      points = right.create_vertices_for_render map
-
-      diff = (base_pos - right).translate_to_isometric
-      uv = gfx.uv.to_f + Boleite::Vector2f.new(-diff[0] / Map::TILE_WIDTH.to_f, diff[1] / Map::TILE_HEIGHT.to_f) * uv_area
-
-      Vertex.new points[2], depth, uv.x + uv_area.x / 2, uv.y + uv_area.y / 2
-    end
-
-    private def calculate_middle_top_vertex_for(tmpl, base_pos, uv_area, map)
-      middle = base_pos - tmpl.size + 1
-      depth = calculate_depth tmpl, middle, map
-      points = middle.create_vertices_for_render map
-
-      uv = tmpl.graphics.uv.to_f
-      uv.y += uv_area.y * tmpl.size.y
-
-      Vertex.new points[1], depth, uv.x, uv.y
-    end
-
-    private def calculate_top_left_top_vertex_for(tmpl, base_vert, base_points, map)
-      gfx = tmpl.graphics
-      point = base_points[3]
-      uv = base_vert.uv
-      uv.y = gfx.uv.y.to_f32 + gfx.height.to_f32
-      y = point.y - gfx.height
-      Vertex.new base_vert.pos.x, y, base_vert.pos.z, uv.x, uv.y
-    end
-
-    private def calculate_top_right_top_vertex_for(tmpl, base_vert, base_points, map)
-      gfx = tmpl.graphics
-      point = base_points[3]
-      uv = base_vert.uv
-      uv.y = gfx.uv.y.to_f32 + gfx.height.to_f32
-      y = point.y - gfx.height
-      Vertex.new base_vert.pos.x, y, base_vert.pos.z, uv.x, uv.y
-    end
-
-    private def calculate_depth(tmpl, pos, map)
+    private def calculate_square_vertices_for(tmpl, pos, uv_offset, map)
+      uv = tmpl.graphics.uv.to_i + uv_offset
       rot = pos.rotate_by map
-      rot.x + rot.y
+      bounds = rot.to_rect.bounds
+      
+      upper_left = Vertex.new bounds[0].x, bounds[0].y, uv.x, uv.y
+      upper_right = Vertex.new bounds[1].x, bounds[0].y, uv.x + Map::TILE_WIDTH, uv.y
+      bottom_left = Vertex.new bounds[0].x, bounds[1].y, uv.x, uv.y - Map::TILE_WIDTH
+      bottom_right = Vertex.new bounds[1].x, bounds[1].y, uv.x + Map::TILE_WIDTH, uv.y - Map::TILE_WIDTH
+
+      return upper_left, upper_right, bottom_left, bottom_right
     end
 
     private def create_vertices_for_selection(pos, map, buffer)
       rot = pos.rotate_by map
-      bounds = pos.to_rect.bounds
-      smaller_bounds = pos.to_rect.shrink(2).bounds
+      bounds = rot.to_rect.bounds
+      smaller_bounds = rot.to_rect.shrink(2).bounds
       indices = {
         0, 3, 7, 0, 7, 4, 
         0, 4, 1, 4, 5, 1,
