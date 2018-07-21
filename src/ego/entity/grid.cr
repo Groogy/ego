@@ -38,18 +38,36 @@ class EntityGrid
     @grid = Array.new(count) { Bucket.new }
   end
 
-  requires inside? entity.position
+  requires inside? pos
   requires !includes? entity
-  def add(entity)
-    pos = entity.position
-    @grid[pos.x + pos.y * @size.y].add entity
+  ensures includes? entity, pos
+  def add(entity, pos)
+    size = entity.template.size
+    size.y.times do |y|
+      size.x.times do |x|
+        @grid[pos.x + x + (pos.y + y) * @size.y].add entity
+      end
+    end
   end
 
-  requires inside? entity.position
+  def add(entity)
+    add entity, entity.position
+  end
+
+  requires inside? pos
   requires includes? entity
-  def remove(entity)
+  ensures !includes? entity
+  def remove(entity, pos)
     pos = entity.position
-    @grid[pos.x + pos.y * @size.y].remove entity
+    size.y.times do |y|
+      size.x.times do |x|
+        @grid[pos.x + x + (pos.y + y) * @size.y].remove entity
+      end
+    end
+  end
+
+  def remove(entity)
+    remove entity, entity.position
   end
 
   requires old != entity.position
@@ -57,9 +75,8 @@ class EntityGrid
   requires includes? entity, old
   ensures includes? entity, entity.position
   def move(old, entity)
-    new = entity.position
-    @grid[old.x + old.y * @size.y].remove entity
-    @grid[new.x + new.y * @size.y].add entity
+    remove entity, old
+    add entity
   end
 
   def inside?(pos)
@@ -71,7 +88,7 @@ class EntityGrid
   end
 
   def includes?(entity, pos)
-    @grid[pos.x + old.y * @size.y].includes? entity
+    @grid[pos.x + pos.y * @size.y].includes? entity
   end
 
   def each_at(pos)
