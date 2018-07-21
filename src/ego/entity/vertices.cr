@@ -87,7 +87,6 @@ class EntityRenderer
 
     private def create_vertices_for_entity(entity, map, buffer)
       tmpl = entity.template
-      pp tmpl.id
       area = tmpl.size
       uv_area = calculate_uv_area_for tmpl
       base_pos = entity.position.point
@@ -100,14 +99,12 @@ class EntityRenderer
         end
       end
       if tmpl.graphics.height > 0
-        create_top_vertices_for tmpl, base_pos, map, buffer
+        create_top_vertices_for tmpl, base_pos, map, uv_area, buffer
       end
     end
 
     private def calculate_uv_area_for(tmpl)
-      uv = tmpl.graphics.uv_size.to_f
-      uv.y -= tmpl.graphics.height
-      uv / tmpl.size.to_f
+      Boleite::Vector2f.new Map::TILE_WIDTH.to_f, Map::TILE_HEIGHT.to_f
     end
 
     private def create_vertices_for_pos(tmpl, pos, base_pos, uv_area, map, buffer)
@@ -131,16 +128,84 @@ class EntityRenderer
       top = Vertex.new points[1], depth, uv.x, uv.y + uv_area.y
       right = Vertex.new points[2], depth, uv.x + uv_area.x / 2, uv.y + uv_area.y / 2
       bottom = Vertex.new points[3], depth, uv.x, uv.y
+
       return left, top, right, bottom
     end
 
-    private def create_top_vertices_for(tmpl, pos, map, buffer)
+    private def create_top_vertices_for(tmpl, base_pos, map, uv_area, buffer)
+      base_points = base_pos.create_vertices_for_render map
+      left = calculate_left_top_vertex_for tmpl, base_pos, map, uv_area
+      right = calculate_right_top_vertex_for tmpl, base_pos, map, uv_area
+      middle = calculate_middle_top_vertex_for tmpl, base_pos, uv_area, map
+      top_left = calculate_top_left_top_vertex_for tmpl, left, base_points, map
+      top_right = calculate_top_right_top_vertex_for tmpl, right, base_points, map
+
+      buffer.add_data left
+      buffer.add_data middle
+      buffer.add_data top_left
+
+      buffer.add_data right
+      buffer.add_data top_right
+      buffer.add_data middle
+
+      buffer.add_data top_left
+      buffer.add_data middle
+      buffer.add_data top_right
     end
 
-    private def calculate_top_vertices_for(tmpl, pos, map)
-      upper_left = Vertex.new points[0].x, points[0].y - sprite_height / 4, depths[1], uv.x - uv_size.x / 2, uv.y + uv_size.y
-      upper_right = Vertex.new points[2].x, points[2].y - sprite_height / 4, depths[2], uv.x + uv_size.x / 2, uv.y + uv_size.y
-      return upper_left, upper_right
+    private def calculate_left_top_vertex_for(tmpl, base_pos, map, uv_area)
+      gfx = tmpl.graphics
+      left = base_pos
+      left.x -= tmpl.size.x - 1
+      depth = calculate_depth tmpl, left, map
+      points = left.create_vertices_for_render map
+
+      diff = (base_pos - left).translate_to_isometric
+      uv = gfx.uv.to_f + Boleite::Vector2f.new(-diff[0] / Map::TILE_WIDTH.to_f, diff[1] / Map::TILE_HEIGHT.to_f) * uv_area
+
+      Vertex.new points[0], depth, uv.x - uv_area.x / 2, uv.y + uv_area.y / 2
+    end
+
+    private def calculate_right_top_vertex_for(tmpl, base_pos, map, uv_area)
+      gfx = tmpl.graphics
+      right = base_pos
+      right.y -= tmpl.size.y - 1
+      depth = calculate_depth tmpl, right, map
+      points = right.create_vertices_for_render map
+
+      diff = (base_pos - right).translate_to_isometric
+      uv = gfx.uv.to_f + Boleite::Vector2f.new(-diff[0] / Map::TILE_WIDTH.to_f, diff[1] / Map::TILE_HEIGHT.to_f) * uv_area
+
+      Vertex.new points[2], depth, uv.x + uv_area.x / 2, uv.y + uv_area.y / 2
+    end
+
+    private def calculate_middle_top_vertex_for(tmpl, base_pos, uv_area, map)
+      middle = base_pos - tmpl.size + 1
+      depth = calculate_depth tmpl, middle, map
+      points = middle.create_vertices_for_render map
+
+      uv = tmpl.graphics.uv.to_f
+      uv.y += uv_area.y * tmpl.size.y
+
+      Vertex.new points[1], depth, uv.x, uv.y
+    end
+
+    private def calculate_top_left_top_vertex_for(tmpl, base_vert, base_points, map)
+      gfx = tmpl.graphics
+      point = base_points[3]
+      uv = base_vert.uv
+      uv.y = gfx.uv.y.to_f32 + gfx.height.to_f32
+      y = point.y - gfx.height
+      Vertex.new base_vert.pos.x, y, base_vert.pos.z, uv.x, uv.y
+    end
+
+    private def calculate_top_right_top_vertex_for(tmpl, base_vert, base_points, map)
+      gfx = tmpl.graphics
+      point = base_points[3]
+      uv = base_vert.uv
+      uv.y = gfx.uv.y.to_f32 + gfx.height.to_f32
+      y = point.y - gfx.height
+      Vertex.new base_vert.pos.x, y, base_vert.pos.z, uv.x, uv.y
     end
 
     private def calculate_depth(tmpl, pos, map)
