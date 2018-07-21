@@ -1,7 +1,7 @@
 class Map
   include CrystalClear
 
-  TILE_WIDTH = 12
+  TILE_WIDTH = 16
   MAX_HEIGHT = 64
 
   class Data
