@@ -2,8 +2,6 @@ class Map
   include CrystalClear
 
   TILE_WIDTH = 12
-  TILE_HEIGHT = 8
-  TILE_HEIGHT_SHIFT = 2
   MAX_HEIGHT = 64
 
   class Data
@@ -13,7 +11,7 @@ class Map
     property height, terrain
   end
 
-  @data = {} of Pos => Data
+  @data = [] of Data
   @size = Boleite::Vector2i.zero
   @view_rotation = 0
   @renderer : MapRenderer
@@ -21,13 +19,10 @@ class Map
   getter size, data, view_rotation
 
   def initialize(@size)
-    @size.x.times do |x|
-      @size.y.times do |y|
-        pos = Pos.new x.to_u16, y.to_u16
-        @data[pos] = Data.new
-      end
-    end
     @renderer = MapRenderer.new @size
+    @data = Array(Data).new @size.x * @size.y do 
+      Data.new
+    end
   end
 
   requires dir >= -1 && dir <= 1
@@ -46,13 +41,13 @@ class Map
   requires inside? pos
   requires height >= 0 && height <= MAX_HEIGHT
   def set_height(pos, height)
-    @data[Pos.new pos].height = height.to_u8
+    @data[Pos.new(pos).to_index self].height = height.to_u8
     @renderer.notify_change
   end
 
   requires inside? pos
   def get_height(pos)
-    @data[Pos.new pos].height.to_u8
+    @data[Pos.new(pos).to_index self].height.to_u8
   end
 
   requires inside? pos
@@ -62,13 +57,13 @@ class Map
 
   requires inside? pos
   def set_terrain(pos, terrain)
-    @data[Pos.new pos].terrain = terrain
+    @data[Pos.new(pos).to_index self].terrain = terrain
     @renderer.notify_change
   end
 
   requires inside? pos
   def get_terrain(pos)
-    @data[Pos.new pos].terrain
+    @data[Pos.new(pos).to_index self].terrain
   end
 
   requires inside? pos
@@ -80,8 +75,9 @@ class Map
   def apply_data(data, terrains)
     data.each do |d|
       pos = Pos.new (d[0] % @size.x).to_u16, (d[0] / @size.y).to_u16
-      @data[pos].terrain = terrains.find d[1]
-      @data[pos].height = d[2]
+      index = pos.to_index self
+      @data[index].terrain = terrains.find d[1]
+      @data[index].height = d[2]
     end
   end
 
@@ -92,14 +88,15 @@ class Map
   ensures return_value.nil? || inside? return_value
   def find_tile(pos : Boleite::Vector2f)
     each_tile_reversed do |tile_pos|
-      return tile_pos if tile_pos.inside? pos, self
+      return tile_pos if tile_pos.inside? pos
     end
     return nil
   end
 
   def each_tile
-    @data.each_key do |pos|
-      yield pos, @data[pos]
+    @data.each_index do |index|
+      pos = Pos.new index, self
+      yield pos, @data[index]
     end
   end
 
@@ -107,7 +104,7 @@ class Map
     @size.y.downto 1 do |y|
       @size.x.downto 1 do |x|
         pos = Pos.new((x-1).to_u16, (y-1).to_u16).rotate_by self
-        yield pos, @data[pos]
+        yield pos, @data[pos.to_index self]
       end
     end
   end

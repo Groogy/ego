@@ -24,14 +24,14 @@ class Map
     end
 
     def write_map_data(size, data, terrains, io)
-      data.each do |point, tile|
-        point_index = point.x.to_u32 + size.y * point.y.to_u32
+      data.each_index do |tile_index|
+        tile = data[tile_index]
         terrain_index = 0u8
         if terrain = tile.terrain
           index = terrains.index terrain.key
           terrain_index = index.to_u8 if index
         end
-        io.write_bytes point_index
+        io.write_bytes tile_index
         io.write_bytes terrain_index
         io.write_bytes tile.height
       end

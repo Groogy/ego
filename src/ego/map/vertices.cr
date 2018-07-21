@@ -56,52 +56,27 @@ class MapRenderer
     end
 
     private def create_vertices(map, buffer)
-      vertices = StaticArray(Vertex, 8).new Vertex.new
-      order = { 0, 1, 2, 0, 2, 3,
-                0, 4, 5, 5, 1, 0,
-                2, 1, 6, 6, 7, 2 }
+      vertices = StaticArray(Vertex, 4).new Vertex.new
+      order = { 0, 3, 2, 0, 2, 1 }
       size = map.size
       size.y.times do |iy|
         size.x.times do |ix|
           point = Map::Pos.new(ix.to_u16, iy.to_u16)
           rot = point.rotate_by map
           height = map.get_height point
-          left, right = calculate_heights height, point, map
           terrain = map.get_terrain point
           color = get_vertex_color height, terrain
-          pos = point.create_vertices_for_render map
-          vertices[0] = Vertex.new pos[0].x, pos[0].y, rot.y + rot.x, color
-          vertices[1] = Vertex.new pos[3].x, pos[3].y, rot.y + rot.x, color
-          vertices[2] = Vertex.new pos[2].x, pos[2].y, rot.y + rot.x, color
-          vertices[3] = Vertex.new pos[1].x, pos[1].y, rot.y + rot.x, color
-          vertices[4] = Vertex.new pos[0].x, pos[0].y + Map::TILE_HEIGHT_SHIFT * left, rot.y + rot.x, Boleite::Color.white
-          vertices[5] = Vertex.new pos[3].x, pos[3].y + Map::TILE_HEIGHT_SHIFT * left, rot.y + rot.x, Boleite::Color.white
-          vertices[6] = Vertex.new pos[3].x, pos[3].y + Map::TILE_HEIGHT_SHIFT * right, rot.y + rot.x, Boleite::Color.white
-          vertices[7] = Vertex.new pos[2].x, pos[2].y + Map::TILE_HEIGHT_SHIFT * right, rot.y + rot.x, Boleite::Color.white
+          bounds = rot.to_rect.bounds
+          vertices[0] = Vertex.new bounds[0].x, bounds[0].y, rot.y, color
+          vertices[1] = Vertex.new bounds[1].x, bounds[0].y, rot.y, color
+          vertices[2] = Vertex.new bounds[1].x, bounds[1].y, rot.y, color
+          vertices[3] = Vertex.new bounds[0].x, bounds[1].y, rot.y, color
 
           order.each do |index|
             buffer.add_data vertices[index]
           end
         end
       end
-    end
-
-    private def calculate_heights(height, point, map)
-      left = 0u8
-      ld = rotate_dir 0, 1, map.view_rotation
-      rd = rotate_dir 1, 0, map.view_rotation
-      lp = Map::Pos.new point.x + ld[0], point.y + ld[1]
-      left = map.get_height lp if map.inside? lp
-      right = 0u8
-      rp = Map::Pos.new point.x + rd[0], point.y + rd[1]
-      right = map.get_height rp if map.inside? rp
-
-      {height - {left, height}.min, height - {right, height}.min}
-    end
-
-    private def rotate_dir(x : Int32, y : Int32, rotation, depth=0)
-      x, y = rotate_dir -y, x, rotation, depth+1 if depth < rotation
-      {x, y}
     end
 
     private def get_vertex_color(height, terrain : TerrainType)

@@ -75,7 +75,7 @@ class EntityRenderer
     private def update_vbo(selected_tile, entities, map, vbo)
       vertices = vbo.get_buffer 0
       vertices.clear
-      create_vertices selected_tile, entities, map, vertices
+      #create_vertices selected_tile, entities, map, vertices
     end
 
     private def create_vertices(selected_tile, entities, map, buffer)
