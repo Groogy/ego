@@ -4,7 +4,6 @@ primitive_population:
   size: [4, 4]
   graphics:
     uv: [32, 0]
-    uv_size: [192, 128]
     height: 42
   components:
     - id: "hunger"
@@ -17,7 +16,6 @@ tree:
   size: [1, 1]
   graphics:
     uv: [215, 0]
-    uv_size: [48, 48]
     height: 16
   components: []
 strawberry_flower:
@@ -26,7 +24,6 @@ strawberry_flower:
   categories: ["plant"]
   graphics:
     uv: [263, 0]
-    uv_size: [48, 48]
     height: 16
   components:
     - id: "harvestable"
@@ -37,7 +34,6 @@ strawberry:
   size: [1, 1]
   graphics:
     uv: [97, 40]
-    uv_size: [0, 0]
     height: 32
   components:
     - id: "food"

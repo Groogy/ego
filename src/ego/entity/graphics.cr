@@ -1,13 +1,12 @@
 struct EntityGraphicsTemplate
   @uv = Boleite::Vector2u.zero
-  @uv_size = Boleite::Vector2u.zero
   @height = UInt16.zero
 
-  getter uv, uv_size, height
+  getter uv, height
 
   def initialize()
   end
 
-  def initialize(@uv, @uv_size, @height)
+  def initialize(@uv, @height)
   end
 end
