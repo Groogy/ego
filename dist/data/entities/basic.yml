@@ -3,9 +3,9 @@ primitive_population:
   categories: ["population"]
   size: [4, 4]
   graphics:
-    uv: [96, 0]
-    uv_size: [192, 192]
-    height: 64
+    uv: [32, 0]
+    uv_size: [192, 128]
+    height: 42
   components:
     - id: "hunger"
       args: { max_satisfaction: 10000, satisfaction_decay: 1, edible: ["foods"] }
