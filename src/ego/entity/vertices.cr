@@ -75,13 +75,13 @@ class EntityRenderer
     private def update_vbo(selected_tile, entities, map, vbo)
       vertices = vbo.get_buffer 0
       vertices.clear
-      #create_vertices selected_tile, entities, map, vertices
+      create_vertices selected_tile, entities, map, vertices
     end
 
     private def create_vertices(selected_tile, entities, map, buffer)
       create_vertices_for_selection selected_tile, map, buffer if selected_tile
       entities.each do |entity|
-        create_vertices_for_entity entity, map, buffer if entity.position.on_map?
+        #create_vertices_for_entity entity, map, buffer if entity.position.on_map?
       end
     end
 
@@ -215,25 +215,26 @@ class EntityRenderer
 
     private def create_vertices_for_selection(pos, map, buffer)
       rot = pos.rotate_by map
-      raw = pos.create_vertices_for_render map
+      bounds = pos.to_rect.bounds
+      smaller_bounds = pos.to_rect.shrink(2).bounds
       depth = map.size.x + map.size.y + 1
 
       indices = {
+        0, 3, 7, 0, 7, 4, 
         0, 4, 1, 4, 5, 1,
-        1, 5, 2, 5, 6, 2,
-        2, 6, 3, 6, 7, 3,
-        3, 7, 0, 7, 4, 0
+        1, 5, 6, 6, 2, 1,
+        2, 6, 3, 3, 6, 7
       }
 
       vertices = {
-        Vertex.new(raw[0], depth),
-        Vertex.new(raw[1], depth),
-        Vertex.new(raw[2], depth),
-        Vertex.new(raw[3], depth),
-        Vertex.new(raw[0].x + 2, raw[0].y, depth),
-        Vertex.new(raw[1].x, raw[1].y + 2, depth),
-        Vertex.new(raw[2].x - 2, raw[2].y, depth),
-        Vertex.new(raw[3].x, raw[3].y - 2, depth),
+        Vertex.new(bounds[0].x, bounds[0].y, depth),
+        Vertex.new(bounds[1].x, bounds[0].y, depth),
+        Vertex.new(bounds[1].x, bounds[1].y, depth),
+        Vertex.new(bounds[0].x, bounds[1].y, depth),
+        Vertex.new(smaller_bounds[0].x, smaller_bounds[0].y, depth),
+        Vertex.new(smaller_bounds[1].x, smaller_bounds[0].y, depth),
+        Vertex.new(smaller_bounds[1].x, smaller_bounds[1].y, depth),
+        Vertex.new(smaller_bounds[0].x, smaller_bounds[1].y, depth),
       }
 
       vertices.each &.color=(Boleite::Color.black)
