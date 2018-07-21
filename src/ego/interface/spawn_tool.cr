@@ -9,7 +9,9 @@ class SpawnTool < ToolBase
   end
 
   def on_map_click(pos : Map::Pos)
-    @world.spawn_entity @tmpl, MapEntityPos.new(pos)
+    if @world.can_be_placed? @tmpl, pos
+      @world.spawn_entity @tmpl, MapEntityPos.new(pos)
+    end
   end
 
   def label : String

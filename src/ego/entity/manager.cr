@@ -8,7 +8,7 @@ class EntityManager
   @renderer = EntityRenderer.new
   @id_generator : EntityIdGenerator
 
-  getter renderer
+  getter renderer, grid
   delegate each_at, to: @grid
   delegate each, each_with_index, to: @entities
 
@@ -25,6 +25,7 @@ class EntityManager
     {% end %}
   end
 
+  requires @grid.inside? pos, tmpl.size
   def create(tmpl, pos, world)
     entity = Entity.new @id_generator.generate, tmpl, pos
     @grid.add entity if pos.on_map?

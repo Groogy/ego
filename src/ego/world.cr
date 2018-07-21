@@ -39,6 +39,11 @@ class World
     @entities.create template, pos, self
   end
 
+  def can_be_placed?(template, pos)
+    return @entities.grid.inside?(pos, template.size) &&
+           @map.flat?(pos, template.size)
+  end
+
   def update
     unless @paused
       @entities.update self
