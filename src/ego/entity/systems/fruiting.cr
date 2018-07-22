@@ -1,13 +1,10 @@
-class HarvestGrowthSystem < EntitySystem
-  include CrystalClear
-
+class FruitingSystem < EntitySystem
   def target_component
-    HarvestGrowthComponent
+    FruitingComponent
   end
 
-  requires entity.has_component? HarvestableComponent
   def update(world, entity, component)
-    component = component.as(HarvestGrowthComponent)
+    component = component.as(FruitingComponent)
     if component.can_grow?
       component.advance_growth
       if component.can_spawn? entity

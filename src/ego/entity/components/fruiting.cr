@@ -1,4 +1,4 @@
-class HarvestGrowthComponent < EntityComponent
+class FruitingComponent < EntityComponent
   include CrystalClear
   
   @provides : EntityTemplate

@@ -25,7 +25,7 @@ strawberry_flower:
   components:
     - id: "harvestable"
       args: { start: [ "strawberry" ] }
-    - id: "harvest_growth"
+    - id: "fruiting"
       args: { provides: "strawberry", growth_time: { days: 2 }, into: "harvestable", limit: 4 }
 strawberry:
   name: "Strawberry"
