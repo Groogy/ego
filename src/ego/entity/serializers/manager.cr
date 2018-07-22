@@ -12,7 +12,7 @@ class EntityManager
       manager = EntityManager.new world.map, id_generator
       pre_load_entities node, manager
       load_position_references manager
-      load_entities node, manager
+      load_entities node, manager, world
       manager
     end
 
@@ -33,10 +33,11 @@ class EntityManager
       end
     end
 
-    def load_entities(node, manager)
+    def load_entities(node, manager, world)
       entities = node.value.as(Hash(Boleite::Serializer::Type, Boleite::Serializer::Type))["instances"]
       manager.each_with_index do |entity, index|
-        child = Boleite::Serializer::Node.new entity, entities, index
+        data = { entity, world }
+        child = Boleite::Serializer::Node.new data, entities, index
         child.unmarshal index, Entity
       end
     end

@@ -1,5 +1,13 @@
-class EntityComponent
+abstract class EntityComponent
   @data : EntityComponentData
+
+  struct NullSerializer
+    def marshal(obj, node)
+    end
+
+    def unmarshal(obj, node)
+    end
+  end
 
   def self.find_class(id)
     {% for klass in @type.all_subclasses %}
@@ -23,5 +31,9 @@ class EntityComponent
 
   def id
     self.class.id
+  end
+
+  def self.component_serializer
+    NullSerializer.new
   end
 end

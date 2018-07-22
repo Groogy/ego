@@ -10,6 +10,8 @@ class Entity
   getter id, template
   property position
 
+  protected property components
+
   def initialize(@id, @template, @position)
   end
 
