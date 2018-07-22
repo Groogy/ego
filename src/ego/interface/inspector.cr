@@ -1,4 +1,6 @@
 class Inspector
+  include CrystalClear
+
   @world : World
   @camera : Boleite::Camera2D
   @selected_tile : Map::Pos?
@@ -36,7 +38,7 @@ class Inspector
     if gui = @gui
       gui.remove_root @window
       @entity_windows.each do |window|
-        gui.remove_root window
+        close_entity window
       end
     end
     @entity_windows = [] of Boleite::GUI::Window
@@ -73,6 +75,7 @@ class Inspector
     @window.pulse.emit
   end
 
+  requires @gui != nil
   def open_entity(entity)
     if gui = @gui
       position = entity.position
@@ -80,8 +83,19 @@ class Inspector
       window.header_text = "#{position.x}x#{position.y} #{entity.template.name}"
       window.size = Boleite::Vector2f.new(200.0, 200.0)
       window.set_next_to @window
+      window.add_close_button { close_entity window }
+      window.pulse.on { close_entity window if entity.destroyed? }
       gui.add_root window
       @entity_windows << window
+    end
+  end
+
+  requires @entity_windows.includes? window
+  requires @gui != nil
+  def close_entity(window)
+    if gui = @gui
+      gui.remove_root window
+      @entity_windows.delete window
     end
   end
 end
