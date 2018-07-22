@@ -15,9 +15,13 @@ class EntityComponent
 
   def self.id
     id = to_s
-    id[0, id.size - "Component".size].downcase
+    id[0, id.size - "Component".size].underscore
   end
 
   def initialize(@data, entity, world)
+  end
+
+  def id
+    self.class.id
   end
 end
