@@ -12,7 +12,10 @@ class GameStateInterface
   end
 
   def update(full_update)
-    @control_menu.update if full_update
+    if full_update
+      @gui.pulse
+      @control_menu.update
+    end
     @debug_stats_viewer.update full_update
   end
 
