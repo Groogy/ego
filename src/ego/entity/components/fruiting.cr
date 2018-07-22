@@ -6,6 +6,7 @@ class FruitingComponent < EntityComponent
   @time_since_growth = GameTime.new
 
   getter provides, time_since_growth, target_storage
+  protected setter time_since_growth
 
   def initialize(data, entity, world)
     super data, entity, world
