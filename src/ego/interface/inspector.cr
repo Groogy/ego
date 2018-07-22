@@ -48,8 +48,8 @@ class Inspector
   private def update_tile_info(coords : Nil)
     @window.clear
     info_box = Boleite::GUI::Layout.new :vertical
-    text = Boleite::GUI::TextBox.new "None selected", Boleite::Vector2f.new(200.0, 200.0)
-    text.character_size = 14u32
+    text = Boleite::GUI::TextBox.new "None selected", Boleite::Vector2f.new(200.0, 100.0)
+    text.character_size = 12u32
     info_box.add text
     @window.add info_box
   end
@@ -62,7 +62,8 @@ class Inspector
       str = "#{coords.x}x#{coords.y}\n"
       str += terrain.name if terrain
       info_box.clear
-      text = Boleite::GUI::TextBox.new str, Boleite::Vector2f.new(200.0, 200.0)
+      text = Boleite::GUI::TextBox.new str, Boleite::Vector2f.new(200.0, 100.0)
+      text.character_size = 12u32
       info_box.add text
 
       @world.entities.each_at(coords) do |entity|
