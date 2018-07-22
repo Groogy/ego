@@ -2,8 +2,10 @@ class EntityComponent
   @data : EntityComponentData
 
   def self.find_class(id)
-    {% for klass in @type.subclasses %}
+    {% for klass in @type.all_subclasses %}
+      {% unless klass.abstract? %}
     return {{ klass }} if {{ klass }}.id == id
+      {% end %}
     {% end %}
   end
 
