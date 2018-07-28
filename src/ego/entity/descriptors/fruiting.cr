@@ -3,14 +3,7 @@ class FruitingDescriptor < EntityDescriptor
     tmpl.has_component? FruitingComponent
   end
 
-  def apply(entity, world, container)
-    text = generate_text entity, world
-    desc = Boleite::GUI::TextBox.new text, Inspector::ENTITY_INFO_SIZE
-    desc.character_size = 12u32
-    container.add desc
-  end
-
-  def generate_text(entity, world)
+  def apply(entity, world, data)
     fruiting = entity.get_component FruitingComponent
     text = generate_seasonal_text fruiting
     text += generate_provides_text fruiting

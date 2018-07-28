@@ -2,7 +2,8 @@ class Inspector
   include CrystalClear
 
   TILE_INFO_SIZE = Boleite::Vector2f.new 200.0, 100.0
-  ENTITY_INFO_SIZE = Boleite::Vector2f.new 200.0, 100.0
+  ENTITY_INFO_SIZE = Boleite::Vector2f.new 200.0, 200.0
+  ENTITY_ENTRY_SIZE = Boleite::Vector2f.new 200.0, 26.0
 
   @world : World
   @camera : Boleite::Camera2D
@@ -12,6 +13,16 @@ class Inspector
   @entity_windows = [] of Boleite::GUI::Window
 
   getter window, selected_tile
+
+  struct DescriptorData
+    @inspector : Inspector
+    @container : Boleite::GUI::Container
+
+    getter inspector, container
+
+    def initialize(@inspector, @container)
+    end
+  end
 
   def initialize(@world, @camera)
     @window = Boleite::GUI::Window.new
@@ -70,7 +81,7 @@ class Inspector
       info_box.add text
 
       @world.entities.each_at(coords) do |entity|
-        button = Boleite::GUI::Button.new entity.template.name, Boleite::Vector2f.new(TILE_INFO_SIZE.x, 26.0)
+        button = Boleite::GUI::Button.new entity.template.name, ENTITY_ENTRY_SIZE
         button.click.on { open_entity entity }
         info_box.add button
       end
@@ -80,7 +91,7 @@ class Inspector
   end
 
   requires @gui != nil
-  def open_entity(entity)
+  def open_entity(entity) : Nil
     if gui = @gui
       position = entity.position
       window = Boleite::GUI::Window.new
@@ -92,11 +103,23 @@ class Inspector
       layout = Boleite::GUI::Layout.new :vertical
       layout.padding = Boleite::Vector2f.new 1.0, 1.0
 
+      text_box = Boleite::GUI::TextBox.new "", Inspector::ENTITY_INFO_SIZE
+      text_box.character_size = 12u32
+
+      data = DescriptorData.new self, layout
+
       descriptors = @world.entities.find_descriptors_for entity.template
       window.pulse.on do
         layout.clear
+        layout.add text_box
+        text_box.text = ""
+
         descriptors.each do |desc|
-          desc.apply entity, @world, layout
+          txt = desc.apply entity, @world, data
+          txt.try do |txt|
+            text_box.text += txt
+            text_box.text += "\n\n" if !txt.empty?
+          end
         end
       end
 
@@ -109,7 +132,7 @@ class Inspector
 
   requires @entity_windows.includes? window
   requires @gui != nil
-  def close_entity(window)
+  def close_entity(window) : Nil
     if gui = @gui
       gui.remove_root window
       @entity_windows.delete window

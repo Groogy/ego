@@ -3,10 +3,8 @@ class DefaultEntityDescriptor < EntityDescriptor
     !tmpl.description.empty?
   end
 
-  def apply(entity, world, container)
-    desc = Boleite::GUI::TextBox.new entity.template.description, Inspector::ENTITY_INFO_SIZE
-    desc.character_size = 12u32
-    container.add desc
+  def apply(entity, world, data)
+    entity.template.description
   end
 
   def priority
