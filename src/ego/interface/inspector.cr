@@ -89,11 +89,15 @@ class Inspector
       window.add_close_button { close_entity window }
       window.pulse.on { close_entity window if entity.destroyed? }
 
+      layout = Boleite::GUI::Layout.new :vertical
+      layout.padding = Boleite::Vector2f.new 1.0, 1.0
+
       descriptors = @world.entities.find_descriptors_for entity.template
       descriptors.each do |desc|
-        desc.apply entity, window
+        desc.apply entity, @world, layout
       end
 
+      window.add layout
       gui.add_root window
       @entity_windows << window
     end

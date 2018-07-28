@@ -22,6 +22,10 @@ class FruitingComponent < EntityComponent
     @data.get_gametime "growth_time"
   end
 
+  def time_left
+    @time_since_growth >= growth_time ? GameTime.new : growth_time - @time_since_growth
+  end
+
   def limit
     @data.get_int "limit"
   end
@@ -32,6 +36,14 @@ class FruitingComponent < EntityComponent
 
   def advance_growth
     @time_since_growth = @time_since_growth.next_tick
+  end
+
+  def start_season
+    @season[:start]
+  end
+
+  def end_season
+    @season[:end]
   end
 
   def can_grow?(entity, world)

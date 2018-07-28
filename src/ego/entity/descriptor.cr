@@ -1,8 +1,8 @@
 abstract class EntityDescriptor
   abstract def applies_to?(tmpl : EntityTemplate) : Bool
-  abstract def apply(entity : Entity, window : Boleite::GUI::Window)
+  abstract def apply(entity : Entity, world : World, container : Boleite::GUI::Container)
 
   def priority : Int32
-    -1
+    0
   end
 end
