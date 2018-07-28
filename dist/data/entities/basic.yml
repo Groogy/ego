@@ -18,7 +18,7 @@ tree:
   components: []
 strawberry_flower:
   name: "Strawberry Flowers"
-  description: "These flowers mature into delicious red strawberries"
+  description: "These flowers mature into delicious red strawberries."
   size: [1, 1]
   categories: ["plant"]
   graphics:
@@ -32,7 +32,7 @@ strawberry_flower:
         growth_time: { days: 4 }
         into: "harvestable"
         limit: 12
-        season: [{months: 5}, {months: 9}]
+        season: [{months: 4}, {months: 8}]
 strawberry:
   name: "Strawberry"
   description: "A red berry that is sweet and delicious."
