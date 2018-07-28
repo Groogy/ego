@@ -8,4 +8,8 @@ class DefaultEntityDescriptor < EntityDescriptor
     desc.character_size = 12u32
     window.add desc
   end
+
+  def priority
+    100 # We want this text first
+  end
 end

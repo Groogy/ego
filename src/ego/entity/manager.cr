@@ -70,9 +70,8 @@ class EntityManager
   end
 
   def find_descriptors_for(tmpl : EntityTemplate)
-    @descriptors.compact_map do |desc|
-      desc if desc.applies_to? tmpl
-    end
+    ary = @descriptors.compact_map { |d| d if d.applies_to? tmpl }
+    ary.sort! { |a, b| a.priority <=> b.priority }
   end
 
   def update(world)
