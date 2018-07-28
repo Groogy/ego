@@ -31,7 +31,7 @@ class FruitingDescriptor < EntityDescriptor
   def generate_growth_text(fruiting, entity, world)
     if fruiting.can_grow? entity, world
       days = fruiting.time_left.to_days
-      "Currently growing another #{fruiting.provides.name} which will be ready in #{days}. "
+      "Currently growing another #{fruiting.provides.name} which will be ready in #{days} days."
     else
       "Is not growing any #{fruiting.provides.name} at the moment. "
     end
