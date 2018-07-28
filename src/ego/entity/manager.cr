@@ -20,8 +20,10 @@ class EntityManager
   end
 
   def create_systems
-    {% for klass in EntitySystem.subclasses %}
+    {% for klass in EntitySystem.all_subclasses %}
+      {% unless klass.abstract? %}
     @systems << {{ klass }}.new
+      {% end %}
     {% end %}
   end
 
