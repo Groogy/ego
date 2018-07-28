@@ -11,7 +11,10 @@ abstract class BaseStorageComponent
       entities = node.data[2]
       obj = obj.as(BaseStorageComponent)
       ids = node.unmarshal "entities", Array(Int64)
-      obj.entities = ids.compact_map { |id| entities.find_by_id id }
+      obj.entities = ids.compact_map do |id| 
+        assert entities.exists_by_id? id
+        entities.find_by_id id
+      end
       obj
     end
   end
