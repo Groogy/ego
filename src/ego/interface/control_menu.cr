@@ -25,7 +25,7 @@ class ControlMenu
 
     date = @world.date
     @date_label = Boleite::GUI::Label.new date.to_formated_string, Boleite::Vector2f.new(200.0, 20.0)
-    @date_label.character_size = 14u32
+    @date_label.character_size = 12u32
     container.add @date_label
     window_container.add container
 
