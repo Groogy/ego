@@ -166,6 +166,14 @@ struct GameTime
     GameTime.new @ticks - val
   end
 
+  def +(val : GameTime)
+    GameTime.new @ticks + val.to_i
+  end
+
+  def -(val : GameTime)
+    GameTime.new @ticks - val.to_i
+  end
+
   def /(val : Int)
     GameTime.new @ticks / val
   end
