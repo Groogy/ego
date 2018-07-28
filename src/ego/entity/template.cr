@@ -33,11 +33,15 @@ class EntityTemplate
     arr
   end
 
-  def has_component(id : String)
+  def has_component?(id : String)
     @data.components.find { |obj| obj.id == id } != nil
   end
 
-  requires has_component(id)
+  def has_component?(klass)
+    has_component? klass.id
+  end
+
+  requires has_component? id
   def get_component_data(id : String)
     @data.components.find { |obj| obj.id == id }
   end
