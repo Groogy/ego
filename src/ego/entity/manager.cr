@@ -5,6 +5,7 @@ class EntityManager
   @grid : EntityGrid
   @entities = [] of Entity
   @systems = [] of EntitySystem
+  @descriptors = [] of EntityDescriptor
   @renderer = EntityRenderer.new
   @id_generator : EntityIdGenerator
 
@@ -17,12 +18,21 @@ class EntityManager
   def initialize(@map, @id_generator = EntityIdGenerator.new)
     @grid = EntityGrid.new @map.size
     create_systems
+    create_descriptors
   end
 
   def create_systems
     {% for klass in EntitySystem.all_subclasses %}
       {% unless klass.abstract? %}
     @systems << {{ klass }}.new
+      {% end %}
+    {% end %}
+  end
+
+  def create_descriptors
+    {% for klass in EntityDescriptor.all_subclasses %}
+      {% unless klass.abstract? %}
+    @descriptors << {{ klass }}.new
       {% end %}
     {% end %}
   end
@@ -57,6 +67,12 @@ class EntityManager
       return true if entity.id == id
     end
     false
+  end
+
+  def find_descriptors_for(tmpl : EntityTemplate)
+    @descriptors.compact_map do |desc|
+      desc if desc.applies_to? tmpl
+    end
   end
 
   def update(world)

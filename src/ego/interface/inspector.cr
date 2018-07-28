@@ -89,8 +89,10 @@ class Inspector
       window.add_close_button { close_entity window }
       window.pulse.on { close_entity window if entity.destroyed? }
 
-      desc = create_entity_description entity
-      window.add desc
+      descriptors = @world.entities.find_descriptors_for entity.template
+      descriptors.each do |desc|
+        desc.apply entity, window
+      end
 
       gui.add_root window
       @entity_windows << window
@@ -104,11 +106,5 @@ class Inspector
       gui.remove_root window
       @entity_windows.delete window
     end
-  end
-
-  def create_entity_description(entity)
-    desc = Boleite::GUI::TextBox.new entity.template.description, ENTITY_INFO_SIZE
-    desc.character_size = 12u32
-    desc
   end
 end

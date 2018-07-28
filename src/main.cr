@@ -8,6 +8,7 @@ require "./ego/entity/*"
 require "./ego/entity/components/*"
 require "./ego/entity/components/serializers/*"
 require "./ego/entity/systems/*"
+require "./ego/entity/descriptors/*"
 require "./ego/entity/serializers/*"
 
 app = EgoApplication.new
