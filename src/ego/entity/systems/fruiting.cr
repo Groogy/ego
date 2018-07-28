@@ -9,7 +9,10 @@ class FruitingSystem < EntitySystem
       component.advance_growth
       if component.can_spawn? entity
         component.spawn_entity world, entity
+        component.reset_growth
       end
+    else
+      component.reset_growth
     end
   end
 end
