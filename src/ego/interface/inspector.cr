@@ -93,11 +93,15 @@ class Inspector
       layout.padding = Boleite::Vector2f.new 1.0, 1.0
 
       descriptors = @world.entities.find_descriptors_for entity.template
-      descriptors.each do |desc|
-        desc.apply entity, @world, layout
+      window.pulse.on do
+        layout.clear
+        descriptors.each do |desc|
+          desc.apply entity, @world, layout
+        end
       end
 
       window.add layout
+      window.pulse.emit
       gui.add_root window
       @entity_windows << window
     end
