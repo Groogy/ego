@@ -1,7 +1,7 @@
 class PopulationComponent < EntityComponent
   include CrystalClear
   
-  @population : Int64
+  @population = 1i64
   @growth = GameTime.new
 
   getter population, growth
@@ -9,7 +9,10 @@ class PopulationComponent < EntityComponent
 
   def initialize(data, entity, world)
     super data, entity, world
-    @population = data.get_int "start"
+  end
+
+  def spawn_setup(entity, world)
+    @population = @data.get_int "start"
   end
 
   def max_population

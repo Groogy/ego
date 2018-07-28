@@ -23,6 +23,12 @@ class Entity
     end
   end
 
+  def spawn_setup(world)
+    @components.each do |obj|
+      obj.spawn_setup self, world
+    end
+  end
+
   def has_component?(id : String) : Bool
     @components.each do |obj|
       return true if obj.id == id

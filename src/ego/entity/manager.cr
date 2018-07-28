@@ -31,6 +31,7 @@ class EntityManager
     @grid.add entity if pos.on_map?
     @entities << entity
     entity.initialize_components world
+    entity.spawn_setup world
     @renderer.notify_change
     entity
   end

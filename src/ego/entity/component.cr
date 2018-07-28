@@ -29,6 +29,9 @@ abstract class EntityComponent
   def initialize(@data, entity, world)
   end
 
+  def spawn_setup(entity, world)
+  end
+
   def id
     self.class.id
   end
