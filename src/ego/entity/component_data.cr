@@ -55,19 +55,45 @@ class EntityComponentData
   end
 
   private def convert_gametime_data
-    @data.each do |key, value|
-      if value.is_a? Hash(String, DataType)
-        hsh = {} of String => Int64
-        value.each do |k, v|
-          hsh[k] = v.as(Int64)
-        end
-        begin
-          time = GameTime.new hsh
-        rescue ArgumentError
-        else
-          @data[key] = time
-        end
+    convert_gametime_recursive @data
+  end
+
+  private def convert_gametime_recursive(hsh : Hash(String, DataType))
+    hsh.each do |k, v|
+      time = try_convert_gametime v
+      if time
+        hsh[k] = time
+      else
+        convert_gametime_recursive v
       end
     end
+  end
+
+  private def convert_gametime_recursive(ary : Array(DataType))
+    ary.each_with_index do |v, i|
+      time = try_convert_gametime v
+      if time
+        ary[i] = time
+      else
+        convert_gametime_recursive v
+      end
+    end
+  end
+
+  private def convert_gametime_recursive(val)
+  end
+
+  private def try_convert_gametime(val : Hash(String, DataType))
+    cpy = {} of String => Int64
+    begin
+      val.each do |k, v|
+        cpy[k] = v.as(Int64)
+      end
+      time = GameTime.new cpy
+    rescue ArgumentError | TypeCastError
+    end
+  end
+
+  private def try_convert_gametime(val)
   end
 end
