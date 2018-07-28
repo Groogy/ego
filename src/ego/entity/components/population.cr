@@ -4,17 +4,12 @@ class PopulationComponent < EntityComponent
   @population : Int64
   @growth = GameTime.new
 
+  getter population, growth
+  protected setter population, growth
+
   def initialize(data, entity, world)
     super data, entity, world
     @population = data.get_int "start"
-  end
-
-  def current_population
-    @population
-  end
-
-  def current_growth
-    @growth
   end
 
   def max_population
@@ -37,7 +32,7 @@ class PopulationComponent < EntityComponent
     end
   end
 
-  invariant self.current_population > 0
-  invariant self.current_population <= self.max_population
-  invariant self.current_growth >= 0
+  invariant self.population > 0
+  invariant self.population <= self.max_population
+  invariant self.growth >= 0
 end
