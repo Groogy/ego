@@ -5,6 +5,12 @@ struct GameTime
   HOURS_PER_DAY = 24
   DAYS_PER_MONTH = 30
   MONTHS_PER_YEAR = 12
+
+  MONTH_NAMES = { # Todo make up names
+    "January", "February", "March", "April",
+    "May", "June", "July", "August",
+    "September", "October", "November", "December"
+  }
   
   @ticks = 0i64
 
@@ -104,8 +110,12 @@ struct GameTime
     to_hours % HOURS_PER_DAY
   end
 
+  def to_month_in_year_named
+    MONTH_NAMES[to_month_in_year]
+  end
+
   def to_formated_string
-    "Year #{to_years} Month #{to_month_in_year} Day #{to_day_in_month} Hour #{to_hour_in_day}"
+    "#{to_day_in_month + 1} of #{to_month_in_year_named} #{to_years}"
   end
 
   def to_i
