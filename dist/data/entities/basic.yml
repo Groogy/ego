@@ -24,9 +24,14 @@ strawberry_flower:
     uv: [87, 0]
   components:
     - id: "harvestable"
-      args: { start: [ "strawberry" ] }
+      args: {}
     - id: "fruiting"
-      args: { provides: "strawberry", growth_time: { days: 2 }, into: "harvestable", limit: 4 }
+      args:
+        provides: "strawberry"
+        growth_time: { days: 4 }
+        into: "harvestable"
+        limit: 12
+        season: [{months: 5}, {months: 9}]
 strawberry:
   name: "Strawberry"
   categories: ["food"]

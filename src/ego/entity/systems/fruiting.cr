@@ -5,7 +5,7 @@ class FruitingSystem < EntitySystem
 
   def update(world, entity, component)
     component = component.as(FruitingComponent)
-    if component.can_grow?
+    if component.can_grow? entity, world
       component.advance_growth
       if component.can_spawn? entity
         component.spawn_entity world, entity
