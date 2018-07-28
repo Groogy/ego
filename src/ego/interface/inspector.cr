@@ -1,6 +1,9 @@
 class Inspector
   include CrystalClear
 
+  TILE_INFO_SIZE = Boleite::Vector2f.new 200.0, 100.0
+  ENTITY_INFO_SIZE = Boleite::Vector2f.new 200.0, 100.0
+
   @world : World
   @camera : Boleite::Camera2D
   @selected_tile : Map::Pos?
@@ -48,7 +51,7 @@ class Inspector
   private def update_tile_info(coords : Nil)
     @window.clear
     info_box = Boleite::GUI::Layout.new :vertical
-    text = Boleite::GUI::TextBox.new "None selected", Boleite::Vector2f.new(200.0, 100.0)
+    text = Boleite::GUI::TextBox.new "None selected", TILE_INFO_SIZE
     text.character_size = 12u32
     info_box.add text
     @window.add info_box
@@ -62,12 +65,12 @@ class Inspector
       str = "#{coords.x}x#{coords.y}\n"
       str += terrain.name if terrain
       info_box.clear
-      text = Boleite::GUI::TextBox.new str, Boleite::Vector2f.new(200.0, 100.0)
+      text = Boleite::GUI::TextBox.new str, TILE_INFO_SIZE
       text.character_size = 12u32
       info_box.add text
 
       @world.entities.each_at(coords) do |entity|
-        button = Boleite::GUI::Button.new entity.template.name, Boleite::Vector2f.new(200.0, 26.0)
+        button = Boleite::GUI::Button.new entity.template.name, Boleite::Vector2f.new(TILE_INFO_SIZE.x, 26.0)
         button.click.on { open_entity entity }
         info_box.add button
       end
@@ -82,10 +85,13 @@ class Inspector
       position = entity.position
       window = Boleite::GUI::Window.new
       window.header_text = "#{position.x}x#{position.y} #{entity.template.name}"
-      window.size = Boleite::Vector2f.new(200.0, 200.0)
       window.set_next_to @window
       window.add_close_button { close_entity window }
       window.pulse.on { close_entity window if entity.destroyed? }
+
+      desc = create_entity_description entity
+      window.add desc
+
       gui.add_root window
       @entity_windows << window
     end
@@ -98,5 +104,11 @@ class Inspector
       gui.remove_root window
       @entity_windows.delete window
     end
+  end
+
+  def create_entity_description(entity)
+    desc = Boleite::GUI::TextBox.new entity.template.description, ENTITY_INFO_SIZE
+    desc.character_size = 12u32
+    desc
   end
 end

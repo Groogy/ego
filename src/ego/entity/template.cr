@@ -4,7 +4,7 @@ class EntityTemplate
   @data : EntityTemplateData
   @categories = [] of EntityCategory
 
-  delegate id, name, size, graphics, to: @data
+  delegate id, name, description, size, graphics, to: @data
   protected getter data
   protected property categories
 
