@@ -3,6 +3,8 @@ abstract class BaseStorageComponent < EntityComponent
 
   @entities = [] of Entity
 
+  protected property entities
+
   requires can_store? storage, entity
   requires !@entities.includes? entity
   ensures entity.position.point == storage.position.point

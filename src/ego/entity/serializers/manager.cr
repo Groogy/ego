@@ -36,7 +36,7 @@ class EntityManager
     def load_entities(node, manager, world)
       entities = node.value.as(Hash(Boleite::Serializer::Type, Boleite::Serializer::Type))["instances"]
       manager.each_with_index do |entity, index|
-        data = { entity, world }
+        data = { entity, world, manager }
         child = Boleite::Serializer::Node.new data, entities, index
         child.unmarshal index, Entity
       end
