@@ -68,6 +68,10 @@ class ControlMenu
     end
   end
 
+  def max_speed?
+    @speed == MAX_SPEED
+  end
+
   def update
     if @world.paused?
       @pause_button.label_text = "Unpause"

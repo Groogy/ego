@@ -1,7 +1,7 @@
 class GameStateInterface
   @gui : Boleite::GUI
 
-  getter control_menu, inspector
+  getter control_menu, inspector, debug_stats_viewer
 
   def initialize(@gui, app, world, camera)
     @control_menu = ControlMenu.new world

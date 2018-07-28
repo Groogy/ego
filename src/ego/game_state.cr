@@ -40,7 +40,13 @@ class GameState < Boleite::State
       input.update delta
     end
 
-    did_update = update_game delta
+    if @interface.control_menu.max_speed?
+      full_speed_update_game delta
+      did_update = true
+    else
+      did_update = update_game delta
+    end
+    
     @interface.update did_update
   end
 
@@ -55,6 +61,15 @@ class GameState < Boleite::State
     else
       false
     end
+  end
+
+  def full_speed_update_game(delta)
+    while @frame_time <= Time::Span.new seconds: 1, nanoseconds: 0
+      @frame_time += delta
+      @world.update
+      @interface.debug_stats_viewer.fast_tick
+    end
+    @frame_time = Time::Span.zero
   end
 
   def render(delta)

@@ -14,20 +14,28 @@ class DebugStatsViewer
     container.add @info
     @window.add container
 
-    @profiler = Profiler.new
+    @frame_profiler = Profiler.new
+    @tick_profiler = Profiler.new
   end
 
   def update(full_update)
-    @profiler.tick
+    @frame_profiler.tick
     if full_update
+      @tick_profiler.tick
       apply_text
     end
   end
 
+  def fast_tick
+    @tick_profiler.tick
+  end
+
   def apply_text
     text = ""
-    text += "#{@profiler.num_ticks_per_second} / Ticks Per Second\n"
-    text += "#{@profiler.milliseconds_per_tick}ms / Ticks\n"
+    text += "#{@frame_profiler.num_ticks_per_second} / Frames Per Second\n"
+    text += "#{@frame_profiler.milliseconds_per_tick}ms / Frame\n"
+    text += "#{@tick_profiler.num_ticks_per_second} / Ticks Per Second\n"
+    text += "#{@tick_profiler.milliseconds_per_tick}ms / Tick\n"
 
     @info.text = text
   end
