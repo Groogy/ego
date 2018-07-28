@@ -64,7 +64,7 @@ class Entity
   requires has_component? klass
   def get_component(klass)
     comp = get_component? klass
-    comp.as(EntityComponent)
+    klass.cast comp
   end
 
   def destroy
