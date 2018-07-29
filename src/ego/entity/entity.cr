@@ -67,6 +67,15 @@ class Entity
     klass.cast comp
   end
 
+  def query(klass)
+    comp = get_component? klass
+    if comp
+      yield klass.cast(comp)
+    else
+      nil
+    end
+  end
+
   def destroy
     @destroyed = true
   end
