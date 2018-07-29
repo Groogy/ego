@@ -7,7 +7,7 @@ class EntityManager
   @systems = [] of EntitySystem
   @descriptors = [] of EntityDescriptor
   @renderer = EntityRenderer.new
-  @id_generator : EntityIdGenerator
+  @id_generator : IdGenerator
 
   getter renderer, grid
   delegate each_at, to: @grid
@@ -15,7 +15,7 @@ class EntityManager
 
   protected property entities, id_generator
 
-  def initialize(@map, @id_generator = EntityIdGenerator.new)
+  def initialize(@map, @id_generator = IdGenerator.new)
     @grid = EntityGrid.new @map.size
     create_systems
     create_descriptors

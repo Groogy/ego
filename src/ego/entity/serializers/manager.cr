@@ -8,7 +8,7 @@ class EntityManager
 
     def unmarshal(node)
       world = node.data
-      id_generator = EntityIdGenerator.new node.unmarshal_int("next_id")
+      id_generator = IdGenerator.new node.unmarshal_int("next_id")
       manager = EntityManager.new world.map, id_generator
       pre_load_entities node, manager
       load_position_references manager

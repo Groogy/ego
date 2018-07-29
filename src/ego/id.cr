@@ -1,6 +1,6 @@
 alias EntityId = Int64
 
-class EntityIdGenerator
+class IdGenerator
   @next_id : Int64
 
   def initialize(@next_id = 1i64)
