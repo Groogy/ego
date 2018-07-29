@@ -1,4 +1,5 @@
 alias EntityId = Int64
+alias SocialUnitId = Int64
 
 class IdGenerator
   @next_id : Int64

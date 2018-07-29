@@ -5,6 +5,7 @@ class World
       node.marshal "random", obj.random
       node.marshal "map", obj.map
       node.marshal "entities", obj.entities
+      node.marshal "social_units", obj.social_units
     end
 
     def unmarshal(node)
@@ -14,6 +15,7 @@ class World
       world.random = node.unmarshal "random", Boleite::NoiseRandom
       world.map = node.unmarshal "map", Map
       world.entities = node.unmarshal "entities", EntityManager
+      world.social_units = node.unmarshal "social_units", SocialUnitManager
       world
     end
   end

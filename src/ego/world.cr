@@ -4,20 +4,23 @@ class World
   @entities : EntityManager
   @entity_categories = EntityCategoryManager.new
   @entity_templates = EntityTemplateManager.new
+  @social_units : SocialUnitManager
   @current_tick = GameTime.new
   @paused = false
   @random : Boleite::Random
 
   getter current_tick, map, random, terrains
   getter entities, entity_categories, entity_templates
+  getter social_units
   getter? paused
 
-  protected setter current_tick, map, random, entities
+  protected setter current_tick, map, random, entities, social_units
 
   def initialize
     size = Boleite::Vector2i.new 128, 128
     @map = Map.new size
     @entities = EntityManager.new @map
+    @social_units = SocialUnitManager.new
     @random = Boleite::NoiseRandom.new 0u32
   end
 
