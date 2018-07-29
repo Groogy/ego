@@ -1,0 +1,2 @@
+class SocialUnitCreatorComponent < EntityComponent
+end

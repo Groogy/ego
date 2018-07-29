@@ -50,6 +50,7 @@ class World
   def update
     unless @paused
       @entities.update self
+      @social_units.update self
       @current_tick = @current_tick.next_tick
     end
   end

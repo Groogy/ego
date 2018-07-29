@@ -14,4 +14,16 @@ class SocialUnitManager
   def add(unit)
     @instances << unit
   end
+
+  def create
+    unit = SocialUnit.new @id_generator.generate
+    add unit
+    unit
+  end
+
+  def update(world)
+    @instances.each do |i|
+      i.update world
+    end
+  end
 end

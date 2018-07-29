@@ -9,6 +9,10 @@ primitive_population:
       args: { max_satisfaction: 10000, satisfaction_decay: 1, edible: ["foods"] }
     - id: "population"
       args: { max: 24, start: 5, growth: { years: 10 } }
+    - id: "social_unit_member"
+      args: {}
+    - id: "social_unit_creator"
+      args: {}
 tree:
   name: "Trees"
   categories: ["plant", "material"]
