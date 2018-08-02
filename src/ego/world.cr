@@ -47,6 +47,10 @@ class World
            @map.flat?(pos, template.size)
   end
 
+  def within_boundraries?(pos)
+    @entities.grid.inside? pos, Boleite::Vector2i.one
+  end
+
   def update
     unless @paused
       @entities.update self
