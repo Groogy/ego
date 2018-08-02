@@ -1,5 +1,5 @@
 abstract struct EntityPos
-  abstract def point : Boleite::Vector2u16
+  abstract def point : Boleite::Vector2i16
   abstract def on_map? : Boolean
   abstract def parent : Entity?
 
@@ -10,6 +10,14 @@ abstract struct EntityPos
   def y
     point.y
   end
+
+  def ==(other : EntityPos)
+    point.x == other.point.x && point.y == other.point.y
+  end
+
+  def ==(other)
+    point.x == other.x && point.y == other.y
+  end
 end
 
 struct MapEntityPos < EntityPos
@@ -18,7 +26,7 @@ struct MapEntityPos < EntityPos
   def initialize(@pos)
   end
 
-  def initialize(pos : Boleite::Vector2u16)
+  def initialize(pos : Boleite::Vector2i16)
     @pos = Map::Pos.new pos.x, pos.y
   end
 

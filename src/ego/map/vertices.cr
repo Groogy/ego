@@ -61,7 +61,7 @@ class MapRenderer
       size = map.size
       size.y.times do |iy|
         size.x.times do |ix|
-          point = Map::Pos.new(ix.to_u16, iy.to_u16)
+          point = Map::Pos.new(ix.to_i16, iy.to_i16)
           rot = point.rotate_by map
           height = map.get_height point
           terrain = map.get_terrain point

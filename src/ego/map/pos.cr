@@ -1,7 +1,7 @@
 class Map
   struct Pos
-    @x : UInt16
-    @y : UInt16
+    @x : Int16
+    @y : Int16
 
     property x, y
 
@@ -15,8 +15,8 @@ class Map
     end
 
     def initialize(pos)
-      @x = pos.x.to_u16
-      @y = pos.y.to_u16
+      @x = pos.x.to_i16
+      @y = pos.y.to_i16
     end
 
     def -(val : Int)
@@ -38,11 +38,15 @@ class Map
     def rotate_by(map)
       x, y = @x.to_i, @y.to_i
       x, y = map.apply_view_rotation x, y
-      Pos.new x.to_u16, y.to_u16
+      Pos.new x.to_i16, y.to_i16
     end
 
     def to_index(map)
       @x + (@y * map.size.x)
+    end
+
+    def to_vector
+      Boleite::Vector2i.new @x.to_i, @y.to_i
     end
 
     def to_rect
@@ -51,6 +55,10 @@ class Map
 
     def inside?(pos)
       to_rect.contains? pos
+    end
+
+    def ==(other)
+      @x == other.x && @y == other.y
     end
   end
 end

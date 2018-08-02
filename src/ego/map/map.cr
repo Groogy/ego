@@ -74,7 +74,7 @@ class Map
   requires data.size == @data.size
   def apply_data(data, terrains)
     data.each do |d|
-      pos = Pos.new (d[0] % @size.x).to_u16, (d[0] / @size.y).to_u16
+      pos = Pos.new (d[0] % @size.x).to_i16, (d[0] / @size.y).to_i16
       index = pos.to_index self
       @data[index].terrain = terrains.find d[1]
       @data[index].height = d[2]
@@ -116,7 +116,7 @@ class Map
   def each_tile_reversed
     @size.y.downto 1 do |y|
       @size.x.downto 1 do |x|
-        pos = Pos.new((x-1).to_u16, (y-1).to_u16).rotate_by self
+        pos = Pos.new((x-1).to_i16, (y-1).to_i16).rotate_by self
         yield pos, @data[pos.to_index self]
       end
     end
