@@ -17,7 +17,7 @@ class SocialUnitManager
     def pre_load_instances(node, manager)
       instances_pre = node.unmarshal "instances", Array(SocialUnitPreLoadData)
       instances_pre.each do |data|
-        unit = SocialUnit.new data.id
+        unit = SocialUnit.new data.id, data.name
         manager.add unit
       end
     end

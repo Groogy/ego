@@ -2,6 +2,7 @@ class SocialUnit
   struct Serializer
     def marshal(obj, node)
       node.marshal "id", obj.id
+      node.marshal "name", obj.name
       members = obj.members.map &.id
       node.marshal "members", members
     end

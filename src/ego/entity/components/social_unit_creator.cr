@@ -26,7 +26,7 @@ class SocialUnitCreatorComponent < EntityComponent
   end
 
   def create(world)
-    world.social_units.create
+    world.social_units.create world
   end
 
   def find_unit_at_pos(world : World, pos : Map::Pos)

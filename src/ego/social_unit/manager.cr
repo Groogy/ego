@@ -15,8 +15,9 @@ class SocialUnitManager
     @instances << unit
   end
 
-  def create
-    unit = SocialUnit.new @id_generator.generate
+  def create(world)
+    name = world.name_generators.generate world
+    unit = SocialUnit.new @id_generator.generate, name
     add unit
     unit
   end

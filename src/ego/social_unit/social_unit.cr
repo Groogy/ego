@@ -2,12 +2,13 @@ class SocialUnit
   include CrystalClear
 
   @id : SocialUnitId
+  @name : String
   @members = [] of Entity
 
-  getter id
+  getter id, name
   protected getter members
 
-  def initialize(@id)
+  def initialize(@id, @name)
   end
 
   requires entity.has_component? SocialUnitMemberComponent
