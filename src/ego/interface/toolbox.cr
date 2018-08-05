@@ -130,6 +130,7 @@ class Toolbox
     containers = {} of EntityCategory => Boleite::GUI::Layout
     templates.each do |key, tmpl|
       category = tmpl.primary_category
+      next if !category.visible?
       if !containers.keys.includes? category
         containers[category] = Boleite::GUI::Layout.new :horizontal
       end

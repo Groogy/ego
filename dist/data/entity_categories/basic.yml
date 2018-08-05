@@ -2,8 +2,10 @@ food:
   name: "Food"
 plant:
   name: "Plant"
+  visible: true
 population:
   name: "Population"
+  visible: true
 building:
   name: "Building"
 mineral:
@@ -14,3 +16,7 @@ animal:
   name: "Animal"
 material:
   name: "Material"
+agents:
+  name: "Agents"
+  
+
