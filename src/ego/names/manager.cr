@@ -2,6 +2,9 @@ class NameGeneratorManager
   include CrystalClear
 
   @generators = [] of NameGenerator
+  @history = [] of String
+
+  protected property history
 
   requires Dir.exists? path
   def load_folder(path)
@@ -21,14 +24,25 @@ class NameGeneratorManager
     end
   end
 
+  ensures !return_value.empty?
   def generate(world)
     random = world.random
     generator = pick_generator random
-    generator.generate random
+    name = ""
+    loop do
+      name = generator.generate random
+      break if is_unique? name
+    end
+    @history << name
+    name
   end
 
   def pick_generator(random)
     index = random.get_int 0, @generators.size
     @generators[index]
+  end
+
+  def is_unique?(name)
+    !@history.includes? name
   end
 end

@@ -16,7 +16,7 @@ class World
   getter name_generators
   getter? paused
 
-  protected setter current_tick, map, random, entities, social_units
+  protected setter current_tick, map, random, entities, social_units, name_generators
 
   def initialize
     size = Boleite::Vector2i.new 128, 128
