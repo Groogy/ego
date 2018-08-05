@@ -7,7 +7,7 @@ module PathFinder
   class Node
     getter pos : Map::Pos
     getter prev : Node?
-    getter cost : UInt32
+    getter cost : Float64
 
     def initialize(@pos, @prev, @cost)
     end
@@ -16,7 +16,7 @@ module PathFinder
   def self.broad_search(world, start, length, tester)
     explored = Deque(Node).new length * length
     frontier = Deque(Node).new 
-    frontier << Node.new start, nil, 0u32
+    frontier << Node.new start, nil, 0.0
     while !frontier.empty?
       node = frontier.shift
       explored.push node
@@ -30,7 +30,7 @@ module PathFinder
         next if !world.within_boundraries? neigh
         next if Boleite::Vector.square_magnitude((start - neigh).to_vector) >= length * length
 
-        cost = node.cost + 1
+        cost = node.cost + world.movement_cost node.pos, neigh
         neighbor = Node.new neigh, node, cost
         unless explored.find { |n| n.pos == neigh }
           index = frontier.index(offset:0) { |n| n.pos == neigh }

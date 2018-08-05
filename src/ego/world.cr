@@ -51,6 +51,15 @@ class World
     @entities.grid.inside? pos, Boleite::Vector2i.one
   end
 
+  def movement_cost(from, to)
+    start_cost = @map.get_movement_cost from
+    end_cost = @map.get_movement_cost to
+    start_height = @map.get_height from
+    end_height = @map.get_height to
+    cost = (start_cost + end_cost) / 2.0
+    cost *= (end_height - start_height).abs + 1
+  end
+
   def update
     unless @paused
       @entities.update self

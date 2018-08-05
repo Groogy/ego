@@ -56,6 +56,21 @@ class Map
   end
 
   requires inside? pos
+  def get_movement_cost(pos)
+    terrain = get_terrain pos
+    if terrain
+      terrain.cost
+    else
+      Float64::MAX
+    end
+  end
+
+  requires inside? pos
+  def get_movement_cost(x, y)
+    get_movement_cost Boleite::Vector2i.new(x, y)
+  end
+
+  requires inside? pos
   def set_terrain(pos, terrain)
     @data[Pos.new(pos).to_index self].terrain = terrain
     @renderer.notify_change
