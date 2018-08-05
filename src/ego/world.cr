@@ -5,6 +5,7 @@ class World
   @entity_categories = EntityCategoryManager.new
   @entity_templates = EntityTemplateManager.new
   @social_units : SocialUnitManager
+  @name_generators = NameGeneratorManager.new
   @current_tick = GameTime.new
   @paused = false
   @random : Boleite::Random
@@ -12,6 +13,7 @@ class World
   getter current_tick, map, random, terrains
   getter entities, entity_categories, entity_templates
   getter social_units
+  getter name_generators
   getter? paused
 
   protected setter current_tick, map, random, entities, social_units
@@ -28,6 +30,7 @@ class World
     @terrains.load_folder "data/tiles"
     @entity_categories.load_folder "data/entity_categories"
     @entity_templates.load_folder "data/entities", self
+    @name_generators.load_folder "data/names"
   end
 
   def toggle_pause

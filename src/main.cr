@@ -12,6 +12,8 @@ require "./ego/entity/descriptors/*"
 require "./ego/entity/serializers/*"
 require "./ego/social_unit/*"
 require "./ego/social_unit/serializers/*"
+require "./ego/names/*"
+require "./ego/names/serializers/*"
 
 app = EgoApplication.new
 app.state_stack.push MenuState.new(app)

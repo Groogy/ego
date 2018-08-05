@@ -1,0 +1,67 @@
+adjective_list:
+  - Golden
+  - Glorious
+  - Great
+  - Sacred
+  - Red
+  - Eternal
+  - Black
+  - White
+  - Infernal
+  - Magnificent
+  - Mighty
+  - Royal
+  - Supreme
+  - Heavenly
+  - Ardent
+  - Grand
+  - Serene
+name_list:
+  - River
+  - Mountain
+  - Sea
+  - Woods
+  - Hunters
+  - Horde
+  - Stone
+  - Plain
+  - Dust
+  - Ghost
+  - Wolf
+  - Bear
+  - Eagle
+  - Crow
+  - Raven
+  - Butcher
+  - Fire
+  - Death
+  - Wind
+  - Water
+  - Fist
+end_list:
+  - Tribe
+  - People
+name_builders:
+  - the_start:
+      text: "The"
+      start_piece: true
+    name_start:
+      text: name_list
+      use_list: true
+      start_piece: true
+    adjective_start:
+      text: adjective_list
+      use_list: true
+      start_piece: true
+    name_middle:
+      text: name_list
+      use_list: true
+      can_follow: [the_start, adjective_start]
+    adjective_middle:
+      text: adjective_list
+      use_list: true
+      can_follow: [the_start]
+    end_piece:
+      text: end_list
+      use_list: true
+      can_follow: [name_start, adjective_start, name_middle, adjective_middle]
