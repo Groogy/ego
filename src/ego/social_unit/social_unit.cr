@@ -3,7 +3,7 @@ class SocialUnit
 
   @id : SocialUnitId
   @name : String
-  @members = [] of Entity
+  @members = SocialUnitMemberManager.new
 
   getter id, name
   protected getter members
@@ -15,15 +15,13 @@ class SocialUnit
   requires !entity.query SocialUnitMemberComponent, &.owner.nil?
   requires !@members.includes? entity
   def register(entity)
-    entity.query SocialUnitMemberComponent, &.owner=self
-    @members << entity
+    @members.register entity, self
   end
 
   requires @members.includes? entity
   ensures !@members.includes? entity
   def unregister(entity)
-    @members.delete entity
-    entity.query SocialUnitMemberComponent, &.owner=nil
+    @members.unregister entity
   end
 
   def update(world)
