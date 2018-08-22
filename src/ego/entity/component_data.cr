@@ -7,6 +7,7 @@ class EntityComponentData
   @data : Hash(String, DataType)
 
   getter id, data
+  delegate each, to: @data
 
   def initialize(@id, @data)
     convert_gametime_data
