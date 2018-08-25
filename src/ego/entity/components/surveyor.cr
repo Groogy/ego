@@ -1,0 +1,2 @@
+class SurveyorComponent < EntityComponent
+end
