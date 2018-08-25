@@ -26,9 +26,44 @@ class SocialUnit
 
   def update(world)
     clean_destroyed_members
+    survey_land world
   end
 
   def clean_destroyed_members
     @members.reject! { |e| e.destroyed? }
+  end
+
+  def survey_land(world)
+    provider = @members.find_agent_provider SurveyorComponent
+    target = find_survey_target provider, world
+    if target
+      agent = request_agent provider, world
+      if agent
+        path = PathFinder.quick_search world, agent.position.point, target
+        agent.query MovingComponent, &.target=(path)
+      end
+    end
+  end
+
+  def request_agent(provider : Nil, world)
+    nil
+  end
+
+  def request_agent(provider : Entity, world)
+    provider.query AgentProviderComponent, &.request_agent(SurveyorComponent, provider, world)
+  end
+
+  def find_survey_target(provider : Nil, world)
+  end
+
+  def find_survey_target(provider : Entity, world)
+    PathFinder.broad_search world, provider.position.point, 10, ->find_interesting_entity(World, Map::Pos)
+  end
+
+  def find_interesting_entity(world : World, pos : Map::Pos)
+    world.entities.each_at pos do |e|
+      return e if e.has_component? SurveyorInterestComponent
+    end
+    nil
   end
 end
