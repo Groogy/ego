@@ -70,12 +70,10 @@ class EntityGrid
     remove entity, entity.position
   end
 
-  requires old != entity.position
-  requires inside? old, entity.template.size && inside? entity.position, entity.template.size
-  requires includes? entity, old
-  ensures includes? entity, entity.position
-  def move(old, entity)
-    remove entity, old
+  requires pos != entity.position
+  def move(entity, pos)
+    remove entity
+    entity.position = MapEntityPos.new pos
     add entity
   end
 
