@@ -58,7 +58,7 @@ class EntityGrid
   requires includes? entity
   ensures !includes? entity
   def remove(entity, pos)
-    pos = entity.position
+    size = entity.template.size
     size.y.times do |y|
       size.x.times do |x|
         @grid[pos.x + x + (pos.y + y) * @size.y].remove entity
