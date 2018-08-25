@@ -55,6 +55,11 @@ class EntityManager
     entity
   end
 
+  def move(entity, pos)
+    @grid.move entity, pos
+    @renderer.notify_change
+  end
+
   def find_by_id(id : EntityId)
     each do |entity|
       return entity if entity.id == id
