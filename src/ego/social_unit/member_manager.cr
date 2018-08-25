@@ -26,4 +26,11 @@ class SocialUnitMemberManager
     found.each { |e| unregister e }
     found
   end
+
+  def find_agent_provider(klass)
+    each do |e|
+      return e if e.query AgentProviderComponent, &.available_agent?(klass)
+    end
+    return nil
+  end
 end
