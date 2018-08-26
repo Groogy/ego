@@ -64,6 +64,38 @@ module PathFinder
       explored.push node
 
       if result = tester.call world, node.pos
+        return self.build_path node
+      end
+
+      DIRECTIONS.each do |dir|
+        neigh = node.pos + dir
+        next if !world.within_boundraries? neigh
+        next if Boleite::Vector.square_magnitude((start - neigh).to_vector) >= length * length
+
+        cost = node.cost + world.movement_cost node.pos, neigh
+        neighbor = Node.new neigh, node, cost, 0.0
+        unless explored.find { |n| n.pos == neigh }
+          index = frontier.index(offset:0) { |n| n.pos == neigh }
+          if index
+            frontier[index] = neighbor if frontier[index].cost > cost
+          else
+            frontier.push neighbor
+          end
+        end
+      end
+    end
+    nil
+  end
+
+  def self.broad_search_entity(world, start, length, tester)
+    explored = Deque(Node).new length * length
+    frontier = Deque(Node).new 
+    frontier << Node.new start, nil, 0.0, 0.0
+    while !frontier.empty?
+      node = frontier.shift
+      explored.push node
+
+      if result = tester.call world, node.pos
         return result
       end
 

@@ -35,11 +35,10 @@ class SocialUnit
 
   def survey_land(world)
     provider = @members.find_agent_provider SurveyorComponent
-    target = find_survey_target provider, world
-    if target
+    path = find_survey_target provider, world
+    if path
       agent = request_agent provider, world
       if agent
-        path = PathFinder.quick_search world, agent.position.point, target
         agent.query MovingComponent, &.target=(path)
       end
     end

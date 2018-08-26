@@ -17,7 +17,7 @@ class SocialUnitCreatorComponent < EntityComponent
   end
 
   def find(world, entity)
-    entity = PathFinder.broad_search world, entity.position.point, 10, ->find_unit_at_pos(World, Map::Pos)
+    entity = PathFinder.broad_search_entity world, entity.position.point, 10, ->find_unit_at_pos(World, Map::Pos)
     if entity
       entity.query SocialUnitMemberComponent, &.owner 
     else
