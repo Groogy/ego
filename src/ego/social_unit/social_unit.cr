@@ -35,11 +35,12 @@ class SocialUnit
 
   def survey_land(world)
     provider = @members.find_agent_provider SurveyorComponent
-    path = find_survey_target provider, world
+    path = SurveyorSystem.find_survey_target provider, world
     if path
       agent = request_agent provider, world
       if agent
-        agent.query MovingComponent, &.target=(path)
+        moving = agent.get_component MovingComponent
+        SurveyorSystem.set_survey_path moving, path
       end
     end
   end
@@ -50,19 +51,5 @@ class SocialUnit
 
   def request_agent(provider : Entity, world)
     provider.query AgentProviderComponent, &.request_agent(SurveyorComponent, provider, world)
-  end
-
-  def find_survey_target(provider : Nil, world)
-  end
-
-  def find_survey_target(provider : Entity, world)
-    PathFinder.broad_search world, provider.position.point, 10, ->find_interesting_entity(World, Map::Pos)
-  end
-
-  def find_interesting_entity(world : World, pos : Map::Pos)
-    world.entities.each_at pos do |e|
-      return e if e.has_component? SurveyorInterestComponent
-    end
-    nil
   end
 end
