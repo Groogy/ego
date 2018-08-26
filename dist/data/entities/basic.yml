@@ -9,9 +9,22 @@ primitive_population:
       args: { max_satisfaction: 10000, satisfaction_decay: 1, edible: ["foods"] }
     - id: "population"
       args: { max: 24, start: 5, growth: { years: 10 } }
+    - id: "agent_provider"
+      args: { surveyor: { tmpl: "primitive_surveyor", max: 1 } }
     - id: "social_unit_member"
       args: {}
     - id: "social_unit_creator"
+      args: {}
+primitive_surveyor:
+  name: "Primitive Surveyor"
+  categories: ["agents"]
+  size: [1, 1]
+  graphics:
+    uv: [119, 0]
+  components:
+    - id: "moving"
+      args: { speed: 1.0 }
+    - id: "surveyor"
       args: {}
 tree:
   name: "Trees"
@@ -19,7 +32,9 @@ tree:
   size: [1, 1]
   graphics:
     uv: [71, 0]
-  components: []
+  components:
+    - id: "surveyor_interest"
+      args: {}
 strawberry_flower:
   name: "Strawberry Flowers"
   description: "These flowers mature into delicious red strawberries."
@@ -37,6 +52,8 @@ strawberry_flower:
         into: "harvestable"
         limit: 12
         season: [{months: 4}, {months: 8}]
+    - id: "surveyor_interest"
+      args: {}
 strawberry:
   name: "Strawberry"
   description: "A red berry that is sweet and delicious."
