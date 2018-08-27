@@ -25,12 +25,7 @@ class SocialUnit
   end
 
   def update(world)
-    clean_destroyed_members
     survey_land world
-  end
-
-  def clean_destroyed_members
-    @members.reject! { |e| e.destroyed? }
   end
 
   def survey_land(world)
