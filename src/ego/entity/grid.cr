@@ -82,7 +82,7 @@ class EntityGrid
   end
 
   def includes?(entity)
-    @grid.each &.includes?(entity)
+    @grid.any? &.includes?(entity)
   end
 
   def includes?(entity, pos)
