@@ -78,6 +78,7 @@ class Entity
 
   def destroy
     @destroyed = true
+    @components.each &.on_destroyed(self)
   end
 
   def destroyed?

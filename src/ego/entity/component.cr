@@ -32,6 +32,9 @@ abstract class EntityComponent
   def spawn_setup(entity, world)
   end
 
+  def on_destroyed(entity)
+  end
+
   def id
     self.class.id
   end
