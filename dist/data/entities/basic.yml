@@ -26,6 +26,8 @@ primitive_surveyor:
       args: { speed: 1.0 }
     - id: "surveyor"
       args: {}
+    - id: "social_unit_member"
+      args: {}
 tree:
   name: "Trees"
   categories: ["plant", "material"]

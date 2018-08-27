@@ -50,6 +50,10 @@ class SocialUnit
   end
 
   def request_agent(provider : Entity, world)
-    provider.query AgentProviderComponent, &.request_agent(SurveyorComponent, provider, world)
+    agent = provider.query AgentProviderComponent, &.request_agent(SurveyorComponent, provider, world)
+    if agent
+      agent.query SocialUnitMemberComponent, &.owner=(self)
+    end
+    agent
   end
 end
