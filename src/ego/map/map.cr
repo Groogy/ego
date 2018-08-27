@@ -50,7 +50,6 @@ class Map
     @data[Pos.new(pos).to_index self].height.to_u8
   end
 
-  requires inside? pos
   def get_height(x, y)
     get_height Boleite::Vector2i.new(x, y)
   end
