@@ -12,7 +12,7 @@ class SocialUnit
   end
 
   requires entity.has_component? SocialUnitMemberComponent
-  requires !entity.query SocialUnitMemberComponent, &.owner.nil?
+  requires entity.query SocialUnitMemberComponent, &.owner.nil?
   requires !@members.includes? entity
   def register(entity)
     @members.register entity, self
@@ -56,4 +56,6 @@ class SocialUnit
     end
     agent
   end
+
+  invariant !@members.any? &.destroyed?
 end

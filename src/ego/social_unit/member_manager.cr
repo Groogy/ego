@@ -1,7 +1,7 @@
 class SocialUnitMemberManager
   @members = [] of Entity
 
-  delegate includes?, to: @members
+  delegate includes?, any?, all?, to: @members
 
   def register(entity, unit)
     entity.query SocialUnitMemberComponent, &.owner=unit
