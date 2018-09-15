@@ -4,8 +4,9 @@ class SocialUnit
   @id : SocialUnitId
   @name : String
   @members = SocialUnitMemberManager.new
+  @resources = SocialUnitResourceTracker.new
 
-  getter id, name
+  getter id, name, resources
   protected getter members
 
   def initialize(@id, @name)
@@ -30,7 +31,7 @@ class SocialUnit
 
   def survey_land(world)
     provider = @members.find_agent_provider SurveyorComponent
-    path = SurveyorSystem.find_survey_target provider, world
+    path = SurveyorSystem.find_survey_target provider, world, self
     if path
       agent = request_agent provider, world
       if agent

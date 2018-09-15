@@ -1,21 +1,37 @@
 class SurveyorSystem < EntitySystem
+  include CrystalClear
+  
   def target_component
     SurveyorComponent
   end
 
+  requires entity.has_component? MovingComponent
+  requires entity.query SocialUnitMemberComponent, &.owner
   def update(world, entity, component)
     component = component.as(SurveyorComponent)
     moving = entity.get_component MovingComponent
     target = moving.target
+    social_unit = entity.query SocialUnitMemberComponent, &.owner
+    return if !social_unit
     if target && target.last_tile == entity.position
-      moving.target = nil
+      survey_tile world, entity, moving, social_unit
     elsif target.nil?
-      survey_land world, entity, moving
+      survey_land world, entity, moving, social_unit
     end
   end
 
-  def survey_land(world, entity, moving)
-    path = SurveyorSystem.find_survey_target entity, world
+  def survey_tile(world, entity, moving, social_unit)
+    pos = entity.position.point
+    world.entities.each_at pos do |e|
+      if e.has_component? SurveyorInterestComponent
+        social_unit.resources.register e, world
+      end
+    end
+    moving.target = nil
+  end
+
+  def survey_land(world, entity, moving, social_unit)
+    path = SurveyorSystem.find_survey_target entity, world, social_unit
     SurveyorSystem.set_survey_path moving, path
   end
 
@@ -23,18 +39,19 @@ class SurveyorSystem < EntitySystem
     moving.target = path
   end
 
-  def self.find_survey_target(entity : Nil, world)
+  def self.find_survey_target(entity : Nil, world, social_unit)
     nil
   end
 
-  def self.find_survey_target(entity : Entity, world)
-    PathFinder.broad_search world, entity.position.point, 10, ->find_interesting_entity(World, Map::Pos)
-  end
-
-  def self.find_interesting_entity(world : World, pos : Map::Pos)
-    world.entities.each_at pos do |e|
-      return e if e.has_component? SurveyorInterestComponent
+  def self.find_survey_target(entity : Entity, world, social_unit)
+    resources = social_unit.resources
+    proc = ->(w : World, p : Map::Pos) do
+      w.entities.each_at p do |e|
+        if e.has_component? SurveyorInterestComponent
+          break e unless resources.contains? p, e.template
+        end
+      end
     end
-    nil
+    PathFinder.broad_search world, entity.position.point, 10, proc
   end
 end
