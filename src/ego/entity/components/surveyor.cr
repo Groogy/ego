@@ -1,2 +1,2 @@
-class SurveyorComponent < EntityComponent
+class SurveyorComponent < AgentBaseComponent
 end
