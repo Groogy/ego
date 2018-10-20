@@ -84,7 +84,7 @@ class AgentProviderComponent < EntityComponent
     end
   end
 
-  requires entity.any? &.includes?(entity)
+  requires owns? entity
   def return_agent(entity)
     d = find_definition entity.template
     if d
@@ -99,5 +99,9 @@ class AgentProviderComponent < EntityComponent
 
   def find_definition(klass)
     @definitions.find { |d| d.component == klass }
+  end
+
+  def owns?(entity)
+    @instances.any? &.includes?(entity)
   end
 end

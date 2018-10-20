@@ -22,17 +22,22 @@ end
 class GoHomeTask < AgentTask
   include CrystalClear
 
-  def initialize(@home : Entity)
+  requires home.has_component? AgentProviderComponent
+  def initialize(home : Entity)
+    @home = home
   end
 
   requires entity.has_component? MovingComponent
+  requires @home.query AgentProviderComponent, &.owns?(entity)
   def start(world, entity, component)
     path = PathFinder.quick_search world, entity.position.point, @home
     assert path
     entity.query MovingComponent, &.target=(path)
   end
 
+  requires @home.query AgentProviderComponent, &.owns?(entity)
   def finish(world, entity, component)
+    @home[AgentProviderComponent].return_agent entity
   end
 
   def finished?(entity, component)
