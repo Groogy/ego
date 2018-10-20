@@ -31,12 +31,14 @@ class SocialUnit
 
   def survey_land(world)
     provider = @members.find_agent_provider SurveyorComponent
-    path = SurveyorSystem.find_survey_target provider, world, self
-    if path
-      agent = request_agent provider, world
-      if agent
-        moving = agent.get_component MovingComponent
-        SurveyorSystem.set_survey_path moving, path
+    if provider
+      path = SurveyorSystem.find_survey_target provider, world, self
+      if path
+        agent = request_agent provider, world
+        if agent
+          component = agent.get_component SurveyorComponent
+          SurveyorSystem.set_survey_path world, agent, component, path
+        end
       end
     end
   end

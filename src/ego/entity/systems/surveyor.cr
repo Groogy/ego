@@ -7,43 +7,30 @@ class SurveyorSystem < AgentBaseSystem
   requires entity.query SocialUnitMemberComponent, &.owner
   def update(world, entity, component)
     component = component.as(SurveyorComponent)
-    moving = entity.get_component MovingComponent
-    target = moving.target
-    social_unit = entity.query SocialUnitMemberComponent, &.owner
-    return if !social_unit
-    if target && target.last_tile == entity.position
-      survey_tile world, entity, moving, social_unit
-    elsif target.nil?
-      found = survey_land world, entity, moving, social_unit
-      go_home world, entity, component, moving unless found
+    if component.task
+      update_task world, entity, component
+    else
+      found = survey_land world, entity, component
+      go_home world, entity, component unless found
     end
   end
 
-  def survey_tile(world, entity, moving, social_unit)
-    pos = entity.position.point
-    world.entities.each_at pos do |e|
-      if e.has_component? SurveyorInterestComponent
-        social_unit.resources.register e, world
-      end
-    end
-    moving.target = nil
-  end
-
-  def survey_land(world, entity, moving, social_unit)
-    path = SurveyorSystem.find_survey_target entity, world, social_unit
-    SurveyorSystem.set_survey_path moving, path
+  def survey_land(world, entity, component)
+    unit = entity[SocialUnitMemberComponent].owner!
+    path = SurveyorSystem.find_survey_target entity, world, unit
+    SurveyorSystem.set_survey_path world, entity, component, path
     !path.nil?
   end
 
-  def self.set_survey_path(moving, path)
-    moving.target = path
+  def self.set_survey_path(world : World, entity : Entity, component : AgentBaseComponent, path : Path)
+    component.create_task SurveyTask, world, entity, path
   end
 
-  def self.find_survey_target(entity : Nil, world, social_unit)
-    nil
+  def self.set_survey_path(world : World, entity : Entity, component : AgentBaseComponent, path : Nil)
+    component.reset_task
   end
 
-  def self.find_survey_target(entity : Entity, world, social_unit)
+  def self.find_survey_target(entity : Entity, world : World, social_unit : SocialUnit)
     resources = social_unit.resources
     proc = ->(w : World, p : Map::Pos) do
       w.entities.each_at p do |e|
