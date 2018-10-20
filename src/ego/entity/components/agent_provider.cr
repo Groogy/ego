@@ -76,7 +76,9 @@ class AgentProviderComponent < EntityComponent
     d = find_definition klass
     if d
       i = @instances[d.index]
-      i.request_agent d, owner, world
+      e = i.request_agent d, owner, world
+      e.query klass, &.home=(owner) if e
+      e
     else
       nil
     end

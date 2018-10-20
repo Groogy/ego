@@ -1,6 +1,4 @@
-class SurveyorSystem < EntitySystem
-  include CrystalClear
-  
+class SurveyorSystem < AgentBaseSystem
   def target_component
     SurveyorComponent
   end
@@ -16,7 +14,8 @@ class SurveyorSystem < EntitySystem
     if target && target.last_tile == entity.position
       survey_tile world, entity, moving, social_unit
     elsif target.nil?
-      survey_land world, entity, moving, social_unit
+      found = survey_land world, entity, moving, social_unit
+      go_home world, entity, component, moving unless found
     end
   end
 
@@ -33,6 +32,7 @@ class SurveyorSystem < EntitySystem
   def survey_land(world, entity, moving, social_unit)
     path = SurveyorSystem.find_survey_target entity, world, social_unit
     SurveyorSystem.set_survey_path moving, path
+    !path.nil?
   end
 
   def self.set_survey_path(moving, path)
