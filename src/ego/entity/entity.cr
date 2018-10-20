@@ -84,4 +84,8 @@ class Entity
   def destroyed?
     @destroyed
   end
+
+  def [](klass)
+    get_component klass
+  end
 end
