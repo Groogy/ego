@@ -3,7 +3,15 @@ class Path
   @step = 1
 
   getter step
+  protected setter step
+  protected property points
   delegate empty?, size, to: @points
+
+  def initialize
+  end
+
+  def initialize(@points, @step)
+  end
 
   def add(pos)
     @points << Map::Pos.new pos
