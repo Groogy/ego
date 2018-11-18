@@ -35,6 +35,10 @@ class EntityTemplateManager
     @templates[key]
   end
 
+  def has?(key)
+    @templates.has_key? key
+  end
+
   def each
     @templates.each do |key, value|
       yield key, value
