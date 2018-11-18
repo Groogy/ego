@@ -25,23 +25,28 @@ class AgentProviderComponent < EntityComponent
   end
 
   class Instance
-    @instances = [] of Entity
+    @agents = [] of Entity
 
-    delegate includes?, to: @instances
+    getter agents
+    delegate includes?, to: @agents
 
     def request_agent(d, owner, world)
       return nil if count >= d.max
-      @instances << world.spawn_entity d.agent, owner.position
-      @instances.last
+      @agents << world.spawn_entity d.agent, owner.position
+      @agents.last
     end
 
     def return_agent(d, entity)
       entity.destroy
-      @instances.delete entity
+      @agents.delete entity
+    end
+
+    def add_agent(agent)
+      @agents << agent
     end
 
     def count
-      @instances.size
+      @agents.size
     end
   end
 
@@ -93,12 +98,33 @@ class AgentProviderComponent < EntityComponent
     end
   end
 
-  def find_definition(tmpl : EntityTemplate)
+  protected def find_definition(tmpl : EntityTemplate)
     @definitions.find { |d| d.agent == tmpl }
   end
 
-  def find_definition(klass)
+  protected def find_definition(klass)
     @definitions.find { |d| d.component == klass }
+  end
+
+  protected def agent_templates
+    @definitions.map { |d| d.agent }
+  end
+
+  protected def active_agents_for(tmpl)
+    d = find_definition tmpl
+    if d
+      @instances[d.index].agents
+    else
+      [] of Entity
+    end
+  end
+
+  requires find_definition tmpl
+  protected def add_agent_for(tmpl : EntityTemplate, agent : Entity)
+    d = find_definition tmpl
+    if d
+      @instances[d.index].add_agent agent
+    end
   end
 
   def owns?(entity)

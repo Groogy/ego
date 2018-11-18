@@ -2,6 +2,8 @@ class SurveyorComponent < AgentBaseComponent
 end
 
 class SurveyTask < AgentTask
+  getter path
+  
   def initialize(@path : Path)
   end
 

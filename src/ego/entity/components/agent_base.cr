@@ -11,9 +11,21 @@ abstract class AgentBaseComponent < EntityComponent
     task.start world, entity, self
     @task = task
   end
+
+  def load_task(t : AgentTask)
+    @task = t
+  end
 end
 
 abstract class AgentTask
+  def self.find_class(id)
+    {% for klass in @type.all_subclasses %}
+      {% unless klass.abstract? %}
+    return {{ klass }} if {{ klass }}.to_s == id
+      {% end %}
+    {% end %}
+  end
+
   abstract def start(world, entity, component)
   abstract def finish(world, entity, component)
   abstract def finished?(entity, component)
@@ -21,6 +33,8 @@ end
 
 class GoHomeTask < AgentTask
   include CrystalClear
+
+  getter home
 
   requires home.has_component? AgentProviderComponent
   def initialize(home : Entity)
