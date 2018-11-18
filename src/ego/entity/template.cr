@@ -50,8 +50,9 @@ class EntityTemplate
   end
 
   requires has_component? id
-  def get_component_data(id : String)
-    @data.components.find { |obj| obj.id == id }
+  def get_component_data(id : String) : EntityComponentData
+    data = @data.components.find { |obj| obj.id == id }
+    data.as(EntityComponentData)
   end
 
   def get_component_data(index : Int)
