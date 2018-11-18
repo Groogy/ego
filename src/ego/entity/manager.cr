@@ -10,7 +10,7 @@ class EntityManager
   @id_generator : IdGenerator
 
   getter renderer, grid
-  delegate each_at, to: @grid
+  delegate each_at, find_at, to: @grid
   delegate each, each_with_index, to: @entities
 
   protected property entities, id_generator

@@ -94,4 +94,10 @@ class EntityGrid
       yield entity
     end
   end
+
+  def find_at(pos)
+    @grid[pos.x + pos.y * @size.y].find do |entity|
+      yield entity
+    end
+  end
 end
