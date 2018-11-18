@@ -5,7 +5,7 @@ abstract class BaseStorageComponent < EntityComponent
 
   protected property entities
 
-  delegate each, empty?, to: @entities
+  delegate each, sum, empty?, to: @entities
 
   requires can_store? storage, entity
   requires !@entities.includes? entity
@@ -23,6 +23,30 @@ abstract class BaseStorageComponent < EntityComponent
 
   def count
     @entities.size
+  end
+
+  def calculate_volume
+    sum { |e| e.query MassComponent, &.volume || 0.0 }
+  end
+
+  def calculate_volume_with(tmpl : EntityTemplate)
+    volume = calculate_volume
+    if tmpl.has_component? "mass"
+      volume += MassComponent.volume tmpl.get_component_data("mass")
+    end
+    volume
+  end
+
+  def calculate_weight
+    sum { |e| e.query MassComponent, &.weight || 0.0 }
+  end
+
+  def calculate_weight_with(tmpl : EntityTemplate)
+    weight = calculate_weight
+    if tmpl.has_component? "mass"
+      weight += MassComponent.weight tmpl.get_component_data("mass")
+    end
+    weight
   end
 
   abstract def can_store?(storage, entity : Entity)

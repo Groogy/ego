@@ -1,11 +1,19 @@
 class MassComponent < EntityComponent
   include CrystalClear
 
+  def self.volume(data)
+    data.get_float "volume"
+  end
+
+  def self.weight(data)
+    data.get_float "weight"
+  end
+
   def volume
-    @data.get_float "volume"
+    MassComponent.volume @data
   end
 
   def weight
-    @data.get_float "weight"
+    MassComponent.weight @data
   end
 end

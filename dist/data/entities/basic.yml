@@ -11,6 +11,8 @@ primitive_population:
       args: { max: 24, start: 5, growth: { years: 10 } }
     - id: "agent_provider"
       args: { surveyor: { tmpl: "primitive_surveyor", max: 1 } }
+    - id: "generic_stockpile"
+      args: { max_volume: 4, allows: ["foods"] }
     - id: "social_unit_member"
       args: {}
     - id: "social_unit_creator"
