@@ -10,7 +10,7 @@ class Inspector
   @selected_tile : Map::Pos?
   @input = Boleite::InputReceiver.new
   @gui : Boleite::GUI?
-  @entity_windows = [] of Boleite::GUI::Window
+  @sub_windows = [] of Boleite::GUI::Window
 
   getter window, selected_tile
 
@@ -51,8 +51,8 @@ class Inspector
     app.input_router.unregister @input
     if gui = @gui
       gui.remove_root @window
-      @entity_windows.each do |window|
-        close_entity window
+      @sub_windows.each do |window|
+        close_window window
       end
     end
     @entity_windows = [] of Boleite::GUI::Window
@@ -94,11 +94,9 @@ class Inspector
   def open_entity(entity) : Nil
     if gui = @gui
       position = entity.position
-      window = Boleite::GUI::Window.new
+      window = open_window
       window.header_text = "#{position.x}x#{position.y} #{entity.template.name}"
-      window.set_next_to @window
-      window.add_close_button { close_entity window }
-      window.pulse.on { close_entity window if entity.destroyed? }
+      window.pulse.on { close_window window if entity.destroyed? }
 
       layout = Boleite::GUI::Layout.new :vertical
       layout.padding = Boleite::Vector2f.new 1.0, 1.0
@@ -118,24 +116,33 @@ class Inspector
           txt = desc.apply entity, @world, data
           txt.try do |txt|
             text_box.text += txt
-            text_box.text += "\n\n" if !txt.empty?
+            text_box.text += "\n\n" unless txt.empty?
           end
         end
       end
 
       window.add layout
       window.pulse.emit
-      gui.add_root window
-      @entity_windows << window
     end
   end
 
-  requires @entity_windows.includes? window
+  def open_window
+    window = Boleite::GUI::Window.new
+    window.set_next_to @window
+    window.add_close_button { close_window window }
+    if gui = @gui
+      gui.add_root window
+    end
+    @sub_windows << window
+    window
+  end
+
+  requires @sub_windows.includes? window
   requires @gui != nil
-  def close_entity(window) : Nil
+  def close_window(window) : Nil
     if gui = @gui
       gui.remove_root window
-      @entity_windows.delete window
+      @sub_windows.delete window
     end
   end
 end
