@@ -23,6 +23,14 @@ class EntityTemplate
     @categories.any? { |cat| cat.id == str }
   end
 
+  def each_category
+    @categories.each { |c| yield c }
+  end
+
+  def any_category?
+    @categories.any? { |c| yield c }
+  end
+
   def allocate_components
     arr = [] of EntityComponent
     @data.components.each do |data|
