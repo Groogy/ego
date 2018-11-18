@@ -5,7 +5,7 @@ abstract class BaseStorageComponent < EntityComponent
 
   protected property entities
 
-  delegate each, sum, empty?, to: @entities
+  delegate each, sum, any?, empty?, to: @entities
 
   requires can_store? storage, entity
   requires !@entities.includes? entity
@@ -21,8 +21,18 @@ abstract class BaseStorageComponent < EntityComponent
     @entities.delete entity
   end
 
+  requires has? tmpl
+  def take(storage, tmpl : EntityTemplate, taker)
+    e = @entities.find { |e| e.template == tmpl }
+    take storage, e, taker
+  end
+
   def count
     @entities.size
+  end
+
+  def has?(tmpl : EntityTemplate)
+    any? { |e| e.template == tmpl }
   end
 
   def calculate_volume
