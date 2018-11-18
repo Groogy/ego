@@ -66,3 +66,5 @@ strawberry:
   components:
     - id: "food"
       args: { hunger_worth: 200 }
+    - id: "mass"
+      args: { volume: 0.01, weight: 0.01 }
