@@ -51,7 +51,7 @@ class GoHomeTask < AgentTask
 
   requires @home.query AgentProviderComponent, &.owns?(entity)
   def finish(world, entity, component)
-    @home[AgentProviderComponent].return_agent entity
+    @home[AgentProviderComponent].return_agent entity, world
   end
 
   def finished?(entity, component)

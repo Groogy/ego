@@ -36,7 +36,8 @@ class AgentProviderComponent < EntityComponent
       @agents.last
     end
 
-    def return_agent(d, entity)
+    def return_agent(d, entity, grid)
+      grid.remove entity
       entity.destroy
       @agents.delete entity
     end
@@ -90,11 +91,11 @@ class AgentProviderComponent < EntityComponent
   end
 
   requires owns? entity
-  def return_agent(entity)
+  def return_agent(entity, world)
     d = find_definition entity.template
     if d
       i = @instances[d.index]
-      i.return_agent d, entity
+      i.return_agent d, entity, world.entities.grid
     end
   end
 
