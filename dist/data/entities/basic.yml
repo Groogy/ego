@@ -57,7 +57,7 @@ strawberry_flower:
         limit: 12
         season: [{months: 4}, {months: 8}]
     - id: "surveyor_interest"
-      args: {}
+      args: { quantity_container: "harvestable" }
 strawberry:
   name: "Strawberry"
   description: "A red berry that is sweet and delicious."
@@ -70,3 +70,5 @@ strawberry:
       args: { hunger_worth: 200 }
     - id: "mass"
       args: { volume: 0.01, weight: 0.01 }
+    - id: "surveyor_interest"
+      args: {}
