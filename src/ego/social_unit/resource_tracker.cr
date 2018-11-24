@@ -1,15 +1,20 @@
 class SocialUnitResourceTracker
   class Area
+    include CrystalClear
+
     @resource : EntityTemplate
     @tiles = [] of Map::Pos
     @quantity = 0
     @last_prospect : GameTime
 
-    getter resource
+    getter resource, tiles, last_prospect
     property quantity
 
     def initialize(@resource, pos, @last_prospect)
       @tiles << pos
+    end
+
+    def initialize(@resource, @tiles, @quantity, @last_prospect)
     end
 
     def add(entity, world)
@@ -41,6 +46,8 @@ class SocialUnitResourceTracker
   end
 
    @areas = [] of Area
+
+   protected property areas
 
    def register(entity, world)
     area = find_valid_area entity, world

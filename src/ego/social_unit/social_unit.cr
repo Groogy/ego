@@ -8,6 +8,7 @@ class SocialUnit
 
   getter id, name, resources
   protected getter members
+  protected setter resources
 
   def initialize(@id, @name)
   end

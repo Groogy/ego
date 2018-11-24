@@ -5,6 +5,7 @@ class SocialUnit
       node.marshal "name", obj.name
       members = obj.members.map &.id
       node.marshal "members", members
+      node.marshal "resources", obj.resources
     end
 
     def unmarshal(node)
@@ -12,6 +13,7 @@ class SocialUnit
       world = node.data[1]
       assert instance.id == node.unmarshal_int "id"
       load_members node, instance, world
+      instance.resources = node.unmarshal "resources", SocialUnitResourceTracker
       instance
     end
 
