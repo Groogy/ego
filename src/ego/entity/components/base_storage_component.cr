@@ -31,6 +31,10 @@ abstract class BaseStorageComponent < EntityComponent
     @entities.size
   end
 
+  def count
+    @entities.count { |e| yield e }
+  end
+
   def has?(tmpl : EntityTemplate)
     any? { |e| e.template == tmpl }
   end
