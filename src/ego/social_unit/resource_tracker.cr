@@ -43,6 +43,23 @@ class SocialUnitResourceTracker
     def contains?(pos)
       @tiles.includes? pos
     end
+
+    def each_entity(grid : EntityGrid)
+      @tiles.each do |t|
+        grid.each_at t do |e|
+          yield e if e.template == @resource
+        end
+      end
+    end
+
+    def any_entity?(grid : EntityGrid)
+      each_entity grid do |e|
+        return true if yield e
+      end
+      return false
+    end
+
+    invariant @quantity >= 0
   end
 
    @areas = [] of Area
@@ -81,5 +98,9 @@ class SocialUnitResourceTracker
 
     @areas << Area.new tmpl, pos, world.current_tick
     @areas.last
+   end
+
+   def each_area
+    @areas.each { |e| yield e }
    end
 end

@@ -47,8 +47,10 @@ strawberry_flower:
   graphics:
     uv: [87, 0]
   components:
+    - id: "food_source"
+      args: { type: "harvestable" }
     - id: "harvestable"
-      args: {}
+      args: { difficulty: 10 }
     - id: "fruiting"
       args:
         provides: "strawberry"

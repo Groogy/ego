@@ -5,6 +5,14 @@ class HarvestableComponent < BaseStorageComponent
     super data, entity, world
   end
 
+  def difficulty
+    difficulty @data
+  end
+
+  def self.difficulty(data)
+    data.get_int "difficulty"
+  end
+
   def can_store?(storage, entity : Entity)
     true
   end
