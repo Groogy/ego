@@ -13,6 +13,10 @@ class EntityComponentData
     convert_gametime_data
   end
 
+  def has_key?(key)
+    @data.has_key? key
+  end
+
   requires @data.has_key? key
   requires @data[key].is_a? String
   def get_string(key)
