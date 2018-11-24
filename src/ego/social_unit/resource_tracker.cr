@@ -43,7 +43,7 @@ class SocialUnitResourceTracker
    @areas = [] of Area
 
    def register(entity, world)
-    area = find_area entity, world
+    area = find_valid_area entity, world
     area.add entity, world
    end
 
@@ -55,11 +55,11 @@ class SocialUnitResourceTracker
     @areas.any? { |a| a.resource == tmpl && a.contains? pos }
    end
 
-   def find_area(entity, world)
-    find_area entity.position.point, entity.template, world
+   def find_valid_area(entity, world)
+    find_valid_area entity.position.point, entity.template, world
    end
 
-   def find_area(pos, tmpl, world)
+   def find_valid_area(pos, tmpl, world)
     directions = {
       Boleite::Vector2i.new(0, 0),
       Boleite::Vector2i.new(1, 0), Boleite::Vector2i.new(-1, 0),
