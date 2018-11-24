@@ -65,8 +65,9 @@ class GoHomeTask < AgentTask
 
     def unmarshal(node)
       world = node.data[1]
+      entities = node.data[2]
       home_id = node.unmarshal_int "home"
-      home = world.entities.find_by_id home_id
+      home = entities.find_by_id home_id
       if home
         unmarshal node, GoHomeTask, home
       else
