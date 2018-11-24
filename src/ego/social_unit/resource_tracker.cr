@@ -14,9 +14,19 @@ class SocialUnitResourceTracker
 
     def add(entity, world)
       @last_prospect = world.current_tick
-      @quantity += 1
+      add_quantity entity
       pos = entity.position.point
       @tiles << pos unless @tiles.includes? pos
+    end
+
+    def add_quantity(entity)
+      comp = entity[SurveyorInterestComponent]
+      if key = comp.quantity_container
+        container = entity.get_component(key).as(BaseStorageComponent)
+        @quantity += container.count { |e| e.has_component? SurveyorInterestComponent }
+      else
+        @quantity += 1
+      end
     end
 
     def outdated?(world)
