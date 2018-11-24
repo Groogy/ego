@@ -26,6 +26,14 @@ class EntityGrid
         yield entity
       end
     end
+
+    def any?
+      @entities.any? do |entity|
+        yield entity
+      end
+    end
+
+    invariant !any? { |e| e.destroyed? }
   end
 
   @size : Boleite::Vector2i
