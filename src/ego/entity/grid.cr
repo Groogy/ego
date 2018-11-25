@@ -27,6 +27,12 @@ class EntityGrid
       end
     end
 
+    def find
+      @entities.find do |entity|
+        yield entity
+      end
+    end
+
     def any?
       @entities.any? do |entity|
         yield entity
