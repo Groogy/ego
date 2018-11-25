@@ -78,3 +78,27 @@ class GoHomeTask < AgentTask
 
   extend Boleite::Serializable(Serializer)
 end
+
+class UnloadTask < AgentTask
+  struct Serializer < BaseSerializer
+    def marshal(obj, node)
+      super obj, node
+      obj = obj.as(UnloadTask)
+      node.marshal "storage", obj.storage.id
+    end
+
+    def unmarshal(node)
+      world = node.data[1]
+      entities = node.data[2]
+      storage_id = node.unmarshal_int "storage"
+      storage = entities.find_by_id storage_id
+      if storage
+        unmarshal node, UnloadTask, storage
+      else
+        raise "Failed to find entity(#{storage_id}) for UnloadTask."
+      end
+    end
+  end
+
+  extend Boleite::Serializable(Serializer)
+end
