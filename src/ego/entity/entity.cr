@@ -43,6 +43,13 @@ class Entity
     return false
   end
 
+  def is_component_a?(klass) : Bool
+    @components.each do |obj|
+      return true if obj.class <= klass
+    end
+    return false
+  end
+
   def get_component?(id : String)
     @components.find do |obj|
       obj.id == id
@@ -87,5 +94,17 @@ class Entity
 
   def [](klass)
     get_component klass
+  end
+
+  def each_component
+    @components.each { |c| yield c }
+  end
+
+  def map_components
+    @components.map { |c| yield c }
+  end
+
+  def select_components
+    @components.select { |c| yield c }
   end
 end
