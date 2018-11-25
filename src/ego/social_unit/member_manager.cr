@@ -17,6 +17,10 @@ class SocialUnitMemberManager
     @members.each { |e| yield e }
   end
 
+  def each_non_agent
+    @members.each { |e| yield e unless e.is_component_a? AgentBaseComponent }
+  end
+
   def map
     @members.map { |e| yield e }
   end

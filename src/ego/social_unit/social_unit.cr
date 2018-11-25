@@ -83,6 +83,17 @@ class SocialUnit
     request_agent provider, klass, world
   end
 
+  def find_empty_storage_for(item)
+    @members.each_non_agent do |e|
+      e.each_component do |c|
+        if c.is_a? BaseStorageComponent
+          return e if c.can_store? e, item
+        end
+      end
+    end
+    return nil
+  end
+
   protected def request_agent(provider : Nil, klass, world)
     nil
   end
