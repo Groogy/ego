@@ -14,15 +14,19 @@ module PathFinder
     end
   end
 
+  def self.quick_search(world, start, target : Entity)
+    pos = target.position.point
+    quick_search world, start, pos
+  end
+
   def self.quick_search(world, start, target)
     explored = Deque(Node).new
     frontier = Deque(Node).new 
-    target_pos = target.position.point
-    heuristic = Boleite::Vector.magnitude (target_pos.to_vector - start.to_vector).to_f
+    heuristic = Boleite::Vector.magnitude (target.to_vector - start.to_vector).to_f
     frontier << Node.new start, nil, 0.0, heuristic
     while !frontier.empty?
       node = frontier.shift
-      if node.pos == target_pos
+      if node.pos == target
         return self.build_path node
       end
       explored.push node
@@ -30,7 +34,7 @@ module PathFinder
         neigh = node.pos + dir
         next if !world.within_boundraries? neigh
         cost = node.cost + world.movement_cost node.pos, neigh
-        heuristic = Boleite::Vector.magnitude (target_pos.to_vector - neigh.to_vector).to_f
+        heuristic = Boleite::Vector.magnitude (target.to_vector - neigh.to_vector).to_f
         index = explored.index(offset:0) { |n| n.pos == neigh }
         if index
           e = explored[index]
