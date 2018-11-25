@@ -28,7 +28,14 @@ abstract class AgentTask
 
   abstract def start(world, entity, component)
   abstract def finish(world, entity, component)
-  abstract def finished?(entity, component)
+  abstract def finished?(world, entity, component)
+  
+  def progress?(world, entity, component)
+    false
+  end
+
+  def progress(world, entity, component)
+  end
 end
 
 class GoHomeTask < AgentTask
@@ -54,7 +61,7 @@ class GoHomeTask < AgentTask
     @home[AgentProviderComponent].return_agent entity, world
   end
 
-  def finished?(entity, component)
+  def finished?(world, entity, component)
     entity.position == @home.position
   end
 end

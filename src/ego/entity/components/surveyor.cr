@@ -21,7 +21,7 @@ class SurveyTask < AgentTask
     end
   end
 
-  def finished?(entity, component)
+  def finished?(world, entity, component)
     entity.position == @path.last_tile
   end
 end
