@@ -24,6 +24,10 @@ class SocialUnitResourceTracker
       @tiles << pos unless @tiles.includes? pos
     end
 
+    def reduce(amount)
+      @quantity -= amount
+    end
+
     def add_quantity(entity)
       comp = entity[SurveyorInterestComponent]
       if key = comp.quantity_container
@@ -69,6 +73,12 @@ class SocialUnitResourceTracker
    def register(entity, world)
     area = find_valid_area entity, world
     area.add entity, world
+   end
+
+   def reduce(tmpl, pos, amount)
+    @areas.each do |a|
+      a.reduce amount if a.resource == tmpl && a.tiles.includes? pos
+    end
    end
 
    def update(world)

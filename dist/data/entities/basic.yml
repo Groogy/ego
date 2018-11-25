@@ -10,7 +10,9 @@ primitive_population:
     - id: "population"
       args: { max: 24, start: 5, growth: { years: 10 } }
     - id: "agent_provider"
-      args: { surveyor: { tmpl: "primitive_surveyor", max: 1 } }
+      args: 
+        surveyor: { tmpl: "primitive_surveyor", max: 1 }
+        harvester: { tmpl: "primitive_harvester", max: 1 }
     - id: "generic_stockpile"
       args: { max_volume: 4, allows: ["foods"] }
     - id: "social_unit_member"
@@ -30,6 +32,21 @@ primitive_surveyor:
       args: {}
     - id: "social_unit_member"
       args: {}
+primitive_harvester:
+  name: "Primitive Harvester"
+  categories: ["agents"]
+  size: [1, 1]
+  graphics:
+    uv: [119, 0]
+  components:
+    - id: "moving"
+      args: { speed: 1.0 }
+    - id: "harvester"
+      args: { skill: 1, container: "carrier" }
+    - id: "social_unit_member"
+      args: {}
+    - id: "carrier"
+      args: { max_weight: 10.0, max_volume: 1.0 }
 tree:
   name: "Trees"
   categories: ["plant", "material"]

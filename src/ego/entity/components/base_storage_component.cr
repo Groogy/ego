@@ -5,7 +5,7 @@ abstract class BaseStorageComponent < EntityComponent
 
   protected property entities
 
-  delegate each, sum, any?, empty?, to: @entities
+  delegate each, sum, any?, empty?, first, to: @entities
 
   requires can_store? storage, entity
   requires !@entities.includes? entity

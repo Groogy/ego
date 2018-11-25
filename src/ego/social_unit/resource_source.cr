@@ -11,6 +11,8 @@ abstract class FoodSource < ResourceSource
   @area : Array(Map::Pos)
   @resource : EntityTemplate
   @quantity : Int32
+  
+  getter area, resource, quantity
 
   def initialize(@area, @resource, @quantity)
   end
@@ -37,7 +39,11 @@ end
 
 class HarvestableFoodSource < FoodSource
   def gather(social_unit, world)
-    puts "HELLO! #{@resource.id} #{@quantity}"
+    agent = social_unit.request_agent HarvesterComponent, world
+    if agent
+      component = agent.get_component HarvesterComponent
+      HarvesterSystem.set_harvest_work_area world, agent, component, @area, @resource
+    end
   end
 
   def harvesting_difficulty

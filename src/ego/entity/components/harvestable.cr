@@ -13,6 +13,11 @@ class HarvestableComponent < BaseStorageComponent
     data.get_int "difficulty"
   end
 
+  requires !@entities.empty?
+  def take_any(storage, taker)
+    take storage, @entities.first, taker
+  end
+
   def can_store?(storage, entity : Entity)
     true
   end
