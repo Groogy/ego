@@ -39,6 +39,10 @@ abstract class BaseStorageComponent < EntityComponent
     any? { |e| e.template == tmpl }
   end
 
+  def has?(n : Nil)
+    false
+  end
+
   def calculate_volume
     sum { |e| e.query MassComponent, &.volume || 0.0 }
   end
