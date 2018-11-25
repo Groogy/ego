@@ -50,7 +50,7 @@ class SocialUnit
     if provider
       path = SurveyorSystem.find_survey_target provider, world, self
       if path
-        agent = request_agent provider, world
+        agent = request_agent provider, SurveyorComponent, world
         if agent
           component = agent.get_component SurveyorComponent
           SurveyorSystem.set_survey_path world, agent, component, path
@@ -78,12 +78,17 @@ class SocialUnit
     sources.first unless sources.empty?
   end
 
-  def request_agent(provider : Nil, world)
+  def request_agent(klass, world)
+    provider = @members.find_agent_provider SurveyorComponent
+    request_agent provider, klass, world
+  end
+
+  protected def request_agent(provider : Nil, klass, world)
     nil
   end
 
-  def request_agent(provider : Entity, world)
-    agent = provider.query AgentProviderComponent, &.request_agent(SurveyorComponent, provider, world)
+  protected def request_agent(provider : Entity, klass, world)
+    agent = provider.query AgentProviderComponent, &.request_agent(klass, provider, world)
     if agent
       register agent
     end
