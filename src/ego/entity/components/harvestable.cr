@@ -6,7 +6,7 @@ class HarvestableComponent < BaseStorageComponent
   end
 
   def difficulty
-    difficulty @data
+    HarvestableComponent.difficulty @data
   end
 
   def self.difficulty(data)
