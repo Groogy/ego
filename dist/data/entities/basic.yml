@@ -6,7 +6,7 @@ primitive_population:
     uv: [7, 0]
   components:
     - id: "hunger"
-      args: { max_satisfaction: 10000, satisfaction_decay: 1, edible: ["foods"] }
+      args: { max_satisfaction: 10000, satisfaction_decay: 1, edible: ["food"] }
     - id: "population"
       args: { max: 24, start: 5, growth: { years: 10 } }
     - id: "agent_provider"
@@ -14,7 +14,7 @@ primitive_population:
         surveyor: { tmpl: "primitive_surveyor", max: 1 }
         harvester: { tmpl: "primitive_harvester", max: 1 }
     - id: "generic_stockpile"
-      args: { max_volume: 4, allows: ["foods"] }
+      args: { max_volume: 4.0, allows: ["food"] }
     - id: "social_unit_member"
       args: {}
     - id: "social_unit_creator"
