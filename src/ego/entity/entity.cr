@@ -74,6 +74,18 @@ class Entity
     klass.cast comp
   end
 
+  def get_component_of_base?(klass)
+    @components.find do |obj|
+      obj.class <= klass
+    end
+  end
+
+  requires is_component_a? klass
+  def get_component_of_base(klass)
+    comp = get_component_of_base? klass
+    klass.cast comp
+  end
+
   def query(klass)
     comp = get_component? klass
     if comp
