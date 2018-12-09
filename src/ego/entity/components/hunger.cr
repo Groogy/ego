@@ -18,16 +18,24 @@ class HungerComponent < EntityComponent
     @data.get_int "max_satisfaction"
   end
 
+  def hunger_ratio
+    satisfaction.to_f / max_satisfaction.to_f 
+  end
+
+  def want_food?
+    hunger_ratio < 0.9
+  end
+
   def edible
     @data.get_array("edible").map { |val| val.as(String) }
   end
 
   def is_edible?(entity)
     tmpl = entity.template
-    edible.any? { |cat| tmpl.has_category? category }
+    edible.any? { |cat| tmpl.has_category? cat }
   end
 
-  requires food.has_component FoodComponent
+  requires food.has_component? FoodComponent
   requires is_edible? food
   def eat(food)
     comp = food.get_component FoodComponent

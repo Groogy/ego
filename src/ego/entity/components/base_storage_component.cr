@@ -43,6 +43,10 @@ abstract class BaseStorageComponent < EntityComponent
     false
   end
 
+  def select
+    @entities.select { |e| yield e }
+  end
+
   def calculate_volume
     sum { |e| e.query MassComponent, &.volume || 0.0 }
   end

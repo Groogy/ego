@@ -29,10 +29,17 @@ class SocialUnit
   def update(world)
     @resources.update world
     survey_land world if should_survey? world
+
+    update_food world
+  end
+
+  def update_food(world)
+    hungry_members = @members.select { |m| m.has_component? HungerComponent }
     if needs_food?
       source = find_food_source(world)
       source.gather self, world if source
     end
+    feed_members world, hungry_members
   end
 
   def should_survey?(world)
@@ -78,20 +85,42 @@ class SocialUnit
     sources.first unless sources.empty?
   end
 
+  requires hungry_members.all? { |e| e.has_component? HungerComponent }
+  def feed_members(world, hungry_members)
+    hungry_members.each do |e|
+      hunger = e[HungerComponent]
+      if hunger.want_food?
+        food = find_food_item hunger.edible
+        hunger.eat food if food
+      end
+    end
+  end
+
   def request_agent(klass, world)
     provider = @members.find_agent_provider SurveyorComponent
     request_agent provider, klass, world
   end
 
   def find_empty_storage_for(item)
-    @members.each_non_agent do |e|
-      e.each_component do |c|
-        if c.is_a? BaseStorageComponent
-          return e if c.can_store? e, item
-        end
-      end
+    @members.each_storage do |entity|
+      storage = entity.get_component_of_base BaseStorageComponent
+      return entity if storage.can_store? entity, item
     end
     return nil
+  end
+
+  def find_food_item(categories)
+    foods = [] of Entity
+    @members.each_storage do |storage|
+      component = storage.get_component_of_base BaseStorageComponent
+      foods += component.select { |e| e.template.any_category?(categories) && e.has_component?(FoodComponent) }
+    end
+    foods.sort! { |a, b| a[FoodComponent].hunger_worth <=> b[FoodComponent].hunger_worth }
+    if foods.empty?
+      nil
+    else
+      foods.first
+    end
   end
 
   protected def request_agent(provider : Nil, klass, world)

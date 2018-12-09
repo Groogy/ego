@@ -27,6 +27,12 @@ class EntityTemplate
     @categories.each { |c| yield c }
   end
 
+  def any_category?(categories)
+    categories.any? do |c|
+      has_category? c
+    end
+  end
+
   def any_category?
     @categories.any? { |c| yield c }
   end

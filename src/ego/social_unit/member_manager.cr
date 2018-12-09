@@ -21,8 +21,16 @@ class SocialUnitMemberManager
     @members.each { |e| yield e unless e.is_component_a? AgentBaseComponent }
   end
 
+  def each_storage
+    each_non_agent { |e| yield e if e.is_component_a? BaseStorageComponent }
+  end
+
   def map
     @members.map { |e| yield e }
+  end
+
+  def select
+    @members.select { |e| yield e }
   end
 
   def reject!(&block)

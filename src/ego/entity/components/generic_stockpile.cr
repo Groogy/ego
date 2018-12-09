@@ -21,6 +21,12 @@ class GenericStockpileComponent < BaseStorageComponent
     tmpl.any_category? { |cat| allows? cat }
   end
 
+  def get_allowed_categories(world)
+    categories = world.entity_categories
+    cats = @data.get_array("allows")
+    cats.map { |s| categories.get s }
+  end
+
   def can_store?(storage, entity : Entity)
     can_store? storage, entity.template
   end
