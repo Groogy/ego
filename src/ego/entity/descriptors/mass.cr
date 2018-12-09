@@ -12,6 +12,15 @@ class MassDescriptor < EntityDescriptor
 
   def get_weight_str(mass)
     weight = mass.weight
+    MassDescriptor.get_weight_str weight
+  end
+
+  def get_volume_str(mass)
+    volume = mass.volume
+    MassDescriptor.get_volume_str volume
+  end
+
+  def self.get_weight_str(weight)
     if weight < 1
       "#{weight*1000}g"
     else
@@ -19,8 +28,7 @@ class MassDescriptor < EntityDescriptor
     end
   end
 
-  def get_volume_str(mass)
-    volume = mass.volume
+  def self.get_volume_str(volume)
     "#{volume}l"
   end
 end
