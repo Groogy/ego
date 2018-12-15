@@ -40,7 +40,8 @@ class SocialUnitResourceTracker
 
     def outdated?(world)
       date = @last_prospect
-      date.add_days 5
+      data = @resource.get_component_data SurveyorInterestComponent
+      date += SurveyorInterestComponent.outdated_time data
       world.current_tick > date
     end
 
@@ -64,6 +65,7 @@ class SocialUnitResourceTracker
     end
 
     invariant @quantity >= 0
+    invariant @resource.has_component? SurveyorInterestComponent
   end
 
    @areas = [] of Area
