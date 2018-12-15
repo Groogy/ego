@@ -1,7 +1,6 @@
 struct GameTime
-  TICKS_PER_HOUR = 60
-  TICKS_PER_DAY = 60 * 24
-  MINUTES_PER_HOUR = 60
+  TICKS_PER_HOUR = 6
+  TICKS_PER_DAY = 6 * 24
   HOURS_PER_DAY = 24
   DAYS_PER_MONTH = 30
   MONTHS_PER_YEAR = 12
@@ -19,7 +18,7 @@ struct GameTime
   end
 
   def self.convert_ticks_to_hours(ticks)
-    convert_ticks_to_minutes(ticks) / MINUTES_PER_HOUR
+    convert_ticks_to_minutes(ticks) / TICKS_PER_HOUR
   end
 
   def self.convert_ticks_to_days(ticks)
