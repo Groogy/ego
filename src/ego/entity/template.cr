@@ -61,6 +61,10 @@ class EntityTemplate
     data.as(EntityComponentData)
   end
 
+  def get_component_data(klass) : EntityComponentData
+    get_component_data klass.id
+  end
+
   def get_component_data(index : Int)
     @data.components[index]
   end
