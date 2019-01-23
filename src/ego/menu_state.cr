@@ -33,10 +33,7 @@ class MenuState < Boleite::State
   end
 
   def new_game
-    world = World.new
-    world.load_data
-    world.generate_map
-    state = GameState.new @app, world
+    state = WorldCreationState.new @app
     @app.state_stack.push state
   end
 
