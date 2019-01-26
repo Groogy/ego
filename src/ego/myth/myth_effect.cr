@@ -22,6 +22,5 @@ class SetGenderMythEffect < MythEffect
   def apply(world, deity)
     gender = Deity::Gender.parse @arg.camelcase
     deity.gender = gender
-    pp gender
   end
 end

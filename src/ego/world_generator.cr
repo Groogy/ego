@@ -35,6 +35,6 @@ class WorldGenerator
   end
 
   def create_story
-    @myths.join ", " { |m| m.template.text }
+    @myths.join ", " { |m| m.template.generate_text @world, @deity }
   end
 end

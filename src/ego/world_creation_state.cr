@@ -57,7 +57,8 @@ class WorldCreationState < Boleite::State
     right_layout.add textbox
 
     @generator.each_available_myth do |m|
-      label = Boleite::GUI::Label.new m.text, Boleite::Vector2f.new(700.0, 60.0)
+      text = m.generate_text @generator.world, @generator.deity
+      label = Boleite::GUI::Label.new text, Boleite::Vector2f.new(700.0, 60.0)
       label.character_size = 32u32
       label.mouse_enter.on &-> { label.color = Boleite::Color.red }
       label.mouse_leave.on &-> { label.color = Boleite::Color.white }
