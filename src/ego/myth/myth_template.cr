@@ -6,7 +6,7 @@ class MythTemplate
 
   @data : MythTemplateData
 
-  delegate id, type, text, to: @data
+  delegate id, type, text, follows, to: @data
   protected getter data
 
   def initialize(@data : MythTemplateData)
