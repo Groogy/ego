@@ -4,6 +4,7 @@ class World
   @entities : EntityManager
   @entity_categories = EntityCategoryManager.new
   @entity_templates = EntityTemplateManager.new
+  @myth_templates = MythTemplateManager.new
   @social_units : SocialUnitManager
   @name_generators = NameGeneratorManager.new
   @current_tick = GameTime.new
@@ -12,6 +13,7 @@ class World
 
   getter current_tick, map, random, terrains
   getter entities, entity_categories, entity_templates
+  getter myth_templates
   getter social_units
   getter name_generators
   getter? paused
@@ -30,6 +32,7 @@ class World
     @terrains.load_folder "data/tiles"
     @entity_categories.load_folder "data/entity_categories"
     @entity_templates.load_folder "data/entities", self
+    @myth_templates.load_folder "data/myths"
     @name_generators.load_folder "data/names"
   end
 

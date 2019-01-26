@@ -1,0 +1,9 @@
+beginning_nothing:
+  type: "creation_start"
+  text: "In the beginning there was nothing"
+beginning_chaos:
+  type: "creation_start"
+  text: "In the beginning there was only chaos"
+beginning_fire:
+  type: "creation_start"
+  text: "In the beginning theere was only fire"
