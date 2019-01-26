@@ -1,9 +1,24 @@
 beginning_nothing:
-  type: "creation_start"
+  type: creation_start
   text: "In the beginning there was nothing"
 beginning_chaos:
-  type: "creation_start"
+  type: creation_start
   text: "In the beginning there was only chaos"
 beginning_fire:
-  type: "creation_start"
-  text: "In the beginning theere was only fire"
+  type: creation_start
+  text: "In the beginning there was only fire"
+beginning_creator:
+  type: creation_start
+  text: "In the beginning there was only the creator"
+creator_origin:
+  type: creation
+  text: "from this the creator emerged"
+  follows: [beginning_nothing, beginning_chaos, beginning_fire]
+father_origin:
+  type: creation
+  text: "from this the father emerged"
+  follows: [beginning_nothing, beginning_chaos, beginning_fire]
+mother_origin:
+  type: creation
+  text: "from this the mother emerged"
+  follows: [beginning_nothing, beginning_chaos, beginning_fire]

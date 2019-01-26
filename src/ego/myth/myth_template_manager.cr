@@ -40,6 +40,14 @@ class MythTemplateManager
     hsh.values
   end
 
+  def find_valid_for(myths : Array(Myth))
+    last = myths.last
+    hsh = @templates.select do |k,v|
+      v.follows.includes? last.template.id
+    end
+    hsh.values
+  end
+
   def has?(key)
     @templates.has_key? key
   end
