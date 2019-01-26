@@ -2,9 +2,13 @@ class WorldGenerator
   @available_myths = [] of MythTemplate
   @myths = [] of Myth
 
+  getter world, deity
+
   def initialize
     @world = World.new
     @world.load_data
+
+    @deity = Deity.new
 
     find_available_myths
   end
@@ -17,6 +21,7 @@ class WorldGenerator
 
   def select_myth(template)
     @myths << Myth.new template
+    @myths.last.apply @world, @deity
     find_available_myths
   end
 

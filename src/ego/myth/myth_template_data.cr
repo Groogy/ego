@@ -3,9 +3,10 @@ class MythTemplateData
   @type : MythTemplate::Type
   @text = ""
   @follows = [] of String
+  @effects = [] of MythEffect
 
-  getter id, type, text, follows
-  protected setter text, follows
+  getter id, type, text, follows, effects
+  protected setter text, follows, effects
 
   def initialize(@id, @type)
   end

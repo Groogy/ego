@@ -10,15 +10,23 @@ beginning_fire:
 beginning_creator:
   type: creation_start
   text: "In the beginning there was only the creator"
+  effects:
+    set_gender: neutral
 creator_origin:
   type: creation
   text: "from this the creator emerged"
   follows: [beginning_nothing, beginning_chaos, beginning_fire]
+  effects:
+    set_gender: neutral
 father_origin:
   type: creation
   text: "from this the father emerged"
   follows: [beginning_nothing, beginning_chaos, beginning_fire]
+  effects:
+    set_gender: male
 mother_origin:
   type: creation
   text: "from this the mother emerged"
   follows: [beginning_nothing, beginning_chaos, beginning_fire]
+  effects:
+    set_gender: female
