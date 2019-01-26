@@ -47,10 +47,17 @@ class WorldCreationState < Boleite::State
 
   def build_gui
     @desktop.clear
-    layout = Boleite::GUI::Layout.new :vertical
+    
+    layout = Boleite::GUI::Layout.new :horizontal
+    left_layout = Boleite::GUI::Layout.new :vertical
+    right_layout = Boleite::GUI::Layout.new :vertical
+
+    story = @generator.create_story
+    textbox = Boleite::GUI::TextBox.new story, Boleite::Vector2f.new(500.0, 200.0)
+    right_layout.add textbox
 
     @generator.each_available_myth do |m|
-      label = Boleite::GUI::Label.new m.text, Boleite::Vector2f.new(800.0, 60.0)
+      label = Boleite::GUI::Label.new m.text, Boleite::Vector2f.new(700.0, 60.0)
       label.character_size = 32u32
       label.mouse_enter.on &-> { label.color = Boleite::Color.red }
       label.mouse_leave.on &-> { label.color = Boleite::Color.white }
@@ -58,8 +65,11 @@ class WorldCreationState < Boleite::State
         @generator.select_myth m
         build_gui
       end
-      layout.add label
+      left_layout.add label
     end
+
+    layout.add left_layout
+    layout.add right_layout
 
     @desktop.add layout
   end

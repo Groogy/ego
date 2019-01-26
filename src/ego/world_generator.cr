@@ -28,4 +28,8 @@ class WorldGenerator
       @available_myths = templates.find_valid_for @myths
     end
   end
+
+  def create_story
+    @myths.join ", " { |m| m.template.text }
+  end
 end
