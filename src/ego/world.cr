@@ -20,8 +20,7 @@ class World
 
   protected setter current_tick, map, random, entities, social_units, name_generators
 
-  def initialize
-    size = Boleite::Vector2i.new 128, 128
+  def initialize(size)
     @map = Map.new size
     @entities = EntityManager.new @map
     @social_units = SocialUnitManager.new
@@ -77,29 +76,5 @@ class World
   def render(renderer)
     @map.render renderer
     @entities.render renderer
-  end
-
-  def generate_map
-    grass = @terrains.find "grass"
-    rock = @terrains.find "rock"
-    
-    size = 128
-    mountain_size = 36
-    center = Boleite::Vector2f.new size / 2.0 - 1, size / 2.0 - 1
-    size.times do |x|
-      size.times do |y|
-        delta = Boleite::Vector2f.new center.x - x, center.y - y
-        distance = Boleite::Vector.magnitude delta
-        coord = Boleite::Vector2i.new x, y
-
-        if distance < mountain_size
-          height = Map::MAX_HEIGHT * ((mountain_size - distance) / mountain_size)
-          @map.set_height coord, height
-          @map.set_terrain coord, rock
-        else
-          @map.set_terrain coord, grass
-        end
-      end
-    end
   end
 end

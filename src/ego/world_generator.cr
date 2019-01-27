@@ -5,7 +5,8 @@ class WorldGenerator
   getter world, deity
 
   def initialize
-    @world = World.new
+    size = Boleite::Vector2i.new 512, 512
+    @world = World.new size
     @world.load_data
 
     @deity = Deity.new
