@@ -5,10 +5,10 @@ class Map
 
     property x, y
 
-    def initialize(index, map)
+    def initialize(index : Int, map : Map)
       size = map.size
-      @x = index % size.x
-      @y = index / size.x
+      @x = (index % size.x).to_i16
+      @y = (index / size.x).to_i16
     end
 
     def initialize(@x, @y)
@@ -42,7 +42,7 @@ class Map
     end
 
     def to_index(map)
-      @x + (@y * map.size.x)
+      @x.to_i32 + (@y.to_i32 * map.size.x)
     end
 
     def to_vector
