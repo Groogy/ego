@@ -24,3 +24,13 @@ class SetGenderMythEffect < MythEffect
     deity.gender = gender
   end
 end
+
+class GeneratorFillWorldMythEffect < MythEffect
+  def apply(world, deity)
+    map = world.map
+    terrain = world.terrains.find @arg
+    map.each_tile do |pos, data|
+      map.set_terrain pos, terrain
+    end
+  end
+end

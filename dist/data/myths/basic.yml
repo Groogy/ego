@@ -34,3 +34,5 @@ created_out_of_rock:
   type: creation
   text: "[GodPronoun] out of this formed rock"
   follows: [beginning_creator, creator_origin, father_origin, mother_origin]
+  effects:
+    generator_fill_world: "rock"
