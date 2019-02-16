@@ -1,7 +1,7 @@
 class TerrainType
   @key = ""
   @name = ""
-  @color = Boleite::Colorf.new
+  @color = Boleite::Colori.new
   @cost = 1.0
 
   property key, name, color, cost

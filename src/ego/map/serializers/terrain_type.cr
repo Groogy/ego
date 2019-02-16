@@ -4,7 +4,7 @@ class TerrainType
       result = TerrainType.new
       result.key = node.key.as(String)
       result.name = node.unmarshal_string "name"
-      result.color = node.unmarshal "color", Boleite::Colorf
+      result.color = node.unmarshal "color", Boleite::Colori
       result.cost = node.unmarshal_float "cost"
       result
     end
