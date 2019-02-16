@@ -6,8 +6,8 @@ struct SaveGameHelper
 
   struct MetaData
     YAML.mapping(
-      map_width: Int32,
-      map_height: Int32,
+      map_width: UInt32,
+      map_height: UInt32,
     )
 
     def initialize
@@ -65,7 +65,7 @@ struct SaveGameHelper
   end 
 
   def self.read_game_state(file, meta)
-    pos = Boleite::Vector2i.new meta.map_width, meta.map_height
+    pos = Boleite::Vector2u.new meta.map_width, meta.map_height
     world = World.new pos
     serializer = Boleite::Serializer.new world
     data = serializer.read file

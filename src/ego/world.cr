@@ -1,4 +1,5 @@
 class World
+  @map : Map
   @terrains = TerrainDatabase.new
   @myth_templates = MythTemplateManager.new
   @name_generators = NameGeneratorManager.new
@@ -6,15 +7,16 @@ class World
   @paused = false
   @random : Boleite::Random
 
-  getter current_tick, random, terrains
+  getter current_tick, random, terrains, map
   getter myth_templates
   getter name_generators
   getter? paused
 
   protected setter current_tick, random, name_generators
 
-  def initialize(size)
+  def initialize(size : Boleite::Vector2u)
     @random = Boleite::NoiseRandom.new 0u32
+    @map = Map.new size
   end
 
   def load_data
