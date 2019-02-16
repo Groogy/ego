@@ -39,7 +39,7 @@ struct SaveGameHelper
         case file.filename
         when META_FILE then meta_data = MetaData.from_yaml file.io
         when GAME_STATE_FILE then game_state_file = file
-        when MAP_DATA_FILE then map_data = read_map_data file.io
+        #when MAP_DATA_FILE then map_data = read_map_data file.io
         end
       end
       if game_state_file && meta_data
@@ -48,7 +48,7 @@ struct SaveGameHelper
         raise "Corrupt save file '#{DEFAULT_SAVE_FILE}''"
       end
       if world && map_data
-        world.map.apply_data map_data, world.terrains
+        #world.map.apply_data map_data, world.terrains
         world
       else
         raise "Corrupt save file '#{DEFAULT_SAVE_FILE}''"
@@ -74,12 +74,13 @@ struct SaveGameHelper
   end
 
   def self.read_map_data(file)
-    serializer = Map::ObjSerializer.new
-    terrain_list = serializer.read_terrain_list file
-    map_data = serializer.read_map_data file
-    map_data.map do |raw|
-      { raw[0], terrain_list[raw[1]], raw[2] }
-    end
+    #serializer = Map::ObjSerializer.new
+    #terrain_list = serializer.read_terrain_list file
+    #map_data = serializer.read_map_data file
+    #map_data.map do |raw|
+    #  { raw[0], terrain_list[raw[1]], raw[2] }
+    #end
+    nil
   end
 
   def self.write_game_state(world)

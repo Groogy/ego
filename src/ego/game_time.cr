@@ -1,7 +1,5 @@
 struct GameTime
-  TICKS_PER_HOUR = 6
-  TICKS_PER_DAY = 6 * 24
-  HOURS_PER_DAY = 24
+  TICKS_PER_DAY = 1
   DAYS_PER_MONTH = 30
   MONTHS_PER_YEAR = 12
 
@@ -13,16 +11,8 @@ struct GameTime
   
   @ticks = 0i64
 
-  def self.convert_ticks_to_minutes(ticks)
-    ticks
-  end
-
-  def self.convert_ticks_to_hours(ticks)
-    convert_ticks_to_minutes(ticks) / TICKS_PER_HOUR
-  end
-
   def self.convert_ticks_to_days(ticks)
-    convert_ticks_to_hours(ticks) / HOURS_PER_DAY
+    ticks
   end
 
   def self.convert_ticks_to_months(ticks)
@@ -45,7 +35,6 @@ struct GameTime
       when "years" then add_years value
       when "months" then add_months value
       when "days" then add_days value
-      when "hours" then add_hours value
       when "ticks" then add_ticks value
       else
         raise ArgumentError.new("Invalid hash given to construct time")
@@ -69,10 +58,6 @@ struct GameTime
     @ticks += val * TICKS_PER_DAY
   end
 
-  def add_hours(val)
-    @ticks += val * TICKS_PER_HOUR
-  end
-
   def add_ticks(val)
     @ticks += val
   end
@@ -89,24 +74,12 @@ struct GameTime
     GameTime.convert_ticks_to_days @ticks
   end
 
-  def to_hours
-    GameTime.convert_ticks_to_hours @ticks
-  end
-
-  def to_minutes
-    convert_ticks_to_minutes @ticks
-  end
-
   def to_month_in_year
     to_months % MONTHS_PER_YEAR
   end
 
   def to_day_in_month
     to_days % DAYS_PER_MONTH
-  end
-
-  def to_hour_in_day
-    to_hours % HOURS_PER_DAY
   end
 
   def to_month_in_year_named
