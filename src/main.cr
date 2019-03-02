@@ -9,6 +9,8 @@ require "./ego/myth/serializers/*"
 require "./ego/names/*"
 require "./ego/names/serializers/*"
 
+Defines.load
+
 app = EgoApplication.new
 app.state_stack.push MenuState.new(app)
 app.run
