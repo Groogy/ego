@@ -1,4 +1,7 @@
 class WorldCreationState < Boleite::State
+  MAP_DISPLAY_SIZE = 600u32
+  WORLD_SIZE = 8192u32
+
   def initialize(@app : EgoApplication)
     super()
     
@@ -13,7 +16,13 @@ class WorldCreationState < Boleite::State
     @desktop = Boleite::GUI::Desktop.new
     @desktop.size = target.size.to_f
 
-    @generator = WorldGenerator.new
+    @generator = WorldGenerator.new Boleite::Vector2u.new(WORLD_SIZE, WORLD_SIZE)
+
+    map = @generator.world.map
+    target_size = target.size.to_f
+    @terrain_sprite = Boleite::Sprite.new map.terrain.generate_texture gfx
+    @terrain_sprite.position = Boleite::Vector2f.new 0.0, target_size.y - MAP_DISPLAY_SIZE
+    @terrain_sprite.size = Boleite::Vector2u.new MAP_DISPLAY_SIZE, MAP_DISPLAY_SIZE
   end
 
   def enable
@@ -36,7 +45,21 @@ class WorldCreationState < Boleite::State
   def render(delta)
     @renderer.clear Boleite::Color.black
     @gui.render
+
+    
+    update_maps
+    render_maps
     @renderer.present
+  end
+
+  def render_maps
+    @renderer.draw @terrain_sprite
+  end
+
+  def update_maps
+    map = @generator.world.map
+    gfx = @app.graphics
+    map.terrain.generate_texture gfx
   end
 
   def start_world
