@@ -13,7 +13,7 @@ class TectonicLine
     while distance_left > 0.0
       distance = random.get_zero_to_one * Defines.tectonics_line_segment_length
       distance_left -= distance
-      angle += Math::PI / 8.0 * (random.get_zero_to_one - 0.5)
+      angle += Math::PI * Defines.tectonics_line_segment_angle_variance * (random.get_zero_to_one - 0.5)
       direction = Boleite::Vector2f.new Math.cos(angle), Math.sin(angle)
       point = point + (direction * distance).to_i
       break if point.x < 0 || point.y < 0 || point.x > size.x || point.y > size.y
