@@ -52,12 +52,28 @@ class WorldCreationState < Boleite::State
     
     update_maps
     render_maps
+    render_tectonics
     @renderer.present
   end
 
   def render_maps
     @renderer.draw @terrain_sprite
     @renderer.draw @height_sprite
+  end
+
+  def render_tectonics
+    shape = Boleite::Shape.new Boleite::Primitive::Lines
+    shape.position = @height_sprite.position
+    shape.clear_vertices
+    scale = MAP_DISPLAY_SIZE.to_f32 / WORLD_SIZE
+    tectonics = @generator.world.tectonics
+    tectonics.each_line do |line|
+      shape.clear_vertices
+      line.points.each do |p|
+        shape.add_vertex p.to_f32 * scale
+      end
+      @renderer.draw shape
+    end
   end
 
   def update_maps

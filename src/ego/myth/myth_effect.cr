@@ -32,3 +32,12 @@ class GeneratorFillWorldMythEffect < MythEffect
     map.fill_with terrain
   end
 end
+
+class GeneratorCreateTectonicsMythEffect < MythEffect
+  def apply(world, deity)
+    tectonics = world.tectonics
+    @arg.to_i.times do
+      tectonics.generate_line world
+    end
+  end
+end
