@@ -21,8 +21,11 @@ class WorldCreationState < Boleite::State
     map = @generator.world.map
     target_size = target.size.to_f
     @terrain_sprite = Boleite::Sprite.new map.terrain.generate_texture gfx
+    @height_sprite = Boleite::Sprite.new map.heightmap.generate_texture gfx
     @terrain_sprite.position = Boleite::Vector2f.new 0.0, target_size.y - MAP_DISPLAY_SIZE
+    @height_sprite.position = Boleite::Vector2f.new target_size.x - MAP_DISPLAY_SIZE, target_size.y - MAP_DISPLAY_SIZE
     @terrain_sprite.size = Boleite::Vector2u.new MAP_DISPLAY_SIZE, MAP_DISPLAY_SIZE
+    @height_sprite.size = Boleite::Vector2u.new MAP_DISPLAY_SIZE, MAP_DISPLAY_SIZE
   end
 
   def enable
@@ -54,12 +57,18 @@ class WorldCreationState < Boleite::State
 
   def render_maps
     @renderer.draw @terrain_sprite
+    @renderer.draw @height_sprite
   end
 
   def update_maps
     map = @generator.world.map
     gfx = @app.graphics
     map.terrain.generate_texture gfx
+    map.heightmap.generate_texture gfx
+    extremes = map.heightmap.extremes
+    color = Boleite::Color.white
+    color.r = 1f32 / extremes[1]
+    @height_sprite.color = color
   end
 
   def start_world
