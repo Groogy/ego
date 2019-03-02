@@ -17,8 +17,8 @@ class MythTemplateManager
     loaded_data = {} of String => MythTemplateData
     File.open(path, "r") do |file|
       serializer = Boleite::Serializer.new nil
-      data = serializer.read(file)
-      templates = serializer.unmarshal data, Hash(String, MythTemplateData)
+      serializer.read(file)
+      templates = serializer.unmarshal Hash(String, MythTemplateData)
       assert templates
       loaded_data = templates if templates
     end

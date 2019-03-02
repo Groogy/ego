@@ -17,8 +17,8 @@ class TerrainDatabase
   def load_file(path)
     File.open(path, "r") do |file|
       serializer = Boleite::Serializer.new nil
-      data = serializer.read(file)
-      types = serializer.unmarshal(data, Hash(String, TerrainType))
+      serializer.read(file)
+      types = serializer.unmarshal(Hash(String, TerrainType))
       assert types
       @types.merge! types if types
     end

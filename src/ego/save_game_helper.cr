@@ -68,8 +68,8 @@ struct SaveGameHelper
     pos = Boleite::Vector2u.new meta.map_width, meta.map_height
     world = World.new pos
     serializer = Boleite::Serializer.new world
-    data = serializer.read file
-    tmp = serializer.unmarshal data, World
+    serializer.read file
+    tmp = serializer.unmarshal World
     tmp.as(World)
   end
 

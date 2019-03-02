@@ -17,8 +17,8 @@ class NameGeneratorManager
   def load_file(path)
     File.open(path, "r") do |file|
       serializer = Boleite::Serializer.new nil
-      data = serializer.read file
-      generator = serializer.unmarshal data, NameGenerator
+      serializer.read file
+      generator = serializer.unmarshal NameGenerator
       assert generator
       @generators << generator if generator
     end
