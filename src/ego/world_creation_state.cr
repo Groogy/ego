@@ -81,10 +81,6 @@ class WorldCreationState < Boleite::State
     gfx = @app.graphics
     map.terrain.generate_texture gfx
     map.heightmap.generate_texture gfx
-    extremes = map.heightmap.extremes
-    color = Boleite::Color.white
-    color.r = 1f32 / extremes[1]
-    @height_sprite.color = color
   end
 
   def start_world

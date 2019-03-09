@@ -1,47 +1,43 @@
 class Heightmap
+  include CrystalClear
+
   DEFAULT_HEIGHT = 0f32
 
   @heights : Array(Float32)
   @texture : Boleite::Texture?
-  @extremes = {DEFAULT_HEIGHT, DEFAULT_HEIGHT}
   @need_update = true
 
   def initialize(@size : Boleite::Vector2u)
     @heights = Array(Float32).new @size.x * @size.y, DEFAULT_HEIGHT
   end
 
-  def calculate_extremes
-    low = Float32::MAX
-    high = Float32::MIN
-    @heights.each do |h|
-      low = {low, h}.min
-      high = {high, h}.max
-    end
-    return low, high
-  end
-
-  def extremes : Tuple(Float32, Float32)
-    @extremes
-  end
-
-  macro pos_to_index(pos)
+  private def pos_to_index(pos)
     pos.x + pos.y * @size.x
   end
 
-  def [](pos)
+  requires inside? pos
+  def get_height(pos)
     index = pos_to_index pos
     @heights[index]
   end
 
-  def []=(pos, height)
+  requires inside? pos
+  def set_height(pos, height)
     index = pos_to_index pos
-    if height > @extremes[1]
-      @extremes[1] = height
-    elsif height < extremes[0]
-      @extremes[0] = height
-    end
     @heights[index] = height
     @need_update = true
+  end
+
+  def [](pos)
+    get_height pos
+  end
+
+  def []=(pos, height)
+    set_height pos, height
+  end
+
+  def inside?(pos)
+    pos.x >= 0 && pos.x < @size.x && pos.y >= 0 && pos.y < @size.y
   end
 
   def generate_texture(gfx) : Boleite::Texture
@@ -55,8 +51,8 @@ class Heightmap
       if @need_update
         bytes = @heights.to_unsafe
         texture.update bytes, @size.x, @size.y, 0, 0, Boleite::Texture::Format::Red
-        @extremes = calculate_extremes
         @need_update = false
+        puts "Generated texture!"
       end
       return texture
     end
