@@ -1,16 +1,17 @@
 class Terrainmap
-  @terrain : Array(TerrainType?)
+  include CrystalClear
+
+  @terrain = {} of Boleite::Colori => TerrainType
   @texture : Boleite::Texture?
   @cache : Boleite::Image
   @need_update = true
 
   def initialize(@size : Boleite::Vector2u)
-    @terrain = Array(TerrainType?).new @size.x * @size.y, nil
     @cache = Boleite::Image.new @size.x, @size.y
   end
 
   def fill_with(terrain : TerrainType)
-    @terrain.fill terrain
+    @terrain[terrain.color] = terrain
     @cache.fill terrain.color
     @need_update = true
   end
@@ -18,19 +19,45 @@ class Terrainmap
   macro pos_to_index(pos)
     pos.x + pos.y * @size.x
   end
-
-  def [](pos)
-    index = pos_to_index pos
-    @terrain[index]
+  
+  requires inside? pos
+  def get_terrain?(pos) : TerrainType?
+    color = @cache.get_pixel pos.x, pos.y
+    @terrain[color]
   end
 
-  def []=(pos, terrain : TerrainType?)
+  def get_terrain(pos)
+    terrain = get_terrain? pos
+    raise "Nil terrain at #{pos}" unless terrain
+    terrain
+  end
+
+  requires inside? pos
+  def set_terrain(pos, terrain : TerrainType?)
     index = pos_to_index pos
-    @terrain[index] = terrain
     color = Color.black
-    color = terrain.color if terrain
+    if terrain
+      color = terrain.color
+      @terrain[color] = terrain
+    end
     @cache.set_pixel pos.x, pos.y, color
     @need_update = true
+  end
+
+  def []?(pos)
+    get_terrain? pos
+  end
+
+  def [](pos)
+    get_terrain pos
+  end
+
+  def []=(pos, terrain)
+    set_terrain pos, terrain
+  end
+
+  def inside?(pos)
+    pos.x >= 0 && pos.x < @size.x && pos.y >= 0 && pos.y < @size.y
   end
 
   def generate_texture(gfx) : Boleite::Texture
