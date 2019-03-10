@@ -7,6 +7,8 @@ class Heightmap
   @texture : Boleite::Texture?
   @need_update = true
 
+  getter size
+
   def initialize(@size : Boleite::Vector2u)
     @heights = Array(Float32).new @size.x * @size.y, DEFAULT_HEIGHT
   end
@@ -26,6 +28,10 @@ class Heightmap
     index = pos_to_index pos
     @heights[index] = height
     @need_update = true
+  end
+
+  def set_height(x, y, height)
+    set_height Boleite::Vector2u.new(x.to_u, y.to_u), height
   end
 
   def [](pos)
@@ -52,7 +58,6 @@ class Heightmap
         bytes = @heights.to_unsafe
         texture.update bytes, @size.x, @size.y, 0, 0, Boleite::Texture::Format::Red
         @need_update = false
-        puts "Generated texture!"
       end
       return texture
     end

@@ -1,6 +1,5 @@
 class WorldCreationState < Boleite::State
-  MAP_DISPLAY_SIZE = 600u32
-  WORLD_SIZE = 8192u32
+  @frame_time = Time::Span.zero  
 
   def initialize(@app : EgoApplication)
     super()
@@ -16,16 +15,19 @@ class WorldCreationState < Boleite::State
     @desktop = Boleite::GUI::Desktop.new
     @desktop.size = target.size.to_f
 
-    @generator = WorldGenerator.new Boleite::Vector2u.new(WORLD_SIZE, WORLD_SIZE)
+    world_size = Defines.world_size.to_u32
+    @generator = WorldGenerator.new Boleite::Vector2u.new(world_size, world_size)
 
     map = @generator.world.map
+    sprite_size = target.size / 2
+    sprite_size.y = sprite_size.x
     target_size = target.size.to_f
     @terrain_sprite = Boleite::Sprite.new map.terrain.generate_texture gfx
     @height_sprite = Boleite::Sprite.new map.heightmap.generate_texture gfx
-    @terrain_sprite.position = Boleite::Vector2f.new 0.0, target_size.y - MAP_DISPLAY_SIZE
-    @height_sprite.position = Boleite::Vector2f.new target_size.x - MAP_DISPLAY_SIZE, target_size.y - MAP_DISPLAY_SIZE
-    @terrain_sprite.size = Boleite::Vector2u.new MAP_DISPLAY_SIZE, MAP_DISPLAY_SIZE
-    @height_sprite.size = Boleite::Vector2u.new MAP_DISPLAY_SIZE, MAP_DISPLAY_SIZE
+    @terrain_sprite.position = Boleite::Vector2f.new 0.0, target_size.y - sprite_size.y
+    @height_sprite.position = Boleite::Vector2f.new target_size.x - sprite_size.x, target_size.y - sprite_size.y
+    @terrain_sprite.size = sprite_size
+    @height_sprite.size = sprite_size
   end
 
   def enable
@@ -43,37 +45,28 @@ class WorldCreationState < Boleite::State
       build_gui
       @update_gui = false
     end
+
+    target = Time::Span.new seconds: 0, nanoseconds: 1_000_000
+    @frame_time += delta
+    if @frame_time >= target
+      @frame_time = Time::Span.zero
+      @generator.update
+    end
+
   end
 
   def render(delta)
     @renderer.clear Boleite::Color.black
     @gui.render
-
     
     update_maps
     render_maps
-    render_tectonics
     @renderer.present
   end
 
   def render_maps
     @renderer.draw @terrain_sprite
     @renderer.draw @height_sprite
-  end
-
-  def render_tectonics
-    shape = Boleite::Shape.new Boleite::Primitive::Lines
-    shape.position = @height_sprite.position
-    shape.clear_vertices
-    scale = MAP_DISPLAY_SIZE.to_f32 / WORLD_SIZE
-    tectonics = @generator.world.tectonics
-    tectonics.each_line do |line|
-      shape.clear_vertices
-      line.points.each do |p|
-        shape.add_vertex p.to_f32 * scale
-      end
-      @renderer.draw shape
-    end
   end
 
   def update_maps

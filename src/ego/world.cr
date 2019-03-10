@@ -3,7 +3,6 @@ class World
   @terrains = TerrainDatabase.new
   @myth_templates = MythTemplateManager.new
   @name_generators = NameGeneratorManager.new
-  @tectonics = TectonicsEngine.new
   @current_tick = GameTime.new
   @paused = false
   @random : Boleite::Random
@@ -11,7 +10,6 @@ class World
   getter current_tick, random, terrains, map
   getter myth_templates
   getter name_generators
-  getter tectonics
   getter? paused
 
   protected setter current_tick, random, name_generators

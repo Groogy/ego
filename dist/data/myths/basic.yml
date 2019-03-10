@@ -36,4 +36,4 @@ created_out_of_rock:
   follows: [beginning_creator, creator_origin, father_origin, mother_origin]
   effects:
     generator_fill_world: "rock"
-    generator_create_tectonics: 20
+    generator_create_heights: ""

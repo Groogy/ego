@@ -13,6 +13,9 @@ class WorldGenerator
     find_available_myths
   end
 
+  def update
+  end
+
   def each_available_myth
     @available_myths.each do |m|
       yield m
