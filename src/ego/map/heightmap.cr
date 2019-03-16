@@ -50,6 +50,8 @@ class Heightmap
     unless @texture
       texture = gfx.create_texture
       texture.create @size.x, @size.y, Boleite::Texture::Format::Red, Boleite::Texture::Type::Float32
+      texture.smooth = false
+      texture.repeating = false
       @texture = texture
     end
 

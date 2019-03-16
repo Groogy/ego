@@ -1,4 +1,8 @@
 abstract class MythEffect
+  include CrystalClear
+
+  Contracts.ignore_method initialize
+
   def self.find_class(id)
     {% for klass in @type.all_subclasses %}
       {% unless klass.abstract? %}
@@ -42,8 +46,11 @@ class GeneratorCreateHeightsMythEffect < MythEffect
     size.y.times do |y|
       size.x.times do |x|
         val = perlin.noise x.to_f / scale, y.to_f / scale, 0.0
-        map.set_height x, y, val.to_f32
+        val = val * 2 - 1
+        map.set_height x, y, val.to_f32 * @arg.to_f32
       end
     end
   end
+
+  invariant Defines.generator_noise_scale > 0.0
 end

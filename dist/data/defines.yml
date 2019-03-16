@@ -1,2 +1,2 @@
 world_size: 2048
-generator_noise_scale: 0.5
+generator_noise_scale: 0.25
