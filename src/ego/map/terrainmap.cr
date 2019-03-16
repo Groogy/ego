@@ -23,13 +23,21 @@ class Terrainmap
   requires inside? pos
   def get_terrain?(pos) : TerrainType?
     color = @cache.get_pixel pos.x, pos.y
-    @terrain[color]
+    @terrain[color]?
   end
 
   def get_terrain(pos)
     terrain = get_terrain? pos
     raise "Nil terrain at #{pos}" unless terrain
     terrain
+  end
+
+  def get_terrain?(x, y)
+    get_terrain? Boleite::Vector2u.new x, y
+  end
+
+  def get_terrain(x, y)
+    get_terrain Boleite::Vector2u.new x, y
   end
 
   requires inside? pos
@@ -64,6 +72,8 @@ class Terrainmap
     unless @texture
       texture = gfx.create_texture
       texture.create @size.x, @size.y, Boleite::Texture::Format::RGBA, Boleite::Texture::Type::Integer8
+      texture.smooth = false
+      texture.repeating = false
       @texture = texture
     end
 
