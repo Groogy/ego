@@ -7,9 +7,12 @@ class WorldCreationState < Boleite::State
     @update_gui = true
     gfx = @app.graphics
     target = gfx.main_target
-    @camera2d = Boleite::Camera2D.new(target.width.to_f32, target.height.to_f32, 0f32, 1f32)
+    @camera2d = Boleite::Camera2D.new target.width.to_f32, target.height.to_f32, 0f32, 1f32
+    @camera3d = Boleite::Camera3D.new 60f32, target.width.to_f32, target.height.to_f32, 0.01f32, 2100f32
     shader = Boleite::Shader.load_file "resources/shaders/test.shader", gfx
-    @renderer = Boleite::ForwardRenderer.new gfx, @camera2d, shader
+    @renderer = Boleite::ForwardRenderer.new gfx, @camera3d, shader
+    @camera3d.rotate Math::PI / 4, 0.0, 0.0
+    @camera3d.move 1024.0, 1000.0, -300.0
     
     @gui = Boleite::GUI.new gfx, Boleite::Font.new(gfx, "resources/fonts/arial.ttf")
     @desktop = Boleite::GUI::Desktop.new
@@ -19,7 +22,7 @@ class WorldCreationState < Boleite::State
     @generator = WorldGenerator.new Boleite::Vector2u.new(world_size, world_size)
 
     map = @generator.world.map
-    sprite_size = target.size / 2
+    sprite_size = target.size / 8
     sprite_size.y = sprite_size.x
     target_size = target.size.to_f
     @terrain_sprite = Boleite::Sprite.new map.terrain.generate_texture gfx
@@ -28,6 +31,8 @@ class WorldCreationState < Boleite::State
     @height_sprite.position = Boleite::Vector2f.new target_size.x - sprite_size.x, target_size.y - sprite_size.y
     @terrain_sprite.size = sprite_size
     @height_sprite.size = sprite_size
+
+    @map_renderer = MapRenderer.new
   end
 
   def enable
@@ -52,13 +57,15 @@ class WorldCreationState < Boleite::State
       @frame_time = Time::Span.zero
       @generator.update
     end
-
   end
 
   def render(delta)
     @renderer.clear Boleite::Color.black
-    @gui.render
+    @renderer.camera = @camera3d
+    @map_renderer.render @generator.world.map, @renderer
     
+    @renderer.camera = @camera2d
+    @gui.render
     update_maps
     render_maps
     @renderer.present
