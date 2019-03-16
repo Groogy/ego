@@ -6,9 +6,8 @@ class MythTemplateData
       result = MythTemplateData.new id, type
       result.text = node.unmarshal_string "text"
       result.follows = node.unmarshal "follows", Array(String) if node.has? "follows"
-      if node.has? "effects"
-        result.effects = node.unmarshal "effects", Array(MythEffect)
-      end
+      result.exclusive = node.unmarshal "exclusive", Array(String) if node.has? "exclusive"
+      result.effects = node.unmarshal "effects", Array(MythEffect) if node.has? "effects"
       result
     end
 

@@ -45,7 +45,10 @@ class MythTemplateManager
     hsh = @templates.select do |k,v|
       v.follows.includes? last.template.id
     end
-    hsh.values
+    arr = hsh.values
+    arr.reject! do |tmpl| 
+      myths.any? { |m| tmpl.exclusive.includes? m.template.id }
+    end
   end
 
   def has?(key)
