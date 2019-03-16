@@ -30,10 +30,163 @@ mother_origin:
   follows: [beginning_nothing, beginning_chaos, beginning_fire]
   effects:
     set_gender: female
-created_out_of_rock:
+world_creation_fire_1:
   type: creation
-  text: "[GodPronoun] out of this formed rock"
+  text: "Fire creation 1 PLACEHOLDER TEXT"
   follows: [beginning_creator, creator_origin, father_origin, mother_origin]
   effects:
-    generator_fill_world: "rock"
-    generator_create_heights: "128"
+    generator_change_average_temperature: "20"
+    generator_change_temperature_volatility: "2"
+world_creation_earth_1:
+  type: creation
+  text: "Earth creation 1 PLACEHOLDER TEXT"
+  follows: [beginning_creator, creator_origin, father_origin, mother_origin]
+  effects:
+    generator_change_max_height: "512.0"
+world_creation_water_1:
+  type: creation
+  text: "Water creation 1 PLACEHOLDER TEXT"
+  follows: [beginning_creator, creator_origin, father_origin, mother_origin]
+  effects:
+    generator_change_water_level: "128.0"
+world_creation_metal_1:
+  type: creation
+  text: "Metal creation 1 PLACEHOLDER TEXT"
+  follows: [beginning_creator, creator_origin, father_origin, mother_origin]
+world_creation_wood_1:
+  type: creation
+  text: "Wood creation 1 PLACEHOLDER TEXT"
+  follows: [beginning_creator, creator_origin, father_origin, mother_origin]
+  effects:
+    generator_change_fertility: "10"
+world_creation_fire_2:
+  type: creation
+  text: "Fire creation 2 PLACEHOLDER TEXT"
+  follows: [world_creation_earth_1, world_creation_water_1, world_creation_metal_1, world_creation_wood_1]
+  effects:
+    generator_change_average_temperature: "15"
+    generator_change_temperature_volatility: "10"
+world_creation_earth_2:
+  type: creation
+  text: "Earth creation 2 PLACEHOLDER TEXT"
+  follows: [world_creation_fire_1, world_creation_water_1, world_creation_metal_1, world_creation_wood_1]
+  effects:
+    generator_change_max_height: "256.0"
+world_creation_water_2:
+  type: creation
+  text: "Water creation 2 PLACEHOLDER TEXT"
+  follows: [world_creation_fire_1, world_creation_earth_1, world_creation_metal_1, world_creation_wood_1]
+  effects:
+    generator_change_water_level: "64.0"
+world_creation_metal_2:
+  type: creation
+  text: "Metal creation 2 PLACEHOLDER TEXT"
+  follows: [world_creation_fire_1, world_creation_earth_1, world_creation_water_1, world_creation_wood_1]
+world_creation_wood_2:
+  type: creation
+  text: "Wood creation 2 PLACEHOLDER TEXT"
+  follows: [world_creation_fire_1, world_creation_earth_1, world_creation_water_1, world_creation_metal_1]
+  effects:
+    generator_change_fertility: "5"
+world_creation_fire_3:
+  type: creation
+  text: "Fire creation 3 PLACEHOLDER TEXT"
+  exclusive: [world_creation_fire_1]
+  follows: [world_creation_earth_2, world_creation_water_2, world_creation_metal_2, world_creation_wood_2]
+  effects:
+    generator_change_average_temperature: "10"
+    generator_change_temperature_volatility: "20"
+world_creation_earth_3:
+  type: creation
+  text: "Earth creation 3 PLACEHOLDER TEXT"
+  exclusive: [world_creation_earth_1]
+  follows: [world_creation_fire_2, world_creation_water_2, world_creation_metal_2, world_creation_wood_2]
+  effects:
+    generator_change_max_height: "128.0"
+world_creation_water_3:
+  type: creation
+  text: "Water creation 3 PLACEHOLDER TEXT"
+  exclusive: [world_creation_water_1]
+  follows: [world_creation_fire_2, world_creation_earth_2, world_creation_metal_2, world_creation_wood_2]
+  effects:
+    generator_change_water_level: "32.0"
+world_creation_metal_3:
+  type: creation
+  text: "Metal creation 3 PLACEHOLDER TEXT"
+  exclusive: [world_creation_metal_1]
+  follows: [world_creation_fire_2, world_creation_earth_2, world_creation_water_2, world_creation_wood_2]
+world_creation_wood_3:
+  type: creation
+  text: "Wood creation 3 PLACEHOLDER TEXT"
+  exclusive: [world_creation_wood_1]
+  follows: [world_creation_fire_2, world_creation_earth_2, world_creation_water_2, world_creation_metal_2]
+  effects:
+    generator_change_fertility: "1.0"
+world_creation_fire_4:
+  type: creation
+  text: "Fire creation 4 PLACEHOLDER TEXT"
+  exclusive: [world_creation_fire_1, world_creation_fire_2]
+  follows: [world_creation_earth_3, world_creation_water_3, world_creation_metal_3, world_creation_wood_3]
+  effects:
+    generator_change_average_temperature: "5"
+    generator_change_temperature_volatility: "30"
+world_creation_earth_4:
+  type: creation
+  text: "Earth creation 4 PLACEHOLDER TEXT"
+  exclusive: [world_creation_earth_1, world_creation_earth_2]
+  follows: [world_creation_fire_3, world_creation_water_3, world_creation_metal_3, world_creation_wood_3]
+  effects:
+    generator_change_max_height: "64.0"
+world_creation_water_4:
+  type: creation
+  text: "Water creation 4 PLACEHOLDER TEXT"
+  exclusive: [world_creation_water_1, world_creation_water_2]
+  follows: [world_creation_fire_3, world_creation_earth_3, world_creation_metal_3, world_creation_wood_3]
+  effects:
+    generator_change_water_level: "16.0"
+world_creation_metal_4:
+  type: creation
+  text: "Metal creation 4 PLACEHOLDER TEXT"
+  exclusive: [world_creation_metal_1, world_creation_metal_2]
+  follows: [world_creation_fire_3, world_creation_earth_3, world_creation_water_3, world_creation_wood_3]
+world_creation_wood_4:
+  type: creation
+  text: "Wood creation 4 PLACEHOLDER TEXT"
+  exclusive: [world_creation_wood_1, world_creation_wood_2]
+  follows: [world_creation_fire_3, world_creation_earth_3, world_creation_water_3, world_creation_metal_3]
+  effects:
+    generator_change_fertility: "0.5"
+world_creation_fire_5:
+  type: creation
+  text: "Fire creation 5 PLACEHOLDER TEXT"
+  exclusive: [world_creation_fire_1, world_creation_fire_2, world_creation_fire_3]
+  follows: [world_creation_earth_4, world_creation_water_4, world_creation_metal_4, world_creation_wood_4]
+  effects:
+    generator_change_average_temperature: "0"
+    generator_change_temperature_volatility: "40"
+world_creation_earth_5:
+  type: creation
+  text: "Earth creation 5 PLACEHOLDER TEXT"
+  exclusive: [world_creation_earth_1, world_creation_earth_2, world_creation_earth_3]
+  follows: [world_creation_fire_4, world_creation_water_4, world_creation_metal_4, world_creation_wood_4]
+  effects:
+    generator_change_max_height: "32.0"
+world_creation_water_5:
+  type: creation
+  text: "Water creation 5 PLACEHOLDER TEXT"
+  exclusive: [world_creation_water_1, world_creation_water_2, world_creation_water_3]
+  follows: [world_creation_fire_4, world_creation_earth_4, world_creation_metal_4, world_creation_wood_4]
+  effects:
+    generator_change_water_level: "8.0"
+world_creation_metal_5:
+  type: creation
+  text: "Metal creation 5 PLACEHOLDER TEXT"
+  exclusive: [world_creation_metal_1, world_creation_metal_2, world_creation_metal_3]
+  follows: [world_creation_fire_4, world_creation_earth_4, world_creation_water_4, world_creation_wood_4]
+world_creation_wood_5:
+  type: creation
+  text: "Wood creation 5 PLACEHOLDER TEXT"
+  exclusive: [world_creation_wood_1, world_creation_wood_2, world_creation_wood_3]
+  follows: [world_creation_fire_4, world_creation_earth_4, world_creation_water_4, world_creation_metal_4]
+  effects:
+    generator_change_fertility: "0.1"

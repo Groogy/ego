@@ -8,6 +8,7 @@ require "./ego/myth/*"
 require "./ego/myth/serializers/*"
 require "./ego/names/*"
 require "./ego/names/serializers/*"
+require "./ego/simulation/*"
 
 Defines.load
 

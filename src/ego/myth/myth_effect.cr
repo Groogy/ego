@@ -29,6 +29,52 @@ class SetGenderMythEffect < MythEffect
   end
 end
 
+abstract class GeneratorMythEffect < MythEffect
+  private def get_simulation(world)
+    world.simulation.as(WorldGenerationSimulation)
+  end
+end
+
+class GeneratorChangeAverageTemperatureMythEffect < GeneratorMythEffect
+  def apply(world, deity)
+    val = @arg.to_f
+    simulation = get_simulation world
+    simulation.average_temperature += val
+  end
+end
+
+class GeneratorChangeTemperatureVolatilityMythEffect < GeneratorMythEffect
+  def apply(world, deity)
+    val = @arg.to_f
+    simulation = get_simulation world
+    simulation.temperature_volatility += val
+  end
+end
+
+class GeneratorChangeWaterLevelMythEffect < GeneratorMythEffect
+  def apply(world, deity)
+    val = @arg.to_f
+    simulation = get_simulation world
+    simulation.water_level += val
+  end
+end
+
+class GeneratorChangeMaxHeightMythEffect < GeneratorMythEffect
+  def apply(world, deity)
+    val = @arg.to_f
+    simulation = get_simulation world
+    simulation.max_height += val
+  end
+end
+
+class GeneratorChangeFertilityMythEffect < GeneratorMythEffect
+  def apply(world, deity)
+    val = @arg.to_f
+    simulation = get_simulation world
+    simulation.fertility += val
+  end
+end
+
 class GeneratorFillWorldMythEffect < MythEffect
   def apply(world, deity)
     map = world.map.terrain

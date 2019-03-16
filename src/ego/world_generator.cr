@@ -7,6 +7,7 @@ class WorldGenerator
   def initialize(size)
     @world = World.new size
     @world.load_data
+    @world.simulation = WorldGenerationSimulation.new
 
     @deity = Deity.new
 

@@ -6,10 +6,12 @@ class World
   @current_tick = GameTime.new
   @paused = false
   @random : Boleite::Random
+  @simulation : WorldSimulation
 
   getter current_tick, random, terrains, map
   getter myth_templates
   getter name_generators
+  property simulation
   getter? paused
 
   protected setter current_tick, random, name_generators
@@ -17,6 +19,7 @@ class World
   def initialize(size : Boleite::Vector2u)
     @random = Boleite::NoiseRandom.new 0u32
     @map = Map.new size
+    @simulation = NullWorldSimulation.new
   end
 
   def load_data
