@@ -46,14 +46,14 @@ class PerlinNoise
     v = fade yf
     w = fade zf
 
-    aaa = p[p[p[    xi ]+    yi ]+    zi ]
-    aba = p[p[p[    xi ]+   yi+1]+    zi ]
-    aab = p[p[p[    xi ]+    yi ]+   zi+1]
-    abb = p[p[p[    xi ]+   yi+1]+   zi+1]
-    baa = p[p[p[   xi+1]+    yi ]+    zi ]
-    bba = p[p[p[   xi+1]+   yi+1]+    zi ]
-    bab = p[p[p[   xi+1]+    yi ]+   zi+1]
-    bbb = p[p[p[   xi+1]+   yi+1]+   zi+1]
+    aaa = @permutation[@permutation[@permutation[    xi ]+    yi ]+    zi ]
+    aba = @permutation[@permutation[@permutation[    xi ]+   yi+1]+    zi ]
+    aab = @permutation[@permutation[@permutation[    xi ]+    yi ]+   zi+1]
+    abb = @permutation[@permutation[@permutation[    xi ]+   yi+1]+   zi+1]
+    baa = @permutation[@permutation[@permutation[   xi+1]+    yi ]+    zi ]
+    bba = @permutation[@permutation[@permutation[   xi+1]+   yi+1]+    zi ]
+    bab = @permutation[@permutation[@permutation[   xi+1]+    yi ]+   zi+1]
+    bbb = @permutation[@permutation[@permutation[   xi+1]+   yi+1]+   zi+1]
 
     x1 = lerp(grad(aaa, xf , yf, zf), grad(baa, xf-1, yf, zf), u)
     x2 = lerp(grad(aba, xf, yf-1, zf), grad(bba, xf-1, yf-1, zf), u)
@@ -94,10 +94,6 @@ class PerlinNoise
     when 0xF then -y - z;
     else raise "Should never happen"
     end
-  end
-
-  private def p
-    @permutation
   end
 
   invariant @permutation.size == 512
