@@ -10,4 +10,5 @@ module Defines
   define_value generator_start_water_level, Float64, 0.0
   define_value generator_start_max_height, Float64, 128.0
   define_value generator_start_fertility, Float64, 0.0
+  define_value generator_start_terrain, String, ""
 end

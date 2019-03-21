@@ -75,37 +75,9 @@ class GeneratorChangeFertilityMythEffect < GeneratorMythEffect
   end
 end
 
-class GeneratorFillWorldMythEffect < MythEffect
+class GeneratorStartSimulationMythEffect < GeneratorMythEffect
   def apply(world, deity)
-    map = world.map.terrain
-    terrain = world.terrains.find @arg
-    map.fill_with terrain
+    simulation = get_simulation world
+    simulation.start_simulation
   end
-end
-
-class GeneratorCreateHeightsMythEffect < MythEffect
-  def apply(world, deity)
-    map = world.map.heightmap
-    size = map.size
-    scale = calculate_scale size
-    perlin = PerlinNoise.new world.random.get_int
-    size.y.times do |y|
-      size.x.times do |x|
-        val = generate_height perlin, x, y, scale
-        map.set_height x, y, val.to_f32
-      end
-    end
-  end
-
-  def calculate_scale(size)
-    (size.x + size.y).to_f / 2 * Defines.generator_noise_scale
-  end
-
-  def generate_height(perlin, x, y, scale)
-    val = perlin.noise x.to_f / scale, y.to_f / scale, 0.0
-    val = val * 2 - 1
-    val * @arg.to_f
-  end
-
-  invariant Defines.generator_noise_scale > 0.0
 end

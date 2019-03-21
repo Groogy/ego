@@ -190,3 +190,9 @@ world_creation_wood_5:
   follows: [world_creation_fire_4, world_creation_earth_4, world_creation_water_4, world_creation_metal_4]
   effects:
     generator_change_fertility: "0.1"
+world_creation_generate:
+  type: creation
+  text: "and so the world was created"
+  follows: [world_creation_fire_5, world_creation_earth_5, world_creation_water_5, world_creation_metal_5, world_creation_wood_5]
+  effects:
+    generator_start_simulation: ""

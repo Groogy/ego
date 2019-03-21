@@ -15,6 +15,7 @@ class WorldGenerator
   end
 
   def update
+    @world.simulation.update @world
   end
 
   def each_available_myth
