@@ -23,6 +23,11 @@ class Heightmap
     @heights[index]
   end
 
+  requires inside? index
+  def get_height(index : Int32)
+    @heights[index]
+  end
+
   requires inside? pos
   def set_height(pos, height)
     index = pos_to_index pos
@@ -34,6 +39,12 @@ class Heightmap
     set_height Boleite::Vector2u.new(x.to_u, y.to_u), height
   end
 
+  requires inside? index
+  def set_height(index : Int32, height)
+    @heights[index] = height
+    @need_update = true
+  end
+
   def [](pos)
     get_height pos
   end
@@ -42,8 +53,30 @@ class Heightmap
     set_height pos, height
   end
 
+  def inside?(index : Int32)
+    index >= 0 && index < @heights.size
+  end
+
   def inside?(pos)
     pos.x >= 0 && pos.x < @size.x && pos.y >= 0 && pos.y < @size.y
+  end
+
+  def each
+    @heights.each { |v| yield v }
+  end
+
+  def each_with_index
+    @heights.each_with_index { |v,i| yield v, i }
+  end
+
+  def map!
+    @heights.map! { |v| yield v }
+    @need_update = true
+  end
+
+  def map_with_index!
+    @heights.map_with_index! { |v,i| yield v, i }
+    @need_update = true
   end
 
   def generate_texture(gfx) : Boleite::Texture

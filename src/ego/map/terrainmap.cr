@@ -6,6 +6,8 @@ class Terrainmap
   @cache : Boleite::Image
   @need_update = true
 
+  getter size
+
   def initialize(@size : Boleite::Vector2u)
     @cache = Boleite::Image.new @size.x, @size.y
   end
@@ -43,7 +45,7 @@ class Terrainmap
   requires inside? pos
   def set_terrain(pos, terrain : TerrainType?)
     index = pos_to_index pos
-    color = Color.black
+    color = Boleite::Color.black
     if terrain
       color = terrain.color
       @terrain[color] = terrain
