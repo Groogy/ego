@@ -1,6 +1,8 @@
 class Terrainmap
   include CrystalClear
 
+  EMPTY_COLOR = Boleite::Colori.new 0u8, 0u8, 0u8, 0u8
+
   @terrain = {} of Boleite::Colori => TerrainType
   @texture : Boleite::Texture?
   @cache : Boleite::Image
@@ -43,15 +45,27 @@ class Terrainmap
   end
 
   requires inside? pos
-  def set_terrain(pos, terrain : TerrainType?)
+  requires terrain.color != EMPTY_COLOR
+  ensures @cache.get_pixel(pos.x, pos.y) == terrain.color
+  def set_terrain(pos, terrain : TerrainType)
     index = pos_to_index pos
-    color = Boleite::Color.black
-    if terrain
-      color = terrain.color
-      @terrain[color] = terrain
-    end
+    color = terrain.color
+    @terrain[color] = terrain
     @cache.set_pixel pos.x, pos.y, color
     @need_update = true
+  end
+
+  requires inside? pos
+  def set_terrain(pos, terrain : Nil)
+    index = pos_to_index pos
+    @cache.set_pixel pos.x, pos.y, EMPTY_COLOR
+    @need_update = true
+  end
+
+  requires inside? pos
+  def empty_terrain?(pos)
+    color = @cache.get_pixel pos.x, pos.y
+    color == EMPTY_COLOR
   end
 
   def []?(pos)

@@ -69,7 +69,7 @@ class WorldGenerationSimulation < WorldSimulation
         count += 1
         DIRECTIONS.each do |dir|
           n = pos + dir
-          if map.inside?(n) && map[n]?.nil?
+          if map.inside?(n) && map.empty_terrain?(n)
             map[n] = default
             @pixels_covered += 1
             @queue << n
@@ -113,7 +113,6 @@ class WorldGenerationSimulation < WorldSimulation
       if heightmap = @heightmap
         apply_heightmap heightmap, target
         @factor = {1.0, @factor + FACTOR_INC}.min
-        puts @factor
       else
         @heightmap = generate_heightmap target.size, world.random, simulation
       end
