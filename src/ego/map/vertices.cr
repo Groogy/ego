@@ -6,9 +6,8 @@ class MapRenderer
 
       property pos, uv
 
-      def initialize(pos, uv)
-        @pos = Boleite::Vector4f32.new pos
-        @uv = Boleite::Vector2f32.new uv
+      def initialize()
+        @pos.w = 1f32
       end
     end
 
@@ -55,16 +54,14 @@ class MapRenderer
     end
 
     private def create_vertices(map, buffer)
-      terrainmap = map.terrain
+      vertex = Vertex.new
       size = map.size
       size.y.times do |y|
         size.x.times do |x|
-          #height = map.get_height x, y
-          terrain = terrainmap.get_terrain? x, y
-          vertex = Vertex.new(
-            [x.to_f32, 0f32, y.to_f32, 1f32], 
-            [x.to_f32 / size.x, y.to_f32 / size.y]
-          )
+          vertex.pos.x = x.to_f32
+          vertex.pos.z = y.to_f32
+          vertex.uv.x = x.to_f32 / size.x
+          vertex.uv.y = y.to_f32 / size.y
           buffer.add_data vertex
         end
       end
