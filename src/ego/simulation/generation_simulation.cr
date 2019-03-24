@@ -84,7 +84,10 @@ class WorldGenerationSimulation < WorldSimulation
     end
 
     def on_done
-      GenerateLandmassStage.new 0.25
+      octaves = Defines.generator_octaves
+      amplitude = Defines.generator_start_amplitude
+      frequency = Defines.generator_start_frequency
+      GenerateLandmassStage.new amplitude, frequency, octaves.to_u8
     end
 
     def find_start_pos(map)
@@ -103,9 +106,10 @@ class WorldGenerationSimulation < WorldSimulation
     FACTOR_INC = 0.005
 
     @factor = 0.0
+
     @heightmap : Array(Float32)?
 
-    def initialize(@height_mod = 1.0)
+    def initialize(@amplitude : Float64, @frequency : Float64, @iterations : UInt8)
     end
 
     def update(world : World, simulation : WorldGenerationSimulation)
@@ -130,14 +134,27 @@ class WorldGenerationSimulation < WorldSimulation
       Array(Float32).new size.x * size.y do |i|
         x = i % size.x
         y = (i - x) / size.x
-        val = perlin.noise x.to_f / scale, y.to_f / scale, 0.0
+        x = x.to_f / scale * @frequency
+        y = y.to_f / scale * @frequency
+        val = perlin.noise x, y, 0.0
         val = val * 2 - 1
-        (val * simulation.max_height * @height_mod).to_f32
+        val *= @amplitude
+        (val * simulation.max_height).to_f32
       end
     end
 
     def done?(world : World)
       @factor >= 1.0
+    end
+
+    def on_done
+      if @iterations > 0
+        persistance = Defines.generator_persistance
+        lacunarity = Defines.generator_lacunarity
+        GenerateLandmassStage.new @amplitude * persistance, @frequency * lacunarity, @iterations - 1
+      else
+        NullStage.new
+      end
     end
 
     invariant Defines.generator_noise_scale > 0.0

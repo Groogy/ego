@@ -42,7 +42,7 @@ world_creation_earth_1:
   text: "Earth creation 1 PLACEHOLDER TEXT"
   follows: [beginning_creator, creator_origin, father_origin, mother_origin]
   effects:
-    generator_change_max_height: "512.0"
+    generator_change_max_height: "128.0"
 world_creation_water_1:
   type: creation
   text: "Water creation 1 PLACEHOLDER TEXT"
@@ -71,7 +71,7 @@ world_creation_earth_2:
   text: "Earth creation 2 PLACEHOLDER TEXT"
   follows: [world_creation_fire_1, world_creation_water_1, world_creation_metal_1, world_creation_wood_1]
   effects:
-    generator_change_max_height: "256.0"
+    generator_change_max_height: "64.0"
 world_creation_water_2:
   type: creation
   text: "Water creation 2 PLACEHOLDER TEXT"
@@ -102,7 +102,7 @@ world_creation_earth_3:
   exclusive: [world_creation_earth_1]
   follows: [world_creation_fire_2, world_creation_water_2, world_creation_metal_2, world_creation_wood_2]
   effects:
-    generator_change_max_height: "128.0"
+    generator_change_max_height: "32.0"
 world_creation_water_3:
   type: creation
   text: "Water creation 3 PLACEHOLDER TEXT"
@@ -136,7 +136,7 @@ world_creation_earth_4:
   exclusive: [world_creation_earth_1, world_creation_earth_2]
   follows: [world_creation_fire_3, world_creation_water_3, world_creation_metal_3, world_creation_wood_3]
   effects:
-    generator_change_max_height: "64.0"
+    generator_change_max_height: "16.0"
 world_creation_water_4:
   type: creation
   text: "Water creation 4 PLACEHOLDER TEXT"
@@ -170,7 +170,7 @@ world_creation_earth_5:
   exclusive: [world_creation_earth_1, world_creation_earth_2, world_creation_earth_3]
   follows: [world_creation_fire_4, world_creation_water_4, world_creation_metal_4, world_creation_wood_4]
   effects:
-    generator_change_max_height: "32.0"
+    generator_change_max_height: "8.0"
 world_creation_water_5:
   type: creation
   text: "Water creation 5 PLACEHOLDER TEXT"

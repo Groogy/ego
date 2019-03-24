@@ -1,8 +1,15 @@
 world_size: 2048
+
+# Generator
 generator_noise_scale: 0.25
 generator_start_average_temperature: 0.0
 generator_start_temperature_volatility: 0.0
 generator_start_water_level: 0.0
-generator_start_max_height: 128.0
+generator_start_max_height: 32.0
 generator_start_fertility: 0.0
 generator_start_terrain: "rock"
+generator_start_amplitude: 1.0
+generator_start_frequency: 1.0
+generator_octaves: 4
+generator_persistance: 0.5
+generator_lacunarity: 2.0
