@@ -8,7 +8,7 @@ class WorldCreationState < Boleite::State
     gfx = @app.graphics
     target = gfx.main_target
     @camera2d = Boleite::Camera2D.new target.width.to_f32, target.height.to_f32, 0f32, 1f32
-    @camera3d = Boleite::Camera3D.new 60f32, target.width.to_f32, target.height.to_f32, 0.01f32, 2100f32
+    @camera3d = Boleite::Camera3D.new 60f32, target.width.to_f32, target.height.to_f32, 10f32, 2500f32
     shader = Boleite::Shader.load_file "resources/shaders/test.shader", gfx
     @renderer = Boleite::ForwardRenderer.new gfx, @camera3d, shader
     @camera3d.rotate Math::PI / 4, 0.0, 0.0
