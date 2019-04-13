@@ -103,7 +103,7 @@ class WorldGenerationSimulation < WorldSimulation
   class GenerateLandmassStage < Stage
     include CrystalClear
 
-    FACTOR_INC = 0.005
+    FACTOR_INC = 0.01
 
     @factor = 0.0
 
@@ -153,11 +153,26 @@ class WorldGenerationSimulation < WorldSimulation
         lacunarity = Defines.generator_lacunarity
         GenerateLandmassStage.new @amplitude * persistance, @frequency * lacunarity, @iterations - 1
       else
-        NullStage.new
+        GenerateRainStage.new
       end
     end
 
     invariant Defines.generator_noise_scale > 0.0
+  end
+
+  class GenerateRainStage < Stage
+    FACTOR_INC = 0.001
+    
+    @factor = 0.0
+
+    def update(world : World, simulation : WorldGenerationSimulation)
+      @factor += FACTOR_INC
+      world.map.water_level = simulation.water_level * @factor
+    end
+
+    def done?(world : World)
+      @factor >= 1.0
+    end
   end
 
   @stage : Stage = NullStage.new
@@ -180,5 +195,8 @@ class WorldGenerationSimulation < WorldSimulation
     else
       @stage.update world, self
     end
+  end
+
+  def render(renderer)
   end
 end
