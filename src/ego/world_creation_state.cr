@@ -21,17 +21,6 @@ class WorldCreationState < Boleite::State
     world_size = Defines.world_size.to_u32
     @generator = WorldGenerator.new Boleite::Vector2u.new(world_size, world_size)
 
-    map = @generator.world.map
-    sprite_size = target.size / 8
-    sprite_size.y = sprite_size.x
-    target_size = target.size.to_f
-    @terrain_sprite = Boleite::Sprite.new map.terrain.generate_texture gfx
-    @height_sprite = Boleite::Sprite.new map.heightmap.generate_texture gfx
-    @terrain_sprite.position = Boleite::Vector2f.new 0.0, target_size.y - sprite_size.y
-    @height_sprite.position = Boleite::Vector2f.new target_size.x - sprite_size.x, target_size.y - sprite_size.y
-    @terrain_sprite.size = sprite_size
-    @height_sprite.size = sprite_size
-
     @map_renderer = MapRenderer.new
   end
 
@@ -62,25 +51,16 @@ class WorldCreationState < Boleite::State
   def render(delta)
     @renderer.clear Boleite::Color.black
     @renderer.camera = @camera3d
-    @map_renderer.render @generator.world.map, @renderer
+    render_world
     
     @renderer.camera = @camera2d
     @gui.render
-    update_maps
-    render_maps
     @renderer.present
   end
 
-  def render_maps
-    @renderer.draw @terrain_sprite
-    @renderer.draw @height_sprite
-  end
-
-  def update_maps
-    map = @generator.world.map
-    gfx = @app.graphics
-    map.terrain.generate_texture gfx
-    map.heightmap.generate_texture gfx
+  def render_world
+    world = @generator.world
+    @map_renderer.render world.map, @renderer
   end
 
   def start_world
