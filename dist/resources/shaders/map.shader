@@ -24,6 +24,7 @@ vertex
 
 	uniform sampler2D colorSampler;
 	uniform sampler2D heightSampler;
+	uniform sampler2D heatSampler;
 
 	out VertexData {
 		vec4 position;
@@ -34,6 +35,8 @@ vertex
 	{
 		vec4 color = texture(colorSampler, uv);
 		float height = texture(heightSampler, uv).r;
+		float heat = texture(heatSampler, uv).r;
+		color.rgb = heat <= 0 ? vec3(1, 1, 1) : color.rgb;
 		color.rgb *= 1 - height / 128;
 		vec4 position = pos + vec4(0, height, 0, 0);
 

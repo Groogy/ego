@@ -1,7 +1,7 @@
 class Heatmap
   include CrystalClear
 
-  DEFAULT_HEAT = 0f32
+  DEFAULT_HEAT = 0.1f32
 
   @heat : Array(Float32)
   @texture : Boleite::Texture?

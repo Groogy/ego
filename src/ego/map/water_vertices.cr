@@ -2,14 +2,17 @@ class MapRenderer
   class WaterVertices
     struct Vertex < Boleite::Vertex
       @pos = Boleite::Vector4f32.zero
+      @uv = Boleite::Vector2f32.zero
 
-      property pos
+      property pos, uv
 
-      def initialize(x, y, z)
+      def initialize(x, y, z, u, v)
         @pos.x = x
         @pos.y = y
         @pos.z = z
         @pos.w = 1f32
+        @uv.x = u
+        @uv.y = v
       end
     end
 
@@ -34,7 +37,8 @@ class MapRenderer
 
     private def create_vbo(gfx) : Boleite::VertexBufferObject
       layout = Boleite::VertexLayout.new [
-        Boleite::VertexAttribute.new(0, 4, :float, 16u32, 0u32, 0u32),
+        Boleite::VertexAttribute.new(0, 4, :float, 24u32, 0u32, 0u32),
+        Boleite::VertexAttribute.new(0, 2, :float, 24u32, 16u32, 0u32),
       ]
       vbo = gfx.create_vertex_buffer_object
       vbo.layout = layout
@@ -46,8 +50,8 @@ class MapRenderer
     private def update_vbo(map, vbo)
       size = map.size.to_f32
       pos = {
-        Vertex.new(0f32, 0f32, 0f32), Vertex.new(size.x, 0f32, 0f32),
-        Vertex.new(0f32, 0f32, size.y), Vertex.new(size.x, 0f32, size.y),
+        Vertex.new(0f32, 0f32, 0f32, 0f32, 0f32), Vertex.new(size.x, 0f32, 0f32, 1f32, 0f32),
+        Vertex.new(0f32, 0f32, size.y, 0f32, 1f32), Vertex.new(size.x, 0f32, size.y, 1f32, 1f32),
       }
       vertices = vbo.get_buffer 0
       vertices.clear
