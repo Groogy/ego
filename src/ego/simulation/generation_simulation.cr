@@ -180,7 +180,7 @@ class WorldGenerationSimulation < WorldSimulation
   end
 
   class GenerateHeatStage < Stage
-    TARGET = 1000
+    TARGET = 10
 
     @iterations = 0
 
@@ -188,7 +188,7 @@ class WorldGenerationSimulation < WorldSimulation
       if @iterations == 0
         fill_with_heat world, simulation
       else
-        transfer_heat world, simulation
+        generate_volatile_heat world.map, world.random, simulation
       end
       @iterations += 1
     end
@@ -214,8 +214,20 @@ class WorldGenerationSimulation < WorldSimulation
       end
     end
 
-    def transfer_heat(world, simulation)
-      
+    def generate_volatile_heat(map, random, simulation)
+      size = map.size
+      heatmap = map.heatmap
+      scale = (size.x + size.y).to_f / 2 * Defines.generator_noise_scale
+      perlin = PerlinNoise.new random.get_int
+      (size.x * size.y).times do |i|
+        x = i % size.x
+        y = (i - x) / size.x
+        x = x.to_f / scale
+        y = y.to_f / scale
+        val = perlin.noise x, y, 0.0
+        val = val * 2 - 1
+        heatmap[i.to_i] += val * simulation.temperature_volatility
+      end
     end
 
     def done?(world : World)
