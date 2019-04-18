@@ -18,5 +18,6 @@ module Defines
   define_value generator_lacunarity, Float64, 2.0
 
   # Heat system
-  define_value heat_height_equilibrium, Float64, 10
+  define_value heat_height_loss, Float64, 1.0
+  define_value heat_temperature_coverage, Float64, 1.0
 end

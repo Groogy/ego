@@ -203,13 +203,13 @@ class WorldGenerationSimulation < WorldSimulation
       heatmap.size.y.times do |y|
         pos.y = y
         dist = (y - mid_point).abs.to_f / mid_point
-        heat = average_temprature * (1.0 - dist)
+        heat = average_temprature * (Defines.heat_temperature_coverage - dist)
         heatmap.size.x.times do |x|
           pos.x = x
           height = heightmap.get_height pos
           over_water = {height - water_level, 0.0}.max
-          height_effect = (Defines.heat_height_equilibrium - over_water) / Defines.heat_height_equilibrium
-          heatmap[pos] = heat.to_f32 * height_effect
+          height_effect = Defines.heat_height_loss * over_water
+          heatmap[pos] = heat.to_f32 - height_effect
         end
       end
     end
