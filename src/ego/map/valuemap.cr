@@ -1,16 +1,14 @@
-class Heatmap
+class ValueMap
   include CrystalClear
 
-  DEFAULT_HEAT = 0.1f32
-
-  @heat : Array(Float32)
+  @values : Array(Float32)
   @texture : Boleite::Texture?
   @need_update = true
 
   getter size
 
-  def initialize(@size : Boleite::Vector2u)
-    @heat = Array(Float32).new @size.x * @size.y, DEFAULT_HEAT
+  def initialize(default : Float32, @size : Boleite::Vector2u)
+    @values = Array(Float32).new @size.x * @size.y, default
   end
 
   private def pos_to_index(pos)
@@ -18,43 +16,43 @@ class Heatmap
   end
 
   requires inside? pos
-  def get_heat(pos)
+  def get_value(pos)
     index = pos_to_index pos
-    @heat[index]
+    @values[index]
   end
 
   requires inside? index
-  def get_heat(index : Int32)
-    @heat[index]
+  def get_value(index : Int32)
+    @values[index]
   end
 
   requires inside? pos
-  def set_heat(pos, heat)
+  def set_value(pos, value)
     index = pos_to_index pos
-    @heat[index] = heat
+    @values[index] = value
     @need_update = true
   end
 
-  def set_heat(x, y, heat)
-    set_heat Boleite::Vector2u.new(x.to_u, y.to_u), heat
+  def set_value(x, y, value)
+    set_value Boleite::Vector2u.new(x.to_u, y.to_u), value
   end
 
   requires inside? index
-  def set_heat(index : Int32, heat)
-    @heat[index] = heat
+  def set_value(index : Int32, value)
+    @values[index] = value
     @need_update = true
   end
 
   def [](pos)
-    get_heat pos
+    get_value pos
   end
 
-  def []=(pos, heat)
-    set_heat pos, heat
+  def []=(pos, value)
+    set_value pos, value
   end
 
   def inside?(index : Int32)
-    index >= 0 && index < @heat.size
+    index >= 0 && index < @values.size
   end
 
   def inside?(pos)
@@ -62,11 +60,11 @@ class Heatmap
   end
 
   def each
-    @heat.each { |v| yield v }
+    @values.each { |v| yield v }
   end
 
   def each_with_index
-    @heat.each_with_index { |v,i| yield v, i }
+    @values.each_with_index { |v,i| yield v, i }
   end
 
   def each_with_pos
@@ -79,12 +77,12 @@ class Heatmap
   end
 
   def map!
-    @heat.map! { |v| yield v }
+    @values.map! { |v| yield v }
     @need_update = true
   end
 
   def map_with_index!
-    @heat.map_with_index! { |v,i| yield v, i }
+    @values.map_with_index! { |v,i| yield v, i }
     @need_update = true
   end
 
@@ -99,12 +97,12 @@ class Heatmap
 
     if (texture = @texture)
       if @need_update
-        bytes = @heat.to_unsafe
+        bytes = @values.to_unsafe
         texture.update bytes, @size.x, @size.y, 0, 0, Boleite::Texture::Format::Red
         @need_update = false
       end
       return texture
     end
-    raise "Failed to create texture for heat map"
+    raise "Failed to create texture for value map"
   end
 end

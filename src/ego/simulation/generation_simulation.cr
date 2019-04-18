@@ -194,7 +194,7 @@ class WorldGenerationSimulation < WorldSimulation
     end
 
     def fill_with_heat(world, simulation)
-      heatmap = world.map.heatmap
+      heatmap = world.map.heat
       heightmap = world.map.heightmap
       water_level = world.map.water_level
       pos = Boleite::Vector2u.zero
@@ -216,7 +216,7 @@ class WorldGenerationSimulation < WorldSimulation
 
     def generate_volatile_heat(map, random, simulation)
       size = map.size
-      heatmap = map.heatmap
+      heatmap = map.heat
       scale = (size.x + size.y).to_f / 2 * Defines.generator_noise_scale
       perlin = PerlinNoise.new random.get_int
       (size.x * size.y).times do |i|

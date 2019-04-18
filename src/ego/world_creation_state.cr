@@ -25,9 +25,13 @@ class WorldCreationState < Boleite::State
     sprite_size = target.size / 4
     sprite_size.y = sprite_size.x
     target_size = target.size.to_f
-    @heat_sprite = Boleite::Sprite.new map.heatmap.generate_texture gfx
+    @heat_sprite = Boleite::Sprite.new map.heat.generate_texture gfx
     @heat_sprite.position = Boleite::Vector2f.new target_size.x - sprite_size.x, target_size.y - sprite_size.y
     @heat_sprite.size = sprite_size
+
+    @humidity_sprite = Boleite::Sprite.new map.humidity.generate_texture gfx
+    @humidity_sprite.position = Boleite::Vector2f.new 0.0, target_size.y - sprite_size.y
+    @humidity_sprite.size = sprite_size
 
     @map_renderer = MapRenderer.new
   end
@@ -75,12 +79,14 @@ class WorldCreationState < Boleite::State
 
   def render_maps
     @renderer.draw @heat_sprite
+    @renderer.draw @humidity_sprite
   end
 
   def update_maps
     map = @generator.world.map
     gfx = @app.graphics
-    map.heatmap.generate_texture gfx
+    map.heat.generate_texture gfx
+    map.humidity.generate_texture gfx
 
     @heat_sprite.color = Boleite::Colorf.new 1f32/30f32, 0f32, 0f32, 1f32
   end

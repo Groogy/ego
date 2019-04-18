@@ -1,17 +1,19 @@
 class Map
   @terrain : Terrainmap
   @heightmap : Heightmap
-  @heatmap : Heatmap
+  @heat : ValueMap
+  @humidity : ValueMap
   @water_level = -0.1
 
-  getter terrain, heightmap, heatmap
+  getter terrain, heightmap, heat, humidity
   getter size
   property water_level
 
   def initialize(@size : Boleite::Vector2u)
     @terrain = Terrainmap.new @size
     @heightmap = Heightmap.new @size
-    @heatmap = Heatmap.new @size
+    @heat = ValueMap.new 0.1f32, @size
+    @humidity = ValueMap.new 0f32, @size
   end
 
   def width

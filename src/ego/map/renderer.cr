@@ -25,7 +25,7 @@ class MapRenderer
       drawcall = Boleite::DrawCallContext.new draw, shader
       drawcall.uniforms["colorSampler"] = map.terrain.generate_texture gfx
       drawcall.uniforms["heightSampler"] = map.heightmap.generate_texture gfx
-      drawcall.uniforms["heatSampler"] = map.heatmap.generate_texture gfx
+      drawcall.uniforms["heatSampler"] = map.heat.generate_texture gfx
       renderer.draw drawcall
     end
   end
@@ -37,7 +37,7 @@ class MapRenderer
     transform = Boleite::Matrix.translate Boleite::Matrix44f32.identity, Boleite::Vector3f32.new(0f32, map.water_level.to_f32, 0f32)
 
     drawcall = Boleite::DrawCallContext.new draw, shader, transform
-    drawcall.uniforms["heatSampler"] = map.heatmap.generate_texture gfx
+    drawcall.uniforms["heatSampler"] = map.heat.generate_texture gfx
     renderer.draw drawcall
   end
 
