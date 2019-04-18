@@ -21,6 +21,14 @@ class WorldCreationState < Boleite::State
     world_size = Defines.world_size.to_u32
     @generator = WorldGenerator.new Boleite::Vector2u.new(world_size, world_size)
 
+    map = @generator.world.map
+    sprite_size = target.size / 4
+    sprite_size.y = sprite_size.x
+    target_size = target.size.to_f
+    @heat_sprite = Boleite::Sprite.new map.heatmap.generate_texture gfx
+    @heat_sprite.position = Boleite::Vector2f.new target_size.x - sprite_size.x, target_size.y - sprite_size.y
+    @heat_sprite.size = sprite_size
+
     @map_renderer = MapRenderer.new
   end
 
@@ -55,12 +63,26 @@ class WorldCreationState < Boleite::State
     
     @renderer.camera = @camera2d
     @gui.render
+    update_maps
+    render_maps
     @renderer.present
   end
 
   def render_world
     world = @generator.world
     @map_renderer.render world.map, @renderer
+  end
+
+  def render_maps
+    @renderer.draw @heat_sprite
+  end
+
+  def update_maps
+    map = @generator.world.map
+    gfx = @app.graphics
+    map.heatmap.generate_texture gfx
+
+    @heat_sprite.color = Boleite::Colorf.new 1f32/30f32, 0f32, 0f32, 1f32
   end
 
   def start_world

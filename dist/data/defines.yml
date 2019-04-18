@@ -13,3 +13,6 @@ generator_start_frequency: 1.0
 generator_octaves: 4
 generator_persistance: 0.5
 generator_lacunarity: 2.0
+
+# Heat system
+heat_height_equilibrium: 100.0

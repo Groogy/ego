@@ -16,4 +16,7 @@ module Defines
   define_value generator_octaves, Int64, 4
   define_value generator_persistance, Float64, 0.5
   define_value generator_lacunarity, Float64, 2.0
+
+  # Heat system
+  define_value heat_height_equilibrium, Float64, 10
 end
