@@ -32,4 +32,17 @@ class Map
   def height
     @size.y
   end
+
+  def each_index
+    (@size.x * @size.y).times { |i| yield i }
+  end
+
+  def each_pos
+    pos = Boleite::Vector2u.zero
+    each_index do |i|
+      pos.x = (i % @size.x).to_u
+      pos.y = (i / @size.x).to_u
+      yield pos
+    end
+  end
 end

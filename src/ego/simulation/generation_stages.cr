@@ -194,7 +194,7 @@ class WorldGenerationSimulation < WorldSimulation
       heatmap = map.heat
       scale = (size.x + size.y).to_f / 2 * Defines.generator_noise_scale
       perlin = PerlinNoise.new random.get_int
-      (size.x * size.y).times do |i|
+      map.each_index do |i|
         x = i % size.x
         y = (i - x) / size.x
         x = x.to_f / scale
@@ -222,25 +222,17 @@ class WorldGenerationSimulation < WorldSimulation
     def update(world : World, simulation : WorldGenerationSimulation)
       map = world.map
       humidity = map.humidity
-      size = map.size
-      fertility = simulation.fertility
-      pos = Boleite::Vector2u.zero
-      size.y.times do |y|
-        pos.y = y
-        size.x.times do |x|
-          pos.x = x
-          val = 1f32
-          if map.over_water_level? pos
-            val = find_highest_surrounding pos.to_i, map, fertility
-          end
-          humidity[pos] = val
+      map.each_pos do |pos|
+        val = 1f32
+        if map.over_water_level? pos
+          val = find_highest_surrounding pos.to_i, map
         end
+        humidity[pos] = val
       end
       @iterations += 1
-      puts @iterations
     end
 
-    def find_highest_surrounding(pos, map, fertility)
+    def find_highest_surrounding(pos, map)
       humidity = map.humidity
       heightmap = map.heightmap
       height = heightmap[pos]
