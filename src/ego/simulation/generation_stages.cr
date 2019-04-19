@@ -136,7 +136,7 @@ class WorldGenerationSimulation < WorldSimulation
   end
 
   class GenerateRainStage < Stage
-    FACTOR_INC = 0.001
+    FACTOR_INC = 0.005
     
     @factor = 0.0
 
@@ -203,6 +203,60 @@ class WorldGenerationSimulation < WorldSimulation
         val = val * 2 - 1
         heatmap[i.to_i] += val * simulation.temperature_volatility
       end
+    end
+
+    def on_done
+      GenerateHumidityStage.new
+    end
+
+    def done?(world : World)
+      @iterations >= TARGET
+    end
+  end
+
+  class GenerateHumidityStage < Stage
+    TARGET = 10
+
+    @iterations = 0
+
+    def update(world : World, simulation : WorldGenerationSimulation)
+      map = world.map
+      humidity = map.humidity
+      size = map.size
+      fertility = simulation.fertility
+      pos = Boleite::Vector2u.zero
+      size.y.times do |y|
+        pos.y = y
+        size.x.times do |x|
+          pos.x = x
+          val = 1f32
+          if map.over_water_level? pos
+            val = find_highest_surrounding pos.to_i, map, fertility
+          end
+          humidity[pos] = val
+        end
+      end
+      @iterations += 1
+      puts @iterations
+    end
+
+    def find_highest_surrounding(pos, map, fertility)
+      humidity = map.humidity
+      heightmap = map.heightmap
+      height = heightmap[pos]
+      directions = {
+        Boleite::Vector2i.new(-1, 0), Boleite::Vector2i.new(1, 0),
+        Boleite::Vector2i.new(0, -1), Boleite::Vector2i.new(0, 1),
+      }
+      values = directions.map do |d| 
+        p = pos + d
+        if humidity.inside? p
+          humidity[p] * { heightmap[p] / height, 1f32 }.min
+        else
+          0f32
+        end
+      end
+      values.max
     end
 
     def done?(world : World)

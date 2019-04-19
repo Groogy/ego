@@ -13,7 +13,16 @@ class Map
     @terrain = Terrainmap.new @size
     @heightmap = Heightmap.new @size
     @heat = ValueMap.new 0.1f32, @size
-    @humidity = ValueMap.new 0f32, @size
+    @humidity = HumidityMap.new @size
+  end
+
+  def over_water_level?(x, y) : Bool
+    over_water_level? Boleite::Vector2u.new(x, y)
+  end
+
+  def over_water_level?(pos) : Bool
+    height = @heightmap[pos]
+    height > water_level
   end
 
   def width

@@ -15,5 +15,5 @@ generator_persistance: 0.5
 generator_lacunarity: 2.0
 
 # Heat system
-heat_height_loss: 0.25
+heat_height_loss: 0.2
 heat_temperature_coverage: 0.9

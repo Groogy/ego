@@ -16,21 +16,20 @@ class ValueMap
   end
 
   requires inside? pos
-  def get_value(pos)
+  def get_value(pos) : Float32
     index = pos_to_index pos
     @values[index]
   end
 
   requires inside? index
-  def get_value(index : Int32)
+  def get_value(index : Int) : Float32
     @values[index]
   end
 
   requires inside? pos
   def set_value(pos, value)
     index = pos_to_index pos
-    @values[index] = value
-    @need_update = true
+    set_value index, value
   end
 
   def set_value(x, y, value)
@@ -38,12 +37,12 @@ class ValueMap
   end
 
   requires inside? index
-  def set_value(index : Int32, value)
+  def set_value(index : Int, value)
     @values[index] = value
     @need_update = true
   end
 
-  def [](pos)
+  def [](pos) : Float32
     get_value pos
   end
 
@@ -51,7 +50,7 @@ class ValueMap
     set_value pos, value
   end
 
-  def inside?(index : Int32)
+  def inside?(index : Int)
     index >= 0 && index < @values.size
   end
 
